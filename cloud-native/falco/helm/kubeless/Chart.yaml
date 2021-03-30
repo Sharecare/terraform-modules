@@ -1,0 +1,4 @@
+apiVersion: v1
+name: kubeless-delete-pod
+version: 1.0.0
+description: kubeless falco response engine

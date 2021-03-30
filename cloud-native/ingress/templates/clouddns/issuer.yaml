@@ -1,0 +1,18 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Issuer
+metadata:
+  name: letsencrypt-clouddns
+  namespace: ingress
+spec:
+  acme:
+    email: infra-eng@doc.ai
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-clouddns-secret
+    solvers:
+     - dns01:
+        clouddns:
+          project: neuron-staging
+          serviceAccountSecretRef:
+            key: gcp-dns-admin.json
+            name: cert-manager-credentials
