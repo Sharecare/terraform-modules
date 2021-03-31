@@ -11,7 +11,7 @@ resource "helm_release" "datadog" {
   values = [
     templatefile("./${path.module}/templates/values.yaml",
       {
-        DATADOG_API_KEY  = var.datadog_api_key
+        DATADOG_API_KEY = var.datadog_api_key
     })
   ]
 }
