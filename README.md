@@ -1,1 +1,4 @@
-# Terraform modules for use in setting up new projects/clusters
+brew install terraform-docs
+brew install pre-commit
+Run pre-commit install
+brew install checkov
