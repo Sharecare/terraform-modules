@@ -8,8 +8,7 @@ variable "project_id" {
 }
 
 variable "product" {
-  type    = string
-  default = "data-toniq"
+  type = string
 }
 
 variable "requirements" {

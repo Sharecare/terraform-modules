@@ -30,7 +30,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_installCRDs"></a> [installCRDs](#input\_installCRDs) | n/a | `string` | `"true"` | no |
-| <a name="input_product"></a> [product](#input\_product) | n/a | `string` | `"data-toniq"` | no |
+| <a name="input_product"></a> [product](#input\_product) | n/a | `string` | n/a | yes |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | n/a | `string` | n/a | yes |
 | <a name="input_requirements"></a> [requirements](#input\_requirements) | n/a | `list(string)` | n/a | yes |
 | <a name="input_webhookurl"></a> [webhookurl](#input\_webhookurl) | n/a | `string` | n/a | yes |

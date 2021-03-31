@@ -24,8 +24,8 @@ No requirements.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_additional_users"></a> [additional\_users](#input\_additional\_users) | list of user to add to the database | `list` | `[]` | no |
-| <a name="input_authorized_networks"></a> [authorized\_networks](#input\_authorized\_networks) | List of authorized pulic network that connect to the SQLDB | `list` | `[]` | no |
+| <a name="input_additional_users"></a> [additional\_users](#input\_additional\_users) | list of user to add to the database | `list(any)` | `[]` | no |
+| <a name="input_authorized_networks"></a> [authorized\_networks](#input\_authorized\_networks) | List of authorized pulic network that connect to the SQLDB | `list(any)` | `[]` | no |
 | <a name="input_disk_size"></a> [disk\_size](#input\_disk\_size) | Size of the SQL Storage in GB | `string` | `"250"` | no |
 | <a name="input_enable_failover_replica"></a> [enable\_failover\_replica](#input\_enable\_failover\_replica) | flag to enable failover replica or not | `string` | `"true"` | no |
 | <a name="input_failover_replica_configuration"></a> [failover\_replica\_configuration](#input\_failover\_replica\_configuration) | n/a | `map` | <pre>{<br>  "ca_certificate": null,<br>  "client_certificate": null,<br>  "client_key": null,<br>  "connect_retry_interval": 5,<br>  "dump_file_path": null,<br>  "failover_target": null,<br>  "master_heartbeat_period": null,<br>  "password": null,<br>  "ssl_cipher": null,<br>  "username": null,<br>  "verify_server_certificate": null<br>}</pre> | no |

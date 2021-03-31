@@ -23,7 +23,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_datadog_api_key"></a> [datadog\_api\_key](#input\_datadog\_api\_key) | Datadog API key | `string` | `""` | no |
-| <a name="input_requirements"></a> [requirements](#input\_requirements) | List of module deps | `list` | `[]` | no |
+| <a name="input_requirements"></a> [requirements](#input\_requirements) | List of module deps | `list(any)` | `[]` | no |
 
 ## Outputs
 
