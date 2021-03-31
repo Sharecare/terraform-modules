@@ -34,10 +34,10 @@ resource "kubernetes_namespace" "ingress" {
 }
 
 resource "kubernetes_secret" "secret_keys" {
-  count = var.provder != "clouddns" ? 1 : 0
-  depends_on = [ kubernetes_namespace.ingress ]
+  count      = var.provder != "clouddns" ? 1 : 0
+  depends_on = [kubernetes_namespace.ingress]
   metadata {
-    name = "helm-secrets-keys"
+    name      = "helm-secrets-keys"
     namespace = "ingress"
   }
 
@@ -107,7 +107,7 @@ resource "null_resource" "cf_issuer_yaml_apply" {
     kubernetes_secret.secret_keys,
     helm_release.cert_manager,
   ]
-  count      = var.provder != "clouddns" ? 1 : 0
+  count = var.provder != "clouddns" ? 1 : 0
   provisioner "local-exec" {
     command = "kubectl apply -f ${path.module}/templates/${var.provder}/issuer.yaml"
 
@@ -335,6 +335,3 @@ resource "null_resource" "done" {
     helm_release.ambassador,
   ]
 }
-
-
-

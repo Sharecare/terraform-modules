@@ -16,6 +16,6 @@ variable "requirements" {
   type = list(string)
 }
 
-variable webhookurl {
+variable "webhookurl" {
   type = string
 }

@@ -4,20 +4,20 @@ resource "random_id" "name" {
 
 module "postgresql_db" {
   source           = "GoogleCloudPlatform/sql-db/google//modules/postgresql"
-  version = "4.1.0"
+  version          = "4.1.0"
   name             = "${var.project_id}-sql-${var.name}-${random_id.name.hex}"
-  database_version = "${var.postgresql_version}"
-  project_id       = "${var.project_id}"
-  region           = "${var.region}"
+  database_version = var.postgresql_version
+  project_id       = var.project_id
+  region           = var.region
   zone             = "c"
-  disk_size        = "${var.disk_size}"
-  tier             = "${var.tier}"
+  disk_size        = var.disk_size
+  tier             = var.tier
 
   ip_configuration = {
     ipv4_enabled        = true
     private_network     = null
     require_ssl         = false
-    authorized_networks = "${var.authorized_networks}"
+    authorized_networks = var.authorized_networks
   }
 
   additional_databases = var.additional_databases

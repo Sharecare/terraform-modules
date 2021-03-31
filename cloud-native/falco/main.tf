@@ -2,15 +2,15 @@
 resource "helm_release" "falco" {
 
   depends_on = []
-  name             = "falco"
-  repository       = "https://falcosecurity.github.io/charts"
-  chart            = "falco"
+  name       = "falco"
+  repository = "https://falcosecurity.github.io/charts"
+  chart      = "falco"
   # version          = "0.2.7"
   namespace        = "falco"
   create_namespace = true
   wait             = true
   recreate_pods    = true
-  lint = true
+  lint             = true
 
   values = [
     data.template_file.falco_template.rendered,
@@ -19,17 +19,17 @@ resource "helm_release" "falco" {
 }
 
 data "template_file" "falco_template" {
-  template   = file("${path.module}/templates/falco.values.yaml")
+  template = file("${path.module}/templates/falco.values.yaml")
 }
 
 data "template_file" "falco_custom" {
-  template   = file("${path.module}/templates/custom.local.yaml")
+  template = file("${path.module}/templates/custom.local.yaml")
 }
 
 ###################### FALCO-SIDEKICK
 resource "helm_release" "falco_sidekick" {
 
-  depends_on = []
+  depends_on       = []
   name             = "falcosidekick"
   repository       = "https://falcosecurity.github.io/charts"
   chart            = "falcosidekick"
@@ -38,7 +38,7 @@ resource "helm_release" "falco_sidekick" {
   create_namespace = true
   wait             = true
   recreate_pods    = true
-  lint = true
+  lint             = true
 
   set {
     name  = "config.debug"
@@ -49,25 +49,25 @@ resource "helm_release" "falco_sidekick" {
     value = "kubeless"
   }
   set {
-    name = "config.kubeless.function"
+    name  = "config.kubeless.function"
     value = "delete-pod"
   }
   set {
-    name = "config.slack.webhookurl"
+    name  = "config.slack.webhookurl"
     value = var.webhookurl
   }
 }
 
 ###################### KUBELESS DELETE-POD
 resource "helm_release" "kubeless" {
-  name       = "kubeless-delete-pod"
-  chart      = "${path.module}/helm/kubeless"
+  name             = "kubeless-delete-pod"
+  chart            = "${path.module}/helm/kubeless"
   namespace        = "kubeless"
   create_namespace = true
   wait             = true
   recreate_pods    = true
-  lint = true
-  depends_on = [kubernetes_namespace.kubeless]
+  lint             = true
+  depends_on       = [kubernetes_namespace.kubeless]
 }
 
 resource "kubernetes_namespace" "kubeless" {

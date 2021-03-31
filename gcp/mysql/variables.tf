@@ -17,14 +17,14 @@ variable "region" {
   type    = string
 }
 variable "authorized_networks" {
-  type = list
-  default = []
+  type        = list(any)
+  default     = []
   description = "List of authorized pulic network that connect to the SQLDB"
 }
 
 variable "additional_users" {
-  type = list
-  default = []
+  type        = list(any)
+  default     = []
   description = "list of user to add to the database"
 }
 

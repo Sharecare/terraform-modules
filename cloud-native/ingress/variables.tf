@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     cloudflare = {
-      source = "cloudflare/cloudflare"
+      source  = "cloudflare/cloudflare"
       version = "2.18.0"
     }
   }
@@ -46,7 +46,7 @@ variable "product" {
 }
 
 variable "cloudflare_key" {
-  type    = string
+  type      = string
   sensitive = true
 }
 
