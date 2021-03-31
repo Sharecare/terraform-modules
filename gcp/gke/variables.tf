@@ -19,7 +19,7 @@ variable "remove_default_node_pool" {
 }
 
 variable "grant_registry_access" {
-  type = bool
+  type    = bool
   default = false
 }
 
@@ -33,7 +33,7 @@ variable "node_pools_metadata" {}
 
 variable "node_pools_tags" {}
 
-variable kubernetes_version {
+variable "kubernetes_version" {
   default = "latest"
 }
 

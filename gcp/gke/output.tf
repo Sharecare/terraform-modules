@@ -5,6 +5,6 @@ output "service_account" {
 
 
 output "attributes" {
-  value = module.gke
+  value     = module.gke
   sensitive = true
 }

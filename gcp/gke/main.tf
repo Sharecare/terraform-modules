@@ -11,10 +11,10 @@ module "gke" {
   ip_range_services          = "${var.project_id}-services"
   http_load_balancing        = var.http_load_balancing
   grant_registry_access      = var.grant_registry_access
-  kubernetes_version        = var.kubernetes_version
+  kubernetes_version         = var.kubernetes_version
   horizontal_pod_autoscaling = true
   network_policy             = true
-  default_max_pods_per_node  =  var.default_max_pods_per_node
+  default_max_pods_per_node  = var.default_max_pods_per_node
   logging_service            = "logging.googleapis.com/kubernetes"
   monitoring_service         = "monitoring.googleapis.com/kubernetes"
   remove_default_node_pool   = var.remove_default_node_pool
