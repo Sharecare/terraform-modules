@@ -8,5 +8,6 @@ output "connection_name" {
 }
 
 output "generated_user_password" {
-  value = module.mysql_db.generated_user_password
+  value     = module.mysql_db.generated_user_password
+  sensitive = true
 }

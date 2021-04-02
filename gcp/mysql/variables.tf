@@ -16,6 +16,7 @@ variable "region" {
   default = "us-central1"
   type    = string
 }
+
 variable "authorized_networks" {
   type        = list(any)
   default     = []
@@ -26,6 +27,12 @@ variable "additional_users" {
   type        = list(any)
   default     = []
   description = "list of user to add to the database"
+}
+
+variable "additional_databases" {
+  type        = list(any)
+  default     = []
+  description = "list of databases to add to the database cluster"
 }
 
 variable "enable_failover_replica" {
@@ -46,19 +53,55 @@ variable "tier" {
   description = "available machine types (tiers) for Cloud SQL, for example, db-n1-standard-1."
 }
 
-variable "failover_replica_configuration" {
-  default = {
-    dump_file_path            = null
-    connect_retry_interval    = 5
-    ca_certificate            = null
-    client_certificate        = null
-    client_key                = null
-    failover_target           = null
-    master_heartbeat_period   = null
-    password                  = null
-    ssl_cipher                = null
-    username                  = null
-    verify_server_certificate = null
-  }
+variable "deletion_protection" {
+  type = bool
 }
 
+variable "disk_autoresize" {
+  type    = bool
+  default = true
+}
+
+variable "tags" {
+  type    = map(any)
+  default = {}
+}
+
+variable "db_name" {
+  type = string
+}
+
+variable "db_charset" {
+  type    = string
+  default = "utf8mb4"
+}
+
+variable "db_collation" {
+  type    = string
+  default = "utf8mb4_general_ci"
+}
+
+variable "name" {
+  type        = string
+  description = "name to append to the cluster name"
+}
+
+variable "read_replicas" {
+  type    = list(any)
+  default = []
+}
+
+variable "read_replica_enabled" {
+  type    = bool
+  default = false
+}
+
+variable "backup_configuration" {
+  type = map(any)
+  default = {
+    binary_log_enabled = true
+    enabled            = true
+    start_time         = "12:13"
+    location           = null
+  }
+}
