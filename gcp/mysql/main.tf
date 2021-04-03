@@ -13,11 +13,7 @@ locals {
     {
       name  = "log_bin_trust_function_creators"
       value = "on"
-    },
-    {
-      name  = "sql_mode"
-      value = "traditional"
-    },
+    }
   ]
   read_replicas = [
     {
@@ -42,7 +38,7 @@ module "mysql_db" {
   project_id                       = var.project_id
   availability_type                = "REGIONAL"
   region                           = var.region
-  zone                             = "c"
+  zone                             = "${var.region}-c"
   disk_size                        = var.disk_size
   tier                             = var.tier
   random_instance_name             = true
