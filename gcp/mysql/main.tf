@@ -13,7 +13,11 @@ locals {
     {
       name  = "log_bin_trust_function_creators"
       value = "on"
-    }
+    },
+    {
+      name  = "sql_mode"
+      value = "TRADITIONAL"
+    },
   ]
   read_replicas = [
     {
@@ -25,7 +29,7 @@ locals {
       disk_autoresize  = var.disk_autoresize
       disk_size        = var.disk_size
       disk_type        = "PD_HDD"
-      user_labels      = { bar = "baz" }
+      user_labels      = var.tags
     }
   ]
 }
@@ -49,6 +53,7 @@ module "mysql_db" {
   enable_default_db                = false
   ip_configuration                 = local.ip_configuration
   database_flags                   = local.database_flags
+  user_labels                      = var.tags
   backup_configuration             = var.backup_configuration
 
   db_name              = var.db_name
