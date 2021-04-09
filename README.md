@@ -12,7 +12,6 @@ Please install the following
 In the module block you can set the source as such and inputs can be seen in the module's individual README.md
 ```hcl
 module "falco" {
-  source = "github.com/doc-ai/terraform-modules//cloud-native//falco"
-  version = <release-tag>
+  source = "github.com/doc-ai/terraform-modules//cloud-native//falco?ref=<release_tag>"
 }
 ```
