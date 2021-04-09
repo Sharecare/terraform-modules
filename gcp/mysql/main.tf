@@ -47,7 +47,7 @@ module "mysql_db" {
   tier                             = var.tier
   random_instance_name             = true
   deletion_protection              = var.deletion_protection
-  read_replica_deletion_protection = var.read_replica_enabled ? var.read_replica_enabled : null
+  read_replica_deletion_protection = var.read_replica_enabled ? var.read_replica_enabled : false
   disk_autoresize                  = var.disk_autoresize
   enable_default_user              = false
   enable_default_db                = false
@@ -63,6 +63,6 @@ module "mysql_db" {
   additional_databases = length(var.additional_databases) > 0 ? var.additional_databases : []
 
 
-  read_replica_name_suffix = var.read_replica_enabled ? "-replica" : null
-  read_replicas            = var.read_replica_enabled ? local.read_replicas : null
+  read_replica_name_suffix = var.read_replica_enabled ? "-replica" : ""
+  read_replicas            = var.read_replica_enabled ? local.read_replicas : []
 }
