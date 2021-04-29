@@ -30,26 +30,10 @@ variable "common_name" {
   default = "staging.docai.beer"
 }
 
-variable "zone_name" {
-  type    = string
-  default = "beer"
-}
-
-variable "dns_name" {
-  type    = string
-  default = "staging.docai.beer."
-}
-
-variable "product" {
-  type    = string
-  default = "data-toniq"
-}
-
 variable "cloudflare_key" {
   type      = string
   sensitive = true
 }
-
 
 variable "requirements" {
   type = list(string)
