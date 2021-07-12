@@ -7,9 +7,10 @@ fullnameOverride: ""
 
 config:
   exporters:
-    jaeger:
-      endpoint: 0.0.0.0:14250
-      insecure: true
+    logging: {}
+    # jaeger:
+    #   endpoint: 0.0.0.0:14250
+    #   insecure: true
   extensions:
     health_check: {}
   processors:
@@ -26,17 +27,18 @@ config:
     extensions:
       - health_check
     pipelines:
-      # logs:
-      #   exporters:
-      #     - logging
-      #   processors:
-      #     - memory_limiter
-      #     - batch
-      #   receivers:
-      #     - otlp
+      logs:
+        exporters:
+          - logging
+        processors:
+          - memory_limiter
+          - batch
+        receivers:
+          - otlp
       traces:
         exporters:
-          - jaeger
+          - logging
+          # - jaeger
         processors:
           - memory_limiter
           - batch
@@ -117,7 +119,13 @@ agentCollector:
   enabled: true
 
   containerLogs:
-    enabled: false
+    enabled: true
+
+  image:
+  repository: otel/opentelemetry-collector-contrib
+
+  command:
+    name: otelcontribcol
 
   podAnnotations: {}
 
