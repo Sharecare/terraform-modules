@@ -606,8 +606,9 @@ alertmanager:
 ## Using default values from https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml
 ##
 grafana:
-  enabled: false
+  enabled: true
   namespaceOverride: ""
+  grafana.ini:
 
   ## Deploy default dashboards.
   ##
@@ -701,6 +702,24 @@ grafana:
   ##
   service:
     portName: service
+
+    getambassador.io/config: |
+    ---
+    apiVersion: ambassador/v1
+    kind:  Mapping
+    name: grafana
+    prefix: /
+    host: "grafana.alpha.2.docai.beer"
+    host_regex: false
+    service: prometheus-grafana.default:80
+    add_response_headers:
+      Content-Security-Policy: "frame-ancestors 'none'"
+      Strict-Transport-Security: max-age=31536000;
+      X-Frame-Options: deny
+      X-XSS-Protection: 1; mode=block
+      Referrer-Policy: strict-origin-when-cross-origin
+      Feature-Policy: "geolocation 'self'; camera 'self'"
+      X-Content-Type-Options: nosniff
 
   ## If true, create a serviceMonitor for grafana
   ##
