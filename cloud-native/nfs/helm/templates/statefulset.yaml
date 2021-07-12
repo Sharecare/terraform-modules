@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: Statefulset
 metadata:
   name: {{ include "nfs-provisioner.fullname" . }}
   labels:
@@ -14,7 +14,6 @@ spec:
     matchLabels:
       app: {{ include "nfs-provisioner.name" . }}
       release: {{ .Release.Name }}
-  serviceName: {{ include "nfs-provisioner.fullname" . }}
   template:
     metadata:
       labels:
