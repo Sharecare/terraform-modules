@@ -119,7 +119,7 @@ agentCollector:
   enabled: true
 
   containerLogs:
-    enabled: true
+    enabled: false
 
   podAnnotations: {}
 
