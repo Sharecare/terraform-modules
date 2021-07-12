@@ -7,10 +7,9 @@ fullnameOverride: ""
 
 config:
   exporters:
-    logging: {}
-    # jaeger:
-    #   endpoint: TODO
-    #   insecure: true
+    jaeger:
+      endpoint: 0.0.0.0:14250
+      insecure: true
   extensions:
     health_check: {}
   processors:
@@ -27,18 +26,17 @@ config:
     extensions:
       - health_check
     pipelines:
-      logs:
-        exporters:
-          - logging
-        processors:
-          - memory_limiter
-          - batch
-        receivers:
-          - otlp
+      # logs:
+      #   exporters:
+      #     - logging
+      #   processors:
+      #     - memory_limiter
+      #     - batch
+      #   receivers:
+      #     - otlp
       traces:
         exporters:
-          - logging
-          # - jaeger
+          - jaeger
         processors:
           - memory_limiter
           - batch
