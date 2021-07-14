@@ -331,43 +331,43 @@ collector:
   #   subPath: ""
   #   secretName: jaeger-tls
   #   readOnly: true
-  extraConfigmapMounts: []
-  # - name: jaeger-config
-  #   mountPath: /config
-  #   subPath: ""
-  #   configMap: jaeger-config
-  #   readOnly: true
-  # samplingConfig: |-
-  #   {
-  #     "service_strategies": [
-  #       {
-  #         "service": "foo",
-  #         "type": "probabilistic",
-  #         "param": 0.8,
-  #         "operation_strategies": [
-  #           {
-  #             "operation": "op1",
-  #             "type": "probabilistic",
-  #             "param": 0.2
-  #           },
-  #           {
-  #             "operation": "op2",
-  #             "type": "probabilistic",
-  #             "param": 0.4
-  #           }
-  #         ]
-  #       },
-  #       {
-  #         "service": "bar",
-  #         "type": "ratelimiting",
-  #         "param": 5
-  #       }
-  #     ],
-  #     "default_strategy": {
-  #       "type": "probabilistic",
-  #       "param": 1
-  #     }
-  #   }
+  extraConfigmapMounts:
+  - name: jaeger-config
+    mountPath: /config
+    subPath: ""
+    configMap: jaeger-config
+    readOnly: true
+  samplingConfig: |-
+    {
+      "service_strategies": [
+        {
+          "service": "foo",
+          "type": "probabilistic",
+          "param": 0.8,
+          "operation_strategies": [
+            {
+              "operation": "op1",
+              "type": "probabilistic",
+              "param": 0.2
+            },
+            {
+              "operation": "op2",
+              "type": "probabilistic",
+              "param": 0.4
+            }
+          ]
+        },
+        {
+          "service": "bar",
+          "type": "ratelimiting",
+          "param": 5
+        }
+      ],
+      "default_strategy": {
+        "type": "const",
+        "param": 0
+      }
+    }
   priorityClassName: ""
   serviceMonitor:
     enabled: false
