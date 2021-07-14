@@ -20,7 +20,9 @@ No modules.
 
 ## Inputs
 
-No inputs.
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_elasticsearch_password"></a> [elasticsearch_password](#input-elasticsearch-password) | Password for Jaeger Elasticsearch user | `string` | n/a | yes |
 
 ## Outputs
 
