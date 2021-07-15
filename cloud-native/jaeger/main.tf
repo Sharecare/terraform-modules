@@ -10,8 +10,9 @@ resource "helm_release" "jaeger" {
   recreate_pods    = true
   lint             = true
 
-  data = {
-    "elasticsearch-password" = var.elasticsearch_password
+  set {
+    name = "elasticsearch-password"
+    value = var.elasticsearch_password
   }
 
   values = [
