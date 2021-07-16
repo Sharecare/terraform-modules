@@ -2,7 +2,7 @@
 resource "helm_release" "jaeger" {
   name             = "jaeger"
   repository       = "https://jaegertracing.github.io/helm-charts"
-  chart            = "jaegertracing/jaeger"
+  chart            = "jaeger"
   version          = "0.46.4"
   namespace        = "jaeger"
   create_namespace = true
