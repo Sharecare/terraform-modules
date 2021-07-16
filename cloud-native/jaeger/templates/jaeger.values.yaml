@@ -18,7 +18,7 @@ storage:
   type: elasticsearch
   elasticsearch:
     scheme: http
-    host: elasticsearch-es-http
+    host: elasticsearch-master
     port: 9200
     user: elastic
     usePassword: true
