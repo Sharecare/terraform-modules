@@ -10,11 +10,6 @@ resource "helm_release" "jaeger" {
   recreate_pods    = true
   lint             = true
 
-  set {
-    name  = "elasticsearch-password"
-    value = var.elasticsearch_password
-  }
-
   values = [
     templatefile("./${path.module}/templates/jaeger.values.yaml", {
       ELASTICSEARCH_PASSWORD = var.elasticsearch_password
