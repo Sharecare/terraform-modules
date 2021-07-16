@@ -22,7 +22,7 @@ storage:
     port: 9200
     user: elastic
     usePassword: true
-    password: $elasticsearch-password
+    password: ${ELASTICSEARCH_PASSWORD}
     # indexPrefix: test
     ## Use existing secret (ignores previous password)
     # existingSecret:
