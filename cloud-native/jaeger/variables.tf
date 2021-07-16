@@ -8,3 +8,8 @@ variable "elasticsearch_password" {
     error_message = "Elasticsearch password must be at least 20 characters."
   }
 }
+
+variable "jaeger_url" {
+  type        = string
+  description = "URL for the Jaeger Query UI"
+}

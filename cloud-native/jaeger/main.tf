@@ -13,6 +13,7 @@ resource "helm_release" "jaeger" {
   values = [
     templatefile("./${path.module}/templates/jaeger.values.yaml", {
       ELASTICSEARCH_PASSWORD = var.elasticsearch_password
+      JAEGER_URL             = var.jaeger_url
     })
   ]
 }

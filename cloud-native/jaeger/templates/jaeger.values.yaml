@@ -409,7 +409,24 @@ query:
   extraEnv: []
   replicaCount: 1
   service:
-    annotations: {}
+    annotations:
+      getambassador.io/config: |
+        ---
+        apiVersion: ambassador/v1
+        kind:  Mapping
+        name: jaeger
+        prefix: /
+        host: ${JAEGER_URL}
+        host_regex: false
+        service: jaeger-query.jaeger:80
+        add_response_headers:
+          Content-Security-Policy: "frame-ancestors 'none'"
+          Strict-Transport-Security: max-age=31536000;
+          X-Frame-Options: deny
+          X-XSS-Protection: 1; mode=block
+          Referrer-Policy: strict-origin-when-cross-origin
+          Feature-Policy: "geolocation 'self'; camera 'self'"
+          X-Content-Type-Options: nosniff
     type: ClusterIP
     # List of IP ranges that are allowed to access the load balancer (if supported)
     loadBalancerSourceRanges: []
