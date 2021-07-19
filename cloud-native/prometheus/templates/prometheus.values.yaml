@@ -606,9 +606,31 @@ alertmanager:
 ## Using default values from https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml
 ##
 grafana:
-  enabled: false
+  enabled: ${GRAFANA_ENABLED}
   namespaceOverride: ""
-
+  grafana.ini:
+    paths:
+      data: /var/lib/grafana/
+      logs: /var/log/grafana
+      plugins: /var/lib/grafana/plugins
+      provisioning: /etc/grafana/provisioning
+    analytics:
+      check_for_updates: true
+    log:
+      mode: console
+    grafana_net:
+      url: https://grafana.net
+    auth.google:
+      allow_sign_up: true
+      enabled: true
+      allowed_domains: ${ALLOWED_DOMAINS}
+      auth_url: https://accounts.google.com/o/oauth2/auth
+      client_id: ${GOOGLE_CLIENT_ID}
+      client_secret: ${GOOGLE_CLIENT_SECRET}
+      scopes: https://www.googleapis.com/auth/userinfo.profile,https://www.googleapis.com/auth/userinfo.email
+      token_url: https://accounts.google.com/o/oauth2/token
+    server:
+      root_url: https://${GRAFANA_URL}
   ## Deploy default dashboards.
   ##
   defaultDashboardsEnabled: true
@@ -700,7 +722,29 @@ grafana:
   ## Passed to grafana subchart and used by servicemonitor below
   ##
   service:
-    portName: service
+    # portName: service
+    enabled: true
+    type: ClusterIP
+    port: 80
+    targetPort: 3000
+    annotations:
+      getambassador.io/config: |
+        ---
+        apiVersion: ambassador/v1
+        kind:  Mapping
+        name: grafana
+        prefix: /
+        host: ${GRAFANA_URL}
+        host_regex: false
+        service: prometheus-grafana.prometheus:80
+        add_response_headers:
+          Content-Security-Policy: "frame-ancestors 'none'"
+          Strict-Transport-Security: max-age=31536000;
+          X-Frame-Options: deny
+          X-XSS-Protection: 1; mode=block
+          Referrer-Policy: strict-origin-when-cross-origin
+          Feature-Policy: "geolocation 'self'; camera 'self'"
+          X-Content-Type-Options: nosniff
 
   ## If true, create a serviceMonitor for grafana
   ##
