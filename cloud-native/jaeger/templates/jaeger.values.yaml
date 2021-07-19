@@ -16,31 +16,6 @@ fullnameOverride: ""
 storage:
   # allowed values (cassandra, elasticsearch)
   type: elasticsearch
-  elasticsearch:
-    scheme: http
-    host: elasticsearch-master
-    port: 9200
-    user: elastic
-    usePassword: true
-    password: ${ELASTICSEARCH_PASSWORD}
-    # indexPrefix: test
-    ## Use existing secret (ignores previous password)
-    # existingSecret:
-    # existingSecretKey:
-    nodesWanOnly: false
-    extraEnv: []
-    ## ES related env vars to be configured on the concerned components
-      # - name: ES_SERVER_URLS
-      #   value: http://elasticsearch-master:9200
-      # - name: ES_USERNAME
-      #   value: elastic
-      # - name: ES_INDEX_PREFIX
-      #   value: test
-    ## ES related cmd line opts to be configured on the concerned components
-    cmdlineParams: {}
-      # es.server-urls: http://elasticsearch-master:9200
-      # es.username: elastic
-      # es.index-prefix: test
   cassandra:
     host: cassandra
     port: 9042
@@ -69,6 +44,31 @@ storage:
       # cassandra.port: 9042
       # cassandra.keyspace: jaeger_v1_test
       # cassandra.tls.enabled: "false"
+  elasticsearch:
+    scheme: http
+    host: elasticsearch-master.jaeger
+    port: 9200
+    user: elastic
+    usePassword: true
+    password: ${ELASTICSEARCH_PASSWORD}
+    # indexPrefix: test
+    ## Use existing secret (ignores previous password)
+    # existingSecret:
+    # existingSecretKey:
+    nodesWanOnly: false
+    extraEnv: []
+    ## ES related env vars to be configured on the concerned components
+      # - name: ES_SERVER_URLS
+      #   value: http://elasticsearch-master:9200
+      # - name: ES_USERNAME
+      #   value: elastic
+      # - name: ES_INDEX_PREFIX
+      #   value: test
+    ## ES related cmd line opts to be configured on the concerned components
+    cmdlineParams: {}
+      # es.server-urls: http://elasticsearch-master:9200
+      # es.username: elastic
+      # es.index-prefix: test
   kafka:
     brokers:
       - kafka:9092
@@ -192,7 +192,7 @@ ingester:
 agent:
   podSecurityContext: {}
   securityContext: {}
-  enabled: false
+  enabled: true
   annotations: {}
   image: jaegertracing/jaeger-agent
   imagePullSecrets: []
@@ -335,7 +335,7 @@ collector:
   - name: jaeger-config
     mountPath: /config
     subPath: ""
-    configMap: jaeger-config
+    configMap: jaeger-sampling-strategies
     readOnly: true
   samplingConfig: |-
     {
@@ -364,8 +364,8 @@ collector:
         }
       ],
       "default_strategy": {
-        "type": "const",
-        "param": 0
+        "type": "probabilistic",
+        "param": 1
       }
     }
   priorityClassName: ""
@@ -384,18 +384,18 @@ query:
     extraEnv: []
     extraConfigmapMounts: []
     extraSecretMounts: []
-  config: |-
-    provider = "google"
-    https_address = ":4180"
-    upstreams = ["http://localhost:16686"]
-    redirect_url = "https://jaeger.alpha.2.docai.beer/oauth2/callback"
-    client_id = "jaeger-query"
-    oidc_issuer_url = "https://keycloak-svc-domain/auth/realms/Default"
-    cookie_secure = "true"
-    email_domains = "*"
-    oidc_groups_claim = "groups"
-    user_id_claim = "preferred_username"
-    skip_provider_button = "true"
+  # config: |-
+  #   provider = "oidc"
+  #   https_address = ":4180"
+  #   upstreams = ["http://localhost:16686"]
+  #   redirect_url = "https://jaeger-svc-domain/oauth2/callback"
+  #   client_id = "jaeger-query"
+  #   oidc_issuer_url = "https://keycloak-svc-domain/auth/realms/Default"
+  #   cookie_secure = "true"
+  #   email_domains = "*"
+  #   oidc_groups_claim = "groups"
+  #   user_id_claim = "preferred_username"
+  #   skip_provider_button = "true"
   podSecurityContext: {}
   securityContext: {}
   agentSidecar:
