@@ -35,4 +35,13 @@ resource "helm_release" "ambassador" {
   }
 }
 
-# add useragent mapping here using ambassador crd and kubectl apply
+resource "kubernetes_manifest" "mapping" {
+  provider = kubernetes-alpha
+  for_each = var.user_agents_block
+  manifest = yamldecode(templatefile("./${path.module}/templates/user-agent-mapping.yaml",
+    {
+      USER_AGENT = each.value,
+      SUFFIX     = each.key
+  }))
+}
+
