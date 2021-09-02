@@ -1,0 +1,10 @@
+apiVersion: getambassador.io/v2
+kind:  Mapping
+metadata:
+  name:  black-hole-route-${SUFFIX}
+  namespace: ingress
+spec:
+  prefix: /
+  service: http://httpbin.org
+  headers:
+    user-agent: ${USER_AGENT}
