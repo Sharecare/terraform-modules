@@ -606,8 +606,12 @@ alertmanager:
 ## Using default values from https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml
 ##
 grafana:
+  image:
+    tag: 8.0.5
   enabled: ${GRAFANA_ENABLED}
   namespaceOverride: ""
+  persistence:
+    enabled: true
   grafana.ini:
     paths:
       data: /var/lib/grafana/
@@ -631,6 +635,35 @@ grafana:
       token_url: https://accounts.google.com/o/oauth2/token
     server:
       root_url: https://${GRAFANA_URL}
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: Prometheus
+          type: prometheus
+          httpMethod: POST
+          url: http://prometheus-kube-prometheus-prometheus.prometheus:9090
+          access: proxy
+          isDefault: false
+        - name: jaeger
+          type: jaeger
+          uid: jaeger-spectra
+          access: proxy
+          url: http://jaeger-query.jaeger:80
+          # isDefault: true
+          version: 1
+          editable: true
+          basicAuth: false
+        - name: elasticsearch
+          type: elasticsearch
+          uid: elasticsearch-metrics
+          access: proxy
+          url: http://jaeger-query.jaeger:80
+          # isDefault: true
+          version: 1
+          editable: true
+          basicAuth: false
+
   ## Deploy default dashboards.
   ##
   defaultDashboardsEnabled: true
