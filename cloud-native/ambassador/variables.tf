@@ -1,4 +1,5 @@
 
 variable "values_override" {
-  # type = string
+  description = "Values override as a heredoc"
+  type        = string
 }
