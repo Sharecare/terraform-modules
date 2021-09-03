@@ -5,6 +5,6 @@ metadata:
   namespace: ingress
 spec:
   prefix: /
-  service: http://httpbin.org
+  service: http://hello.docai.beer
   headers:
     user-agent: ${USER_AGENT}
