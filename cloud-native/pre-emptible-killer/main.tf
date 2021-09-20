@@ -10,26 +10,4 @@ resource "helm_release" "release" {
   values = [
     "${file("./${path.module}/templates/values.yaml")}"
   ]
-
-  set {
-    name  = "cluster.enabled"
-    value = "true"
-  }
-
-  set {
-    name  = "metrics.enabled"
-    value = "true"
-  }
-
-  # set_string {
-  #   name  = "service.annotations.prometheus\\.io/port"
-  #   value = "9127"
-  # }
-  depends_on = [null_resource.module_depends_on]
-}
-
-resource "null_resource" "module_depends_on" {
-  triggers = {
-    value = length(var.module_depends_on)
-  }
 }
