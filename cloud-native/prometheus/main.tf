@@ -7,7 +7,7 @@ resource "helm_release" "prometheus" {
   namespace        = "prometheus"
   create_namespace = true
   wait             = true
-  recreate_pods    = true
+  recreate_pods    = false
   lint             = true
 
   values = [
