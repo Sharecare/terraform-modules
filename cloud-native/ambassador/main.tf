@@ -36,7 +36,6 @@ resource "helm_release" "ambassador" {
 }
 
 resource "kubernetes_manifest" "mapping" {
-  provider = kubernetes-alpha
   for_each = var.user_agents_block
   manifest = yamldecode(templatefile("./${path.module}/templates/user-agent-mapping.yaml",
     {
