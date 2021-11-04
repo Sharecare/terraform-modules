@@ -1367,7 +1367,7 @@ prometheusOperator:
     # Value must match version names from https://golang.org/pkg/crypto/tls/#pkg-constants
     tlsMinVersion: VersionTLS13
     # The default webhook port is 10250 in order to work out-of-the-box in GKE private clusters and avoid adding firewall rules.
-    internalPort: 10250
+    internalPort: 10253
 
   ## Admission webhook support for PrometheusRules resources added in Prometheus Operator 0.30 can be enabled to prevent incorrectly formatted
   ## rules from making their way into prometheus and potentially preventing the container from starting
@@ -1534,7 +1534,7 @@ prometheusOperator:
   # Required for use in managed kubernetes clusters (such as AWS EKS) with custom CNI (such as calico),
   # because control-plane managed by AWS cannot communicate with pods' IP CIDR and admission webhooks are not working
   ##
-  hostNetwork: false
+  hostNetwork: true
 
   ## Define which Nodes the Pods are scheduled on.
   ## ref: https://kubernetes.io/docs/user-guide/node-selection/
@@ -1919,7 +1919,7 @@ prometheus:
     ##
     image:
       repository: quay.io/prometheus/prometheus
-      tag: v2.26.0
+      tag: v2.28.1
       sha: ""
 
     ## Tolerations for use with node taints
@@ -2182,8 +2182,8 @@ prometheus:
 
     ## The remote_write spec configuration for Prometheus.
     ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#remotewritespec
-    remoteWrite: []
-    # - url: "http://metricbeat-svc.kube-system.svc.cluster.local:9201/write"
+    remoteWrite:
+    - url: "http://0.0.0.0:9201/write"
     ## additionalRemoteWrite is appended to remoteWrite
     additionalRemoteWrite: []
 

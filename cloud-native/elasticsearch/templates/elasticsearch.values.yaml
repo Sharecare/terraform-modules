@@ -23,6 +23,8 @@ esMajorVersion: ""
 # Allows you to add any config files in /usr/share/elasticsearch/config/
 # such as elasticsearch.yml and log4j2.properties
 esConfig: {}
+    # elasticsearch.yml: |
+    #   xpack.monitoring.enabled: true
 #  elasticsearch.yml: |
 #    key:
 #      nestedkey: value
@@ -92,10 +94,10 @@ networkHost: "0.0.0.0"
 
 volumeClaimTemplate:
   accessModes: ["ReadWriteOnce"]
-  storageClassName: "standard"
+  storageClassName: "elasticsearch-regional"
   resources:
     requests:
-      storage: 30Gi
+      storage: 64Gi
 
 rbac:
   create: false

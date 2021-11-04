@@ -44,4 +44,3 @@ resource "kubernetes_manifest" "mapping" {
       SUFFIX     = each.key
   }))
 }
-

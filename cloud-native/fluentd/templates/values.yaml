@@ -199,7 +199,7 @@ metrics:
     enabled: true
     additionalLabels:
       release: prometheus-operator
-    namespace: ""
+    namespace: "prometheus"
     namespaceSelector: {}
     ## metric relabel configs to apply to samples before ingestion.
     ##
@@ -226,28 +226,28 @@ metrics:
     # honorLabels: true
 
   prometheusRule:
-    enabled: false
+    enabled: true
     additionalLabels: {}
-    namespace: ""
-    rules: []
-    # - alert: FluentdDown
-    #   expr: up{job="fluentd"} == 0
-    #   for: 5m
-    #   labels:
-    #     context: fluentd
-    #     severity: warning
-    #   annotations:
-    #     summary: "Fluentd Down"
-    #     description: "{{ $labels.pod }} on {{ $labels.nodename }} is down"
-    # - alert: FluentdScrapeMissing
-    #   expr: absent(up{job="fluentd"} == 1)
-    #   for: 15m
-    #   labels:
-    #     context: fluentd
-    #     severity: warning
-    #   annotations:
-    #     summary: "Fluentd Scrape Missing"
-    #     description: "Fluentd instance has disappeared from Prometheus target discovery"
+    namespace: "prometheus"
+    rules:
+    - alert: FluentdDown
+      expr: up{job="fluentd"} == 0
+      for: 5m
+      labels:
+        context: fluentd
+        severity: warning
+      annotations:
+        summary: "Fluentd Down"
+        description: "{{ $labels.pod }} on {{ $labels.nodename }} is down"
+    - alert: FluentdScrapeMissing
+      expr: absent(up{job="fluentd"} == 1)
+      for: 15m
+      labels:
+        context: fluentd
+        severity: warning
+      annotations:
+        summary: "Fluentd Scrape Missing"
+        description: "Fluentd instance has disappeared from Prometheus target discovery"
 
 ## Grafana Monitoring Dashboard
 ##
@@ -266,7 +266,7 @@ plugins: []
 ##
 configMapConfigs:
   - fluentd-prometheus-conf
-# - fluentd-systemd-conf
+  # - fluentd-systemd-conf
 
 ## Fluentd configurations:
 ##
