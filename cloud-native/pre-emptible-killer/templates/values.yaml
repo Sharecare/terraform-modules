@@ -94,7 +94,7 @@ extraArgs: []
 
 # use to set extra environment variables
 extraEnv:
-  BLACKLIST_HOURS: "08:00-20:00"
+  BLACKLIST_HOURS: "15:00-03:00"  # Specified in UTC, this is 7/8 AM to 7/8 PM
 
 # use to add extra labels
 extraLabels: {}
