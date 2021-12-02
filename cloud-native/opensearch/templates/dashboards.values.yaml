@@ -1,5 +1,5 @@
-# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-# SPDX-License-Identifier: Apache-2.0s
+# Copyright OpenSearch Contributors
+# SPDX-License-Identifier: Apache-2.0
 
 # Default values for opensearch-dashboards.
 # This is a YAML-formatted file.
@@ -9,7 +9,7 @@ opensearchHosts: "https://opensearch-cluster-master.opensearch:9200"
 replicaCount: 1
 
 image: "opensearchproject/opensearch-dashboards"
-imageTag: "1.0.0"
+imageTag: "1.2.0"
 imagePullPolicy: "IfNotPresent"
 
 imagePullSecrets: []
@@ -43,6 +43,16 @@ extraEnvs: []
 #    value: "--max-old-space-size=1800"
 
 envFrom: []
+
+extraVolumes:
+  - name: init-files
+    configMap:
+      name: "opensearch-dashboards-init"
+
+extraVolumeMounts:
+  - name: init-files
+    mountPath: /usr/share/init-files
+    readOnly: true
 
 extraInitContainers: ""
 
@@ -82,7 +92,7 @@ priorityClassName: ""
 opensearchAccount:
   secret: ""
   keyPassphrase:
-    enabled: false
+    enabled: true
 
 labels: {}
 
@@ -146,3 +156,17 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+lifecycle: {}
+  # preStop:
+    # exec:
+  #     command: ["/bin/sh", "-c", "echo Hello from the postStart handler > /usr/share/message"]
+  # postStart:
+  #   exec:
+  #     command:
+  #       - bash
+  #       - -c
+  #       - |
+  #         #!/bin/bash
+            # pwd
+  #         curl -X POST "http://admin:admin@127.0.0.1:5601/api/saved_objects/_import?createNewCopies=false" -H "osd-xsrf: true" --form file=@/usr/share/init-files/export.ndjson -H 'kbn-xsrf: true'

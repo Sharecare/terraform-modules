@@ -51,10 +51,11 @@ daemonset:
                   - module: prometheus
                     period: 10s
                     # Prometheus exporter host / port
-                    hosts: ["$${data.host}:$${data.kubernetes.annotations.prometheus.io/port}"]
+                    hosts: ["prometheus-operated.prometheus:9090"]
                     metrics_path: /metrics
-      processors:
-        - add_cloud_metadata:
+                    headers:
+                    accept: "text/plain"
+
 
       output.elasticsearch:
         hosts: ['$${ELASTICSEARCH_HOST:elasticsearch-master}.elasticsearch:$${ELASTICSEARCH_PORT:9200}']
@@ -117,6 +118,8 @@ daemonset:
         metricsets: ["remote_write"]
         host: "$${NODE_NAME}"
         port: "9201"
+        headers:
+          accept: "text/plain"
 
 
   nodeSelector: {}
@@ -200,7 +203,6 @@ deployment:
           - state_statefulset
           - state_pod
           - state_container
-          - state_job
           - state_cronjob
           - state_resourcequota
           - state_service

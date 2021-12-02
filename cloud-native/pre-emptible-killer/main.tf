@@ -8,6 +8,7 @@ resource "helm_release" "release" {
 
 
   values = [
-    "${file("./${path.module}/templates/values.yaml")}"
+    file("./${path.module}/templates/values.yaml")
   ]
 }
+# 35.222.208.183

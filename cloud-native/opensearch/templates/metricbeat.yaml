@@ -11,7 +11,11 @@ daemonset:
   envFrom: []
   # - configMapRef:
   #     name: config-secret
-  extraEnvs: []
+  extraEnvs:
+    - name: NODE_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: spec.nodeName
   #  - name: MY_ENVIRONMENT_VAR
   #    value: the_value_goes_here
   extraVolumes: []
@@ -30,7 +34,7 @@ daemonset:
   # Allows you to add any config files in /usr/share/metricbeat
   # such as metricbeat.yml for daemonset
   metricbeatConfig:
-    metricbeat.yml: |-
+    metricbeat.yml: |
       metricbeat.config.modules:
         # Mounted `metricbeat-daemonset-modules` configmap:
         path: $${path.config}/modules.d/*.yml
@@ -47,23 +51,45 @@ daemonset:
                   - module: prometheus
                     period: 10s
                     # Prometheus exporter host / port
-                    hosts: ["$${data.host}:$${data.kubernetes.annotations.prometheus.io/port}"]
+                    hosts: ["prometheus-operated.prometheus:9090"]
                     metrics_path: /metrics
+                    headers:
+                      accept: "text/plain"
+
       processors:
         - add_cloud_metadata:
-      cloud.id: $${ELASTIC_CLOUD_ID}
-      cloud.auth: elastic:$${ELASTIC_CLOUD_AUTH}
       output.elasticsearch:
+        hosts: ['$${ELASTICSEARCH_HOST:opensearch-cluster-master}.opensearch:$${ELASTICSEARCH_PORT:9200}']
+        username: "admin"
+        password: "admin"
+        protocol: "https"
         enabled: true
-        hosts: ['$${ELASTICSEARCH_HOST:elasticsearch-master}.elasticsearch:$${ELASTICSEARCH_PORT:9200}']
-        setup.dashboards.enabled: true
-        setup.template.settings:
-          index.number_of_shards: 5
-          index.number_of_replicas: 1
-          index.number_of_routing_shards: 30
-      setup.kibana.host: 'http://kibana-kibana.elasticsearch:5601'
-    system.yml: |-
+        ssl.verification_mode: none
+      setup.ilm.enabled: false
+      setup.dashboards.enabled: false
+      setup.kibana:
+        host: http://opensearch-dashboards.opensearch:5601
+        username: admin
+        password: admin
+        headers:
+          securitytenant: global
+      metricbeat.modules:
+      - module: kubernetes
+        enabled: true
+        metricsets:
+          - node
+          - system
+          - pod
+          - container
+          - volume
+        period: 10s
+        host: "$${NODE_NAME}"
+        hosts: ["https://$${NODE_NAME}:10250"]
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        ssl.verification_mode: "none"
+        add_metadata: true
       - module: system
+        enabled: true
         period: 10s
         metricsets:
           - cpu
@@ -73,107 +99,34 @@ daemonset:
           - process
           - process_summary
         processes: ['.*']
+        process.cgroups.enabled: false
         process.include_top_n:
-          by_cpu: 5      # include top 5 processes by CPU
-          by_memory: 5   # include top 5 processes by memory
+          by_cpu: 5
+          by_memory: 5
       - module: system
+        enabled: true
         period: 1m
+        process.cgroups.enabled: false
         metricsets:
           - filesystem
           - fsstat
         processors:
         - drop_event.when.regexp:
             system.filesystem.mount_point: '^/(sys|cgroup|proc|dev|etc|host|lib)($|/)'
-      output.elasticsearch:
-        enabled: true
-        hosts: ['$${ELASTICSEARCH_HOST:elasticsearch-master}.elasticsearch:$${ELASTICSEARCH_PORT:9200}']
-      setup.dashboards.enabled: true
-      setup.kibana.host: 'http://kibana-kibana.elasticsearch:5601'
-    kubernetes.yml: |-
-      - module: kubernetes
-        enabled: true
+      - module: docker
         metricsets:
-          - system
-          - pod
-          - container
-          - node
-          - volume
-        period: 10s
-        host: $${NODE_NAME}
-        hosts: ["https://$${NODE_NAME}:10255"]
-      - module: prometheus
+          - "container"
+          - "cpu"
+          - "diskio"
+          - "event"
+          - "healthcheck"
+          - "info"
+          - "memory"
+          - "network"
+        hosts: ["unix:///var/run/docker.sock"]
         period: 10s
         enabled: true
-        hosts: ["prometheus-kube-state-metrics.prometheus:8080"]
-        metrics_path: '/federate'
-        query:
-          'match[]': '{__name__!=""}'
 
-
-
-  # metricbeat.modules:
-  # - module: prometheus
-  #   metricsets: ["collector"]
-  #   period: 10s
-  #   hosts: ["prometheus-prometheus-node-exporter.prometheus:9100"]
-  #   metrics_path: /metrics
-  # metricbeat.modules:
-  # - module: prometheus
-  #   metricsets: ["collector"]
-  #   period: 10s
-  #   hosts: ["prometheus-kube-prometheus-prometheus.prometheus:9090"]
-  #   metrics_path: /federate
-  #   query:
-  #     'match[]': '{__name__!=""}'
-
-  # - module: kubernetes
-  #   metricsets:
-  #     - container
-  #     - node
-  #     - pod
-  #     - system
-  #     - volume
-  #   period: 10s
-  #   host: "$${NODE_NAME}"
-  #   hosts: ["https://$${NODE_NAME}:10250"]
-  #   bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
-  #   ssl.verification_mode: "none"
-  #   # If using Red Hat OpenShift remove ssl.verification_mode entry and
-  #   # uncomment these settings:
-  #   #ssl.certificate_authorities:
-  #     #- /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
-  #   processors:
-  #   - add_kubernetes_metadata: ~
-  # - module: kubernetes
-  #   enabled: true
-  #   metricsets:
-  #     - event
-  # - module: system
-  #   period: 10s
-  #   metricsets:
-  #     - cpu
-  #     - load
-  #     - memory
-  #     - network
-  #     - process
-  #     - process_summary
-  #   processes: ['.*']
-  #   process.include_top_n:
-  #     by_cpu: 5
-  #     by_memory: 5
-  # - module: system
-  #   period: 1m
-  #   metricsets:
-  #     - filesystem
-  #     - fsstat
-  #   processors:
-  #   - drop_event.when.regexp:
-  #       system.filesystem.mount_point: '^/(sys|cgroup|proc|dev|etc|host|lib)($|/)'
-      # output.elasticsearch:
-      #   hosts: '$${ELASTICSEARCH_HOSTS:elasticsearch-master:9200}'
-      # setup.kibana:
-      #   host: 'http://kibana-kibana.elasticsearch:5601'
-      # setup.dashboards.enabled: true
 
   nodeSelector: {}
   # A list of secrets and their paths to mount inside the pod
@@ -189,13 +142,13 @@ daemonset:
   securityContext:
     runAsUser: 0
     privileged: false
-  resources: {}
-    # requests:
-    #   cpu: "100m"
-    #   memory: "100Mi"
-    # limits:
-    #   cpu: "1000m"
-    #   memory: "200Mi"
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "500Mi"
+    limits:
+      cpu: "1000m"
+      memory: "500Mi"
   tolerations: []
 
 deployment:
@@ -205,12 +158,16 @@ deployment:
   labels: {}
   affinity: {}
   # Include the deployment
-  enabled: false
+  enabled: true
   # Extra environment variables for Metricbeat container.
   envFrom: []
   # - configMapRef:
   #     name: config-secret
-  extraEnvs: []
+  extraEnvs:
+    - name: NODE_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: spec.nodeName
   #  - name: MY_ENVIRONMENT_VAR
   #    value: the_value_goes_here
   # Allows you to add any config files in /usr/share/metricbeat
@@ -236,34 +193,44 @@ deployment:
       processors:
         - add_cloud_metadata:
 
-      cloud.id: $${ELASTIC_CLOUD_ID}
-      cloud.auth: elastic:$${ELASTIC_CLOUD_AUTH}
       output.elasticsearch:
+        hosts: ['$${ELASTICSEARCH_HOST:opensearch-cluster-master}.opensearch:$${ELASTICSEARCH_PORT:9200}']
+        username: "admin"
+        password: "admin"
+        protocol: "https"
         enabled: true
-        hosts: ['$${ELASTICSEARCH_HOST:elasticsearch-master}.elasticsearch:$${ELASTICSEARCH_PORT:9200}']
-      setup.dashboards.enabled: true
-      setup.kibana.host: 'http://kibana-kibana.elasticsearch:5601'
-  kubernetes.yml: |-
+        ssl.verification_mode: none
+      setup.ilm.enabled: false
+      setup.dashboards.enabled: false
+
+      metricbeat.modules:
       - module: kubernetes
+        enabled: true
         metricsets:
           - state_node
+          - state_daemonset
           - state_deployment
           - state_replicaset
+          - state_statefulset
           - state_pod
           - state_container
+          - state_cronjob
+          - state_resourcequota
+          - state_service
+          - state_persistentvolume
+          - state_persistentvolumeclaim
+          - state_storageclass
           - event
         period: 10s
+        add_metadata: true
         host: $${NODE_NAME}
         hosts: ["prometheus-kube-state-metrics.prometheus:8080"]
-        - module: prometheus
-        metricsets: ["remote_write"]
-        host: "127.0.0.1"
-        port: "9201"
-      output.elasticsearch:
-        enabled: true
-        hosts: ['$${ELASTICSEARCH_HOSTS:elasticsearch-master:9200}']
-      setup.dashboards.enabled: true
-      setup.kibana.host: 'http://kibana-kibana.elasticsearch:5601'
+      - module: prometheus
+        period: 10s
+        hosts: ["prometheus-operated.prometheus:9090"]
+        metrics_path: /metrics
+
+
 
 
   nodeSelector: {}
@@ -278,11 +245,11 @@ deployment:
     privileged: false
   resources:
     requests:
-      cpu: "100m"
-      memory: "100Mi"
+      cpu: "700m"
+      memory: "700Mi"
     limits:
-      cpu: "1000m"
-      memory: "200Mi"
+      cpu: "7000m"
+      memory: "700Mi"
   tolerations: []
 
 # Replicas being used for the kube-state-metrics metricbeat deployment
@@ -301,8 +268,8 @@ extraInitContainers: ""
 # Root directory where metricbeat will write data to in order to persist registry data across pod restarts (file position and other metadata).
 hostPathRoot: /var/lib
 
-image: "docker.elastic.co/beats/metricbeat"
-imageTag: "7.15.0"
+image: "docker.elastic.co/beats/metricbeat-oss"
+imageTag: "7.12.1"
 imagePullPolicy: "IfNotPresent"
 imagePullSecrets: []
 
@@ -342,6 +309,7 @@ clusterRoleRules:
       - namespaces
       - events
       - pods
+      - services
     verbs: ["get", "list", "watch"]
   - apiGroups: ["extensions"]
     resources:
@@ -385,9 +353,9 @@ nameOverride: ""
 fullnameOverride: ""
 
 kube_state_metrics:
-  enabled: true
+  enabled: false
   # host is used only when kube_state_metrics.enabled: false
-  host: ""
+  host: "prometheus-kube-state-metrics.prometheus:8080"
 
 # Add sensitive data to k8s secrets
 secrets: []
@@ -420,3 +388,11 @@ resources: {}
 secretMounts: []
 tolerations: []
 labels: {}
+
+# metricbeat export template > metricbeat.template.json
+# curl -XPOST -u admin:admin -H 'osd-xsrf: true' -H 'Content-Type: application/json' 'https://opensearch-cluster-master.opensearch:9200/_template/metricbeat-7.12.1' -d@metricbeat.template.json --insecure
+# cd kibana/7/dashboard/
+# curl -XPOST -u admin:admin -H 'osd-xsrf: true' -H 'Content-Type: application/json' 'http://opensearch-dashboards.opensearch:5601/api/opensearch-dashboards/dashboards/import?exclude=index-pattern&force=true' -d@Metricbeat-kubernetes-overview.json
+# curl -XPOST -u admin:admin -H 'osd-xsrf: true' -H 'Content-Type: application/json' 'http://opensearch-dashboards.opensearch:5601/api/opensearch-dashboards/dashboards/import?exclude=index-pattern&force=true' -d@Metricbeat-host-overview.json
+# curl -XPOST -u admin:admin -H 'osd-xsrf: true' -H 'Content-Type: application/json' 'http://opensearch-dashboards.opensearch:5601/api/opensearch-dashboards/dashboards/import?exclude=index-pattern&force=true' -d@Metricbeat-system-overview.json
+# curl -XPOST -u admin:admin -H 'osd-xsrf: true' -H 'Content-Type: application/json' 'http://opensearch-dashboards.opensearch:5601/api/opensearch-dashboards/dashboards/import?exclude=index-pattern&force=true' -d@Metricbeat-docker-overview.json
