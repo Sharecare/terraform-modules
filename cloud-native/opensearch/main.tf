@@ -13,7 +13,7 @@ resource "helm_release" "opensearch" {
   values = [templatefile("./${path.module}/templates/opensearch.values.yaml", {})]
 
   dynamic "set" {
-    for_each = var.opensearch_values_overrides
+    for_each = var.opensearch_overrides
     content {
       name  = set.key
       value = set.value
