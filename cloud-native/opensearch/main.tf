@@ -8,7 +8,6 @@ resource "helm_release" "opensearch" {
   wait             = true
   recreate_pods    = true
   lint             = true
-  wait_for_jobs    = true
   timeout          = 300
 
   values = [templatefile("./${path.module}/templates/opensearch.values.yaml", {})]
@@ -34,7 +33,6 @@ resource "helm_release" "dashboards" {
   wait             = true
   recreate_pods    = false
   lint             = true
-  wait_for_jobs    = true
   timeout          = 300
   values           = [templatefile("./${path.module}/templates/dashboards.values.yaml", {})]
 
@@ -59,7 +57,6 @@ resource "helm_release" "metricbeat" {
   wait             = true
   recreate_pods    = false
   lint             = true
-  wait_for_jobs    = true
   timeout          = 180
 
   values = [templatefile("./${path.module}/templates/metricbeat.yaml", {})]
@@ -131,7 +128,6 @@ resource "helm_release" "fluentd" {
   wait             = true
   recreate_pods    = true
   lint             = true
-  wait_for_jobs    = true
   timeout          = 120
   dynamic "set" {
     for_each = var.fluentd_overrides
