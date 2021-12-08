@@ -19,4 +19,12 @@ resource "helm_release" "prometheus" {
       GRAFANA_ENABLED      = var.grafana_enabled
     })
   ]
+
+  dynamic "set" {
+    for_each = var.values_override
+    content {
+      name  = set.key
+      value = set.value
+    }
+  }
 }

@@ -22,3 +22,39 @@ variable "cloud_provider" {
   default     = "gcp"
   description = "cloud provider to set up infra for"
 }
+
+variable "observability_enabled" {
+  type        = bool
+  default     = false
+  description = "Create resources to enable logging/metrics/trace ingestion"
+}
+
+variable "pv_zones" {
+  type        = list(any)
+  default     = []
+  description = "array of zones to use with regional persistant volumes"
+}
+
+variable "opensearch_overrides" {
+  type        = any
+  description = "map of values to override opensearch values"
+  default     = {}
+}
+
+variable "opensearch_dashboard_overrides" {
+  type        = any
+  description = "map of values to override opensearch dashboards values"
+  default     = {}
+}
+
+variable "metricbeat_overrides" {
+  type        = any
+  description = "map of values to override metricbeat values"
+  default     = {}
+}
+
+variable "fluentd_overrides" {
+  type        = any
+  description = "map of values to override fluentd values"
+  default     = {}
+}

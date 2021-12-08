@@ -11,8 +11,16 @@ resource "helm_release" "opensearch" {
   wait_for_jobs    = true
   timeout          = 300
 
-  values     = [templatefile("./${path.module}/templates/opensearch.values.yaml", {})]
-  depends_on = [kubernetes_storage_class.opensearch]
+  values = [templatefile("./${path.module}/templates/opensearch.values.yaml", {})]
+
+  dynamic "set" {
+    for_each = var.opensearch_values_overrides
+    content {
+      name  = set.key
+      value = set.value
+    }
+  }
+  # depends_on = [kubernetes_storage_class.opensearch]
 }
 
 resource "helm_release" "dashboards" {
@@ -28,12 +36,20 @@ resource "helm_release" "dashboards" {
   lint             = true
   wait_for_jobs    = true
   timeout          = 300
-  depends_on       = [helm_release.opensearch]
   values           = [templatefile("./${path.module}/templates/dashboards.values.yaml", {})]
+
+  dynamic "set" {
+    for_each = var.opensearch_dashboard_overrides
+    content {
+      name  = set.key
+      value = set.value
+    }
+  }
+  depends_on = [helm_release.opensearch]
 }
 
 resource "helm_release" "metricbeat" {
-  count            = var.metricbeat_enabled ? 1 : 0
+  count            = var.observability_enabled ? 1 : 0
   name             = "metricbeat-oss"
   repository       = "https://helm.elastic.co"
   chart            = "metricbeat"
@@ -46,55 +62,66 @@ resource "helm_release" "metricbeat" {
   wait_for_jobs    = true
   timeout          = 180
 
-  values     = [templatefile("./${path.module}/templates/metricbeat.yaml", {})]
+  values = [templatefile("./${path.module}/templates/metricbeat.yaml", {})]
+  dynamic "set" {
+    for_each = var.metricbeat_overrides
+    content {
+      name  = set.key
+      value = set.value
+    }
+  }
   depends_on = [helm_release.dashboards, helm_release.opensearch]
 }
 
 # curl --user admin:admin -XPUT 'http://opensearch-cluster-master.opensearch:9200/idx'
 
-resource "kubernetes_storage_class" "opensearch" {
-  count = var.cloud_provider == "gcp" ? 0 : 0
-  metadata {
-    name = "opensearch-regional"
-  }
-  storage_provisioner = "kubernetes.io/gce-pd"
-  reclaim_policy      = "Delete"
-  volume_binding_mode = "Immediate"
-  parameters = {
-    type             = "pd-ssd"
-    fsType           = "ext4" # default prefered by elasticsearch
-    replication-type = "regional-pd"
-  }
-  allowed_topologies {
-    match_label_expressions {
-      key = "failure-domain.beta.kubernetes.io/zone"
-      values = [
-        "us-central1-b",
-        "us-central1-c"
-      ]
-    }
-  }
-  allow_volume_expansion = true
-}
+# resource "kubernetes_storage_class" "opensearch" {
+#   count = var.cloud_provider == "gcp" ? 1 : 0
+#   metadata {
+#     name = "opensearch-regional"
+#   }
+#   storage_provisioner = "kubernetes.io/gce-pd"
+#   reclaim_policy      = "Delete"
+#   volume_binding_mode = "Immediate"
+#   parameters = {
+#     type             = "pd-ssd"
+#     fsType           = "ext4" # default prefered by elasticsearch
+#     replication-type = "regional-pd"
+#   }
+#   allowed_topologies {
+#     match_label_expressions {
+#       key = "failure-domain.beta.kubernetes.io/zone"
+#       values = var.pv_zones
+#     }
+#   }
+#   allow_volume_expansion = true
+# }
 
 
-resource "kubernetes_storage_class" "opensearch-aws" {
-  count = var.cloud_provider == "aws" ? 1 : 0
-  metadata {
-    name = "opensearch-aws"
-  }
-  storage_provisioner = "kubernetes.io/aws-ebs"
-  reclaim_policy      = "Delete"
-  volume_binding_mode = "WaitForFirstConsumer"
-  parameters = {
-    type   = "gp2"
-    fsType = "ext4" # default prefered by elasticsearch
-  }
-  allow_volume_expansion = true
-}
+# resource "kubernetes_storage_class" "opensearch-aws" {
+#   count = var.cloud_provider == "aws" ? 1 : 0
+#   metadata {
+#     name = "opensearch-aws"
+#   }
+#   storage_provisioner = "kubernetes.io/aws-ebs"
+#   reclaim_policy      = "Delete"
+#   volume_binding_mode = "WaitForFirstConsumer"
+#   parameters = {
+#     type   = "gp2"
+#     fsType = "ext4" # default prefered by elasticsearch
+#   }
+#   allowed_topologies {
+#     match_label_expressions {
+#       key = "failure-domain.beta.kubernetes.io/zone"
+#       values = var.pv_zones
+#     }
+#   }
+#   allow_volume_expansion = true
+# }
 
 
 resource "helm_release" "fluentd" {
+  count            = var.observability_enabled ? 1 : 0
   name             = "fluentd"
   repository       = "https://fluent.github.io/helm-charts"
   chart            = "fluentd"
@@ -106,19 +133,28 @@ resource "helm_release" "fluentd" {
   lint             = true
   wait_for_jobs    = true
   timeout          = 120
-
+  dynamic "set" {
+    for_each = var.fluentd_overrides
+    content {
+      name  = set.key
+      value = set.value
+    }
+  }
   values = [templatefile("./${path.module}/templates/fluentd.yaml", {})]
 }
 
 
 
 resource "kubernetes_config_map" "init-opensearch-dashboards" {
+  count = var.observability_enabled == true ? 1 : 0
   metadata {
     name      = "opensearch-dashboards-init"
     namespace = "opensearch"
   }
 
   data = {
-    "export.ndjson" = "${file("${path.module}/templates/export.ndjson")}"
+    "export.ndjson" = file("${path.module}/templates/export.ndjson")
+    "policy.json"   = file("${path.module}/templates/policy.json")
+    "rollp.json"    = file("${path.module}/templates/rollup.json")
   }
 }

@@ -624,7 +624,7 @@ alertmanager:
 grafana:
   persistence:
     enabled: true
-    storageClassName: ssd-storage-class
+    storageClassName: standard
   enabled: ${GRAFANA_ENABLED}
   namespaceOverride: ""
   grafana.ini:

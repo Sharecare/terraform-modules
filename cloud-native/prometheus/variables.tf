@@ -27,3 +27,10 @@ variable "grafana_enabled" {
   default     = false
   description = "flag to turn grafana dashboard on/off"
 }
+
+variable "values_override" {
+  type        = any
+  default     = {}
+  description = "values overrides for the chart"
+}
+
