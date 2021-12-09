@@ -336,12 +336,12 @@ alertmanager:
       routes:
       - receiver: 'toniq-monitoring-slack'
 	  match:
-      # deployment: ${CLUSTER_NAME}
-	    deployment: <should matach the labels.deployment value defined in altering rules>
+      deployment: ${CLUSTER_NAME}
+	    # deployment: <should matach the labels.deployment value defined in altering rules>
     receivers:
     - name: 'toniq-monitoring-slack'
     slack_configs:
-    - channel:
+    - channel: toniq-alerts
       api_url: "<slack_api_url>"
       http_config:
         tls_config:
