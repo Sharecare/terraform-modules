@@ -83,13 +83,185 @@ defaultRules:
 
 ## Provide custom recording or alerting rules to be deployed into the cluster.
 ##
-additionalPrometheusRulesMap: {}
-#  rule-name:
-#    groups:
-#    - name: my_group
-#      rules:
-#      - record: my_record
-#        expr: 100 * my_record
+additionalPrometheusRulesMap.rule-name.groups.name[0-n].rules[0-n].labels.deployment = toniq-deployment-name
+additionalPrometheusRulesMap:
+ rule-name:
+   groups:
+   - name: ToniqInstanceDown
+      rules:
+      - alert: ToniqMariadbDown
+        expr: (absent(up{job="toniq-mariadb"}) == 1) or (up{job="toniq-mariadb"} == 0)
+        for: 1m
+        labels:
+          severity: critical
+          deployment: dev-toniq-dev
+        annotations:
+          summary: "Instance {{ $labels.instance }} on {{ $labels.deployment }} down"
+          description: "Instance {{ $labels.instance }} has been down for more than 1 minute. \n VALUE= {{ $value }}\n LABELS = {{ $labels }}"
+      - alert: ToniqHubDown
+        expr: (absent(up{job="toniq-hub"}) == 1) or (up{job="toniq-hub"} == 0)
+        for: 1m
+        labels:
+          severity: critical
+          deployment: dev-toniq-dev
+        annotations:
+          summary: "Instance {{ $labels.instance }} on {{ $labels.deployment }} down"
+          description: "Instance {{ $labels.instance }} has been down for more than 1 minute. \n VALUE= {{ $value }}\n LABELS = {{ $labels }}"
+      - alert: ToniqMinioDown
+        expr: (absent(up{job="toniq-minio-cluster"}) == 1) or (absent(up{job="toniq-minio-node"}) == 1) or (up{job="toniq-minio-cluster"} == 0) or (up{job="toniq-minio-node"} == 0)
+        for: 1m
+        labels:
+          severity: critical
+          deployment: dev-toniq-dev
+        annotations:
+          summary: "Instance {{ $labels.instance }} on {{ $labels.deployment }} down"
+          description: "Instance {{ $labels.instance }} has been down for more than 1 minute. \n VALUE= {{ $value }}\n LABELS = {{ $labels }}"
+      - alert: ToniqSparkDown
+        expr: (absent(up{job="toniq-spark"}) == 1) or (up{job="toniq-spark"} == 0)
+        for: 1m
+        labels:
+          severity: critical
+          deployment: dev-toniq-dev
+        annotations:
+          summary: "Instance {{ $labels.instance }} on {{ $labels.deployment }} down"
+          description: "Instance {{ $labels.instance }} has been down for more than 1 minute. \n VALUE= {{ $value }}\n LABELS = {{ $labels }}"
+      - alert: ToniqPrestoDown
+        expr: (absent(up{job="toniq-presto"}) == 1) or (up{job="toniq-presto"} == 0)
+        for: 1m
+        labels:
+          severity: critical
+          deployment: dev-toniq-dev
+        annotations:
+          summary: "Instance {{ $labels.instance }} on {{ $labels.deployment }} down"
+          description: "Instance {{ $labels.instance }} has been down for more than 1 minute. \n VALUE= {{ $value }}\n LABELS = {{ $labels }}"
+      - alert: ToniqAmbassadorDown
+        expr: (absent(up{job="toniq-ambassador"}) == 1) or (up{job="toniq-ambassador"} == 0)
+        for: 1m
+        labels:
+          severity: critical
+          deployment: dev-toniq-dev
+        annotations:
+          summary: "Instance {{ $labels.instance }} on {{ $labels.deployment }} down"
+          description: "Instance {{ $labels.instance }} has been down for more than 1 minute. \n VALUE= {{ $value }}\n LABELS = {{ $labels }}"
+      - alert: ToniqNatsDown
+        expr: (absent(up{job="toniq-nats"}) == 1) or (up{job="toniq-nats"} == 0)
+        for: 1m
+        labels:
+          severity: critical
+          deployment: dev-toniq-dev
+        annotations:
+          summary: "Instance {{ $labels.instance }} on {{ $labels.deployment }} down"
+          description: "Instance {{ $labels.instance }} has been down for more than 1 minute. \n VALUE= {{ $value }}\n LABELS = {{ $labels }}"
+      - alert: ToniqMlflowDown
+        expr: (absent(up{job="toniq-mlflow"}) == 1) or (up{job="toniq-mlflow"} == 0)
+        for: 1m
+        labels:
+          severity: critical
+          deployment: dev-toniq-dev
+        annotations:
+          summary: "Instance {{ $labels.instance }} on {{ $labels.deployment }} down"
+          description: "Instance {{ $labels.instance }} has been down for more than 1 minute. \n VALUE= {{ $value }}\n LABELS = {{ $labels }}"
+      - alert: ToniqArgoDown
+        expr: (absent(up{job="toniq-argo"}) == 1) or (up{job="toniq-argo"} == 0)
+        for: 1m
+        labels:
+          severity: critical
+          deployment: dev-toniq-dev
+        annotations:
+          summary: "Instance {{ $labels.instance }} on {{ $labels.deployment }} down"
+          description: "Instance {{ $labels.instance }} has been down for more than 1 minute. \n VALUE= {{ $value }}\n LABELS = {{ $labels }}"
+  - name: ToniqGeneral
+    rules:
+    - alert: HostHighCpuLoad
+      expr: (100 - (avg by(instance) (rate(node_cpu_seconds_total{job="node-exporter",mode="idle"}[5m])) * 100)) > 80
+      for: 5m
+      labels:
+        severity: warning
+        deployment: dev-toniq-dev
+      annotations:
+        summary: Host high CPU load (instance {{ $labels.instance }})
+        description: "CPU load is > 80%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+    - alert: HostOutDiskSpace
+      expr: node_filesystem_free_bytes{mountpoint="/", fstype="tmpfs",job="node-exporter"} / node_filesystem_size_bytes{job="node-exporter"} * 100 < 10
+      for: 5m
+      labels:
+        severity: warning
+        deployment: dev-toniq-dev
+      annotations:
+        summary: "Running out of disk space(instance {{ $labels.instance }})"
+        description: "The disk space has been used more than 90% on host {{ $labels.instance }}\n VALUE = {{ $value }}\n LABELS: {{ $labels }}"
+    - alert: HostOutOfMemory
+      expr: node_memory_MemAvailable_bytes{job="node-exporter"} / node_memory_MemTotal_bytes{job="node-exporter"} * 100 < 10
+      for: 5m
+      labels:
+        severity: warning
+        deployment: dev-toniq-dev
+      annotations:
+        summary: "Host is running out of memory (instance {{ $labels.instance }})"
+        description: "Node memory is filling up ( < 10% left)\n VALUE = {{ $value }}\n LABELS: {{ $labels }}"
+    - alert: JvmMemoryFillingUp
+      expr: (sum by (instance)(jvm_memory_bytes_used{area="heap"}) / sum by (instance)(jvm_memory_bytes_max{area="heap"})) * 100 > 80
+      for: 5m
+      labels:
+        severity: warning
+        deployment: dev-toniq-dev
+      annotations:
+        summary: JVM memory filling up (instance {{ $labels.instance }})
+        description: "JVM memory is filling up (> 80%)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+    - alert: ContainerCpuUsage
+      expr: (sum(rate(container_cpu_usage_seconds_total{container!="POD",name!=""}[3m])) BY (instance, name) * 100) > 90
+      for: 5m
+      labels:
+        severity: warning
+        deployment: dev-toniq-dev
+      annotations:
+        summary: Container CPU usage (instance {{ $labels.instance }})
+        description: "Container CPU usage is above 90%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+    - alert: ContainerMemoryUsage
+      expr: (sum(container_memory_working_set_bytes{name!=""}) BY (instance, name) / sum(container_spec_memory_limit_bytes{name!=""} > 0) BY (instance, name) * 100) > 80
+      for: 5m
+      labels:
+        severity: warning
+        deployment: dev-toniq-dev
+      annotations:
+        summary: Container Memory usage (instance {{ $labels.instance }})
+        description: "Container Memory usage is above 80%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+    - alert: ContainerVolumeUsage
+      expr: (1 - (sum(container_fs_inodes_free) BY (instance) / sum(container_fs_inodes_total) BY (instance))) * 100 > 90
+      for: 5m
+      labels:
+        severity: warning
+        deployment: dev-toniq-dev
+      annotations:
+        summary: Container Volume usage (instance {{ $labels.instance }})
+        description: "Container Volume usage is above 80%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+    - alert: ContainerHighThrottleRate
+      expr: rate(container_cpu_cfs_throttled_seconds_total[3m]) > 1
+      for: 5m
+      labels:
+        severity: warning
+        deployment: dev-toniq-dev
+      annotations:
+        summary: Container high throttle rate (instance {{ $labels.instance }})
+        description: "Container is being throttled\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+    - alert: HostUnusualNetworkThroughputIn
+      expr: sum by (instance) (rate(node_network_receive_bytes_total[2m])) / 1024 / 1024 > 100
+      for: 5m
+      labels:
+        severity: warning
+        deployment: dev-toniq-dev
+      annotations:
+        summary: Host unusual network throughput in (instance {{ $labels.instance }})
+        description: "Host network interfaces are probably receiving too much data (> 100 MB/s)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+    - alert: HostUnusualNetworkThroughputOut
+      expr: sum by (instance) (rate(node_network_transmit_bytes_total[2m])) / 1024 / 1024 > 100
+      for: 5m
+      labels:
+        severity: warning
+        deployment: dev-toniq-dev
+      annotations:
+        summary: Host unusual network throughput out (instance {{ $labels.instance }})
+        description: "Host network interfaces are probably sending too much data (> 100 MB/s)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 
 ##
 global:
@@ -146,28 +318,66 @@ alertmanager:
     enabled: false
     minAvailable: 1
     maxUnavailable: ""
-
+  # alertmanager.config.global.slack_api_url
+  # alertmanager.config.slack_configs.api_url
   ## Alertmanager configuration directives
   ## ref: https://prometheus.io/docs/alerting/configuration/#configuration-file
   ##      https://prometheus.io/webtools/alerting/routing-tree-editor/
   ##
   config:
     global:
-      resolve_timeout: 5m
+      slack_api_url: "<slack_api_url>"
     route:
       group_by: ['job']
       group_wait: 30s
-      group_interval: 5m
-      repeat_interval: 12h
+      group_interval: 1m
+      repeat_interval: 4h
       receiver: 'null'
       routes:
-      - match:
-          alertname: Watchdog
-        receiver: 'null'
+      - receiver: 'toniq-monitoring-slack'
+	  match:
+      # deployment: dev-toniq-dev
+	    deployment: <should matach the labels.deployment value defined in altering rules>
     receivers:
+    - name: 'toniq-monitoring-slack'
+    slack_configs:
+    - channel:
+      api_url: "<slack_api_url>"
+      http_config:
+        tls_config:
+          insecure_skip_verify: true
+      send_resolved: true
+      icon_url: https://avatars3.githubusercontent.com/u/3380462
+      title: |-
+        [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ .CommonLabels.alertname }} for {{ .CommonLabels.job }}
+        {{- if gt (len .CommonLabels) (len .GroupLabels) -}}
+        {{" "}}(
+        {{- with .CommonLabels.Remove .GroupLabels.Names }}
+        {{- range $index, $label := .SortedPairs -}}
+          {{ if $index }}, {{ end }}
+          {{- $label.Name }}="{{ $label.Value -}}"
+        {{- end }}
+        {{- end -}}
+        )
+        {{- end }}
+      text: >-
+        {{ range .Alerts -}}
+          *Alert:* {{ .Annotations.title }}{{ if .Labels.severity }} - `{{ .Labels.severity }}`{{ end }}
+          *Description:* {{ .Annotations.description }}
+          *Details:*
+          {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+          {{ end }}
+        {{ end }}
     - name: 'null'
     templates:
     - '/etc/alertmanager/config/*.tmpl'
+    inhibit_rules:
+    - source_match:
+      severity: critical
+    target_match:
+      severity: warning
+    equal:
+    - alertname
 
   ## Pass the Alertmanager configuration directives through Helm's templating
   ## engine. If the Alertmanager configuration contains Alertmanager templates,
@@ -2419,7 +2629,278 @@ prometheus:
     ## The scrape configuration example below will find master nodes, provided they have the name .*mst.*, relabel the
     ## port to 2379 and allow etcd scraping provided it is running on all Kubernetes master nodes
     ##
-    additionalScrapeConfigs: []
+    additionalScrapeConfigs:
+    - job_name: "toniq-spark"
+      kubernetes_sd_configs:
+        - role: pod
+          namespaces:
+            names:
+              - default
+      relabel_configs:
+      - action: keep
+        regex: true
+        source_labels:
+        - __meta_kubernetes_pod_annotation_prometheus_io_scrape
+      - action: replace
+        regex: (.+)
+        source_labels:
+        - __meta_kubernetes_pod_annotation_prometheus_io_path
+        target_label: __metrics_path__
+      - action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        source_labels:
+        - __address__
+        - __meta_kubernetes_pod_annotation_prometheus_io_port
+        target_label: __address__
+      - source_labels:
+        - __meta_kubernetes_pod_label_app
+        regex: argo-spark-.*
+        action: keep
+    - job_name: toniq-minio-cluster
+      metrics_path: /minio/v2/metrics/cluster
+      scheme: http
+      kubernetes_sd_configs:
+        - role: endpoint
+      relabel_configs:
+      - action: keep
+        regex: true
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_scrape
+      - action: replace
+        regex: (.+)
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_path
+        target_label: __metrics_path__
+      - action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        source_labels:
+        - __address__
+        - __meta_kubernetes_service_annotation_prometheus_io_port
+        target_label: __address__
+      - source_labels:
+        - __meta_kubernetes_pod_label_app
+        regex: minio.*
+        action: keep
+    - job_name: toniq-minio-node
+      metrics_path: /minio/v2/metrics/node
+      scheme: http
+      kubernetes_sd_configs:
+        - role: endpoints
+      relabel_configs:
+      - action: keep
+        regex: true
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_scrape
+      - action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        source_labels:
+        - __address__
+        - __meta_kubernetes_service_annotation_prometheus_io_port
+        target_label: __address__
+      - source_labels:
+        - __meta_kubernetes_pod_label_app
+        regex: minio.*
+        action: keep
+    - job_name: toniq-argo
+      scheme: http
+      kubernetes_sd_configs:
+        - role: endpoints
+      relabel_configs:
+      - action: keep
+        regex: true
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_scrape
+      - action: replace
+        regex: (.+)
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_path
+        target_label: __metrics_path__
+      - action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        source_labels:
+        - __address__
+        - __meta_kubernetes_service_annotation_prometheus_io_port
+        target_label: __address__
+      - source_labels:
+        # the regex must actual value of label "app"
+        - __meta_kubernetes_pod_label_app
+        regex: workflow-controller
+        action: keep
+    - job_name: toniq-mariadb
+      scheme: http
+      kubernetes_sd_configs:
+        - role: endpoints
+      relabel_configs:
+      - action: keep
+        regex: true
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_scrape
+      - action: replace
+        regex: (.+)
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_path
+        target_label: __metrics_path__
+      - action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        source_labels:
+        - __address__
+        - __meta_kubernetes_service_annotation_prometheus_io_port
+        target_label: __address__
+      - source_labels:
+        # the regex must actual value of the label "app.kubernetes.io/instance"
+        - __meta_kubernetes_pod_label_app_kubernetes_io_instance
+        regex: toniq
+        action: keep
+      - source_labels:
+        # the regex must match the actual value of the label "app.kubernetes.io/name"
+        - __meta_kubernetes_pod_label_app_kubernetes_io_name
+        regex: mariadb
+        action: keep
+    - job_name: toniq-nats
+      scheme: http
+      kubernetes_sd_configs:
+        - role: endpoints
+      relabel_configs:
+      - action: keep
+        regex: true
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_scrape
+      - action: replace
+        regex: (.+)
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_path
+        target_label: __metrics_path__
+      - action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        source_labels:
+        - __address__
+        - __meta_kubernetes_service_annotation_prometheus_io_port
+        target_label: __address__
+      - source_labels:
+        # the regex must match the actual value of the label "app.kubernetes.io/instance"
+        - __meta_kubernetes_pod_label_app_kubernetes_io_instance
+        regex: toniq
+        action: keep
+      - source_labels:
+        # the regex must match the actual value of the label "app.kubernetes.io/name"
+        - __meta_kubernetes_pod_label_app_kubernetes_io_name
+        regex: nats
+        action: keep
+    - job_name: toniq-ambassador
+      scheme: http
+      kubernetes_sd_configs:
+        - role: endpoints
+      relabel_configs:
+      - action: keep
+        regex: true
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_scrape
+      - action: replace
+        regex: (.+)
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_path
+        target_label: __metrics_path__
+      - action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        source_labels:
+        - __address__
+        - __meta_kubernetes_service_annotation_prometheus_io_port
+        target_label: __address__
+      - source_labels:
+        # the regex must match the actual value of the label "app.kubernetes.io/instance"
+        - __meta_kubernetes_pod_label_app_kubernetes_io_instance
+        regex: ambassador
+        action: keep
+      - source_labels:
+        # the regex must match actual value of the label "app.kubernetes.io/name"
+        - __meta_kubernetes_pod_label_app_kubernetes_io_name
+        regex: ambassador
+        action: keep
+    - job_name: toniq-presto
+      scheme: http
+      kubernetes_sd_configs:
+        - role: endpoints
+      relabel_configs:
+      - action: keep
+        regex: true
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_scrape
+      - action: replace
+        regex: (.+)
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_path
+        target_label: __metrics_path__
+      - action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        source_labels:
+        - __address__
+        - __meta_kubernetes_service_annotation_prometheus_io_port
+        target_label: __address__
+      - source_labels:
+        # the regex must match actual value of the label "app"
+        - __meta_kubernetes_pod_label_app
+        regex: trino-coordinator
+        action: keep
+    - job_name: toniq-jupyter-notebook
+      scheme: http
+      kubernetes_sd_configs:
+        - role: pod
+      relabel_configs:
+      - action: keep
+        regex: true
+        source_labels:
+        - __meta_kubernetes_pod_annotation_prometheus_io_scrape
+      - action: replace
+        regex: (.+)
+        source_labels:
+        - __meta_kubernetes_pod_annotation_prometheus_io_path
+        target_label: __metrics_path__
+      - action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        source_labels:
+        - __address__
+        - __meta_kubernetes_pod_annotation_prometheus_io_port
+        target_label: __address__
+      - source_labels:
+        # the rregex must actual value of the label "app"
+        - __meta_kubernetes_pod_label_app
+        regex: toniq-crestle
+        action: keep
+    - job_name: toniq-hub
+      scheme: http
+      kubernetes_sd_configs:
+        - role: service
+      relabel_configs:
+      - action: keep
+        regex: true
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_scrape
+      - action: replace
+        regex: (.+)
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_path
+        target_label: __metrics_path__
+      - action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        source_labels:
+        - __address__
+        - __meta_kubernetes_service_annotation_prometheus_io_port
+        target_label: __address__
+      - source_labels:
+        # the regex must match actual value of the label "app"
+        - __meta_kubernetes_pod_label_app
+        regex: toniq-api-v1
+        action: keep
     # - job_name: kube-etcd
     #   kubernetes_sd_configs:
     #     - role: node
