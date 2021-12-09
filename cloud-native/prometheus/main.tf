@@ -17,6 +17,7 @@ resource "helm_release" "prometheus" {
       GOOGLE_CLIENT_SECRET = var.google_client_secret,
       GRAFANA_URL          = var.grafana_url
       GRAFANA_ENABLED      = var.grafana_enabled
+      CLUSTER_NAME         = var.cluster_name
     })
   ]
 

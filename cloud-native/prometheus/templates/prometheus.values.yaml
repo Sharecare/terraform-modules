@@ -83,7 +83,7 @@ defaultRules:
 
 ## Provide custom recording or alerting rules to be deployed into the cluster.
 ##
-additionalPrometheusRulesMap.rule-name.groups.name[0-n].rules[0-n].labels.deployment = toniq-deployment-name
+# additionalPrometheusRulesMap.rule-name.groups.name[0-n].rules[0-n].labels.deployment = toniq-deployment-name
 additionalPrometheusRulesMap:
  rule-name:
    groups:
@@ -94,7 +94,7 @@ additionalPrometheusRulesMap:
         for: 1m
         labels:
           severity: critical
-          deployment: dev-toniq-dev
+          deployment: ${CLUSTER_NAME}
         annotations:
           summary: "Instance {{ $labels.instance }} on {{ $labels.deployment }} down"
           description: "Instance {{ $labels.instance }} has been down for more than 1 minute. \n VALUE= {{ $value }}\n LABELS = {{ $labels }}"
@@ -103,7 +103,7 @@ additionalPrometheusRulesMap:
         for: 1m
         labels:
           severity: critical
-          deployment: dev-toniq-dev
+          deployment: ${CLUSTER_NAME}
         annotations:
           summary: "Instance {{ $labels.instance }} on {{ $labels.deployment }} down"
           description: "Instance {{ $labels.instance }} has been down for more than 1 minute. \n VALUE= {{ $value }}\n LABELS = {{ $labels }}"
@@ -112,7 +112,7 @@ additionalPrometheusRulesMap:
         for: 1m
         labels:
           severity: critical
-          deployment: dev-toniq-dev
+          deployment: ${CLUSTER_NAME}
         annotations:
           summary: "Instance {{ $labels.instance }} on {{ $labels.deployment }} down"
           description: "Instance {{ $labels.instance }} has been down for more than 1 minute. \n VALUE= {{ $value }}\n LABELS = {{ $labels }}"
@@ -121,7 +121,7 @@ additionalPrometheusRulesMap:
         for: 1m
         labels:
           severity: critical
-          deployment: dev-toniq-dev
+          deployment: ${CLUSTER_NAME}
         annotations:
           summary: "Instance {{ $labels.instance }} on {{ $labels.deployment }} down"
           description: "Instance {{ $labels.instance }} has been down for more than 1 minute. \n VALUE= {{ $value }}\n LABELS = {{ $labels }}"
@@ -130,7 +130,7 @@ additionalPrometheusRulesMap:
         for: 1m
         labels:
           severity: critical
-          deployment: dev-toniq-dev
+          deployment: ${CLUSTER_NAME}
         annotations:
           summary: "Instance {{ $labels.instance }} on {{ $labels.deployment }} down"
           description: "Instance {{ $labels.instance }} has been down for more than 1 minute. \n VALUE= {{ $value }}\n LABELS = {{ $labels }}"
@@ -139,7 +139,7 @@ additionalPrometheusRulesMap:
         for: 1m
         labels:
           severity: critical
-          deployment: dev-toniq-dev
+          deployment: ${CLUSTER_NAME}
         annotations:
           summary: "Instance {{ $labels.instance }} on {{ $labels.deployment }} down"
           description: "Instance {{ $labels.instance }} has been down for more than 1 minute. \n VALUE= {{ $value }}\n LABELS = {{ $labels }}"
@@ -148,7 +148,7 @@ additionalPrometheusRulesMap:
         for: 1m
         labels:
           severity: critical
-          deployment: dev-toniq-dev
+          deployment: ${CLUSTER_NAME}
         annotations:
           summary: "Instance {{ $labels.instance }} on {{ $labels.deployment }} down"
           description: "Instance {{ $labels.instance }} has been down for more than 1 minute. \n VALUE= {{ $value }}\n LABELS = {{ $labels }}"
@@ -157,7 +157,7 @@ additionalPrometheusRulesMap:
         for: 1m
         labels:
           severity: critical
-          deployment: dev-toniq-dev
+          deployment: ${CLUSTER_NAME}
         annotations:
           summary: "Instance {{ $labels.instance }} on {{ $labels.deployment }} down"
           description: "Instance {{ $labels.instance }} has been down for more than 1 minute. \n VALUE= {{ $value }}\n LABELS = {{ $labels }}"
@@ -166,7 +166,7 @@ additionalPrometheusRulesMap:
         for: 1m
         labels:
           severity: critical
-          deployment: dev-toniq-dev
+          deployment: ${CLUSTER_NAME}
         annotations:
           summary: "Instance {{ $labels.instance }} on {{ $labels.deployment }} down"
           description: "Instance {{ $labels.instance }} has been down for more than 1 minute. \n VALUE= {{ $value }}\n LABELS = {{ $labels }}"
@@ -177,7 +177,7 @@ additionalPrometheusRulesMap:
       for: 5m
       labels:
         severity: warning
-        deployment: dev-toniq-dev
+        deployment: ${CLUSTER_NAME}
       annotations:
         summary: Host high CPU load (instance {{ $labels.instance }})
         description: "CPU load is > 80%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -186,7 +186,7 @@ additionalPrometheusRulesMap:
       for: 5m
       labels:
         severity: warning
-        deployment: dev-toniq-dev
+        deployment: ${CLUSTER_NAME}
       annotations:
         summary: "Running out of disk space(instance {{ $labels.instance }})"
         description: "The disk space has been used more than 90% on host {{ $labels.instance }}\n VALUE = {{ $value }}\n LABELS: {{ $labels }}"
@@ -195,7 +195,7 @@ additionalPrometheusRulesMap:
       for: 5m
       labels:
         severity: warning
-        deployment: dev-toniq-dev
+        deployment: ${CLUSTER_NAME}
       annotations:
         summary: "Host is running out of memory (instance {{ $labels.instance }})"
         description: "Node memory is filling up ( < 10% left)\n VALUE = {{ $value }}\n LABELS: {{ $labels }}"
@@ -204,7 +204,7 @@ additionalPrometheusRulesMap:
       for: 5m
       labels:
         severity: warning
-        deployment: dev-toniq-dev
+        deployment: ${CLUSTER_NAME}
       annotations:
         summary: JVM memory filling up (instance {{ $labels.instance }})
         description: "JVM memory is filling up (> 80%)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -213,7 +213,7 @@ additionalPrometheusRulesMap:
       for: 5m
       labels:
         severity: warning
-        deployment: dev-toniq-dev
+        deployment: ${CLUSTER_NAME}
       annotations:
         summary: Container CPU usage (instance {{ $labels.instance }})
         description: "Container CPU usage is above 90%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -222,7 +222,7 @@ additionalPrometheusRulesMap:
       for: 5m
       labels:
         severity: warning
-        deployment: dev-toniq-dev
+        deployment: ${CLUSTER_NAME}
       annotations:
         summary: Container Memory usage (instance {{ $labels.instance }})
         description: "Container Memory usage is above 80%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -231,7 +231,7 @@ additionalPrometheusRulesMap:
       for: 5m
       labels:
         severity: warning
-        deployment: dev-toniq-dev
+        deployment: ${CLUSTER_NAME}
       annotations:
         summary: Container Volume usage (instance {{ $labels.instance }})
         description: "Container Volume usage is above 80%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -240,7 +240,7 @@ additionalPrometheusRulesMap:
       for: 5m
       labels:
         severity: warning
-        deployment: dev-toniq-dev
+        deployment: ${CLUSTER_NAME}
       annotations:
         summary: Container high throttle rate (instance {{ $labels.instance }})
         description: "Container is being throttled\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -249,7 +249,7 @@ additionalPrometheusRulesMap:
       for: 5m
       labels:
         severity: warning
-        deployment: dev-toniq-dev
+        deployment: ${CLUSTER_NAME}
       annotations:
         summary: Host unusual network throughput in (instance {{ $labels.instance }})
         description: "Host network interfaces are probably receiving too much data (> 100 MB/s)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -258,7 +258,7 @@ additionalPrometheusRulesMap:
       for: 5m
       labels:
         severity: warning
-        deployment: dev-toniq-dev
+        deployment: ${CLUSTER_NAME}
       annotations:
         summary: Host unusual network throughput out (instance {{ $labels.instance }})
         description: "Host network interfaces are probably sending too much data (> 100 MB/s)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
@@ -336,7 +336,7 @@ alertmanager:
       routes:
       - receiver: 'toniq-monitoring-slack'
 	  match:
-      # deployment: dev-toniq-dev
+      # deployment: ${CLUSTER_NAME}
 	    deployment: <should matach the labels.deployment value defined in altering rules>
     receivers:
     - name: 'toniq-monitoring-slack'
