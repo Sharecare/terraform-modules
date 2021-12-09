@@ -335,9 +335,9 @@ alertmanager:
       receiver: 'null'
       routes:
       - receiver: 'toniq-monitoring-slack'
-	  match:
-      deployment: ${CLUSTER_NAME}
-	    # deployment: <should matach the labels.deployment value defined in altering rules>
+      match:
+        deployment: ${CLUSTER_NAME}
+        # deployment: <should matach the labels.deployment value defined in altering rules>
     receivers:
     - name: 'toniq-monitoring-slack'
     slack_configs:
