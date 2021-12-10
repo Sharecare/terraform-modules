@@ -149,8 +149,9 @@ resource "kubernetes_config_map" "init-opensearch-dashboards" {
   }
 
   data = {
-    "export.ndjson" = file("${path.module}/templates/export.ndjson")
-    "policy.json"   = file("${path.module}/templates/policy.json")
-    "rollp.json"    = file("${path.module}/templates/rollup.json")
+    "export.ndjson"                     = file("${path.module}/templates/export.ndjson")
+    "deleteold-logs-indices.json"       = file("${path.module}/templates/deleteold-logs-indices.json")
+    "deleteold-metricbeat-indices.json" = file("${path.module}/templates/deleteold-metricbeat-indices.json")
+    "rollup-metricbeat.json"            = file("${path.module}/templates/rollup-metricbeat.json")
   }
 }

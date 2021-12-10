@@ -157,16 +157,20 @@ tolerations: []
 
 affinity: {}
 
-lifecycle: {}
-  # preStop:
-    # exec:
-  #     command: ["/bin/sh", "-c", "echo Hello from the postStart handler > /usr/share/message"]
-  # postStart:
-  #   exec:
-  #     command:
-  #       - bash
-  #       - -c
-  #       - |
-  #         #!/bin/bash
-            # pwd
-  #         curl -X POST "http://admin:admin@127.0.0.1:5601/api/saved_objects/_import?createNewCopies=false" -H "osd-xsrf: true" --form file=@/usr/share/init-files/export.ndjson -H 'kbn-xsrf: true'
+lifecycle:
+  preStop:
+    exec:
+      command: ["/bin/sh", "-c", "echo Shutting Down"]
+  postStart:
+    exec:
+      command:
+        - bash
+        - -c
+        - |
+          #!/bin/bash
+          until curl https://opensearch-master.opensearch:9200; do echo "Waiting for Opensearch to be available..."; sleep 5; done;
+          until curl http://127.0.0.1:5601; do echo "Waiting for Kibana to be available..."; sleep 5; done;
+          curl -X POST "http://admin:admin@127.0.0.1:5601/api/saved_objects/_import?overwrite=true&createNewCopies=false" -H "osd-xsrf: true" --form file=@/usr/share/init-files/export.ndjson -H 'kbn-xsrf: true'
+          curl -X -k PUT "https://admin:admin@opensearch-master.opensearch:9200/_plugins/_ism/policies/delete_old_logs" -H 'Content-Type: application/json' --from file=@/usr/share/init-files/deleteold-logs-indices.json
+          curl -X -k PUT "https://admin:admin@opensearch-master.opensearch:9200/_plugins/_ism/policies/deleteold_metricbeat_indices" -H 'Content-Type: application/json' --from file=@/usr/share/init-files/deleteold-metricbeat-indices.json
+          curl -X -k PUT "https://admin:admin@opensearch-master.opensearch:9200/_plugins/_rollup/jobs/metricbeat-rollup" -H 'Content-Type: application/json' --from file=@/usr/share/init-files/rollup-metricbeat.json 2>&1 1> /tmp/postStart.out;
