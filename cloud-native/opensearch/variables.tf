@@ -29,10 +29,22 @@ variable "observability_enabled" {
   description = "Create resources to enable logging/metrics/trace ingestion"
 }
 
-variable "pv_zones" {
-  type        = list(any)
-  default     = []
-  description = "array of zones to use with regional persistant volumes"
+variable "create_snapshots" {
+  type        = bool
+  default     = true
+  description = "determines if the job to create snapshots will be deployed"
+}
+
+variable "snapshot_bucket" {
+  type        = string
+  default     = "random-unique-bucket-name"
+  description = "Bucket name to use to when registering a snapshot bucket"
+}
+
+variable "snapshot_type" {
+  type        = string
+  default     = "s3"
+  description = "Type of snapshot source to use currenty only supports gcs/s3"
 }
 
 variable "opensearch_overrides" {

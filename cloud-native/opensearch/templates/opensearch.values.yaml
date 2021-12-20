@@ -12,7 +12,7 @@ roles:
   - master
   - ingest
   - data
-  - remote_cluster_client
+  # - remote_cluster_client
 
 replicas: 3
 minimumMasterNodes: 1
@@ -81,7 +81,7 @@ config:
 # Extra environment variables to append to this nodeGroup
 # This will be appended to the current 'env:' key. You can use any of the kubernetes env
 # syntax here
-extraEnvs:
+extraEnvs: []
 #  - name: MY_ENVIRONMENT_VAR
 #    value: the_value_goes_here
 
@@ -105,7 +105,7 @@ hostAliases: []
 
 image: "opensearchproject/opensearch"
 # override image tag, which is .Chart.AppVersion by default
-imageTag: "1.2.0"
+imageTag: "1.2.2"
 imagePullPolicy: "IfNotPresent"
 
 podAnnotations: {}
@@ -180,20 +180,20 @@ persistence:
   #   set, choosing the default provisioner.  (gp2 on AWS, standard on
   #   GKE, AWS & OpenStack)
   #
-  storageClass: "opensearch-regional"
+  storageClass: standard
   accessModes:
     - ReadWriteOnce
-  size: 64Gi
+  size: 512Gi
   annotations: {}
 
 extraVolumes: []
-  # - name: snapshots
+  # - name: keystore
   #   emptyDir: {}
 
+
 extraVolumeMounts: []
-  # - name: snapshots
-  #   mountPath: /mnt/snapshot
-  #   mountPropagation: HostToContainer
+  # - name: keystore
+  #   mountPath: /mnt/keystore
 
 extraContainers: []
   # - name: bucket-fuse
@@ -218,6 +218,7 @@ extraInitContainers:
       privileged: true
     image: busybox:latest
     command: ['sysctl', '-w','vm.max_map_count=262144']
+
 
 # This is the PriorityClass settings as defined in
 # https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/#priorityclass
@@ -370,8 +371,9 @@ lifecycle: {}
   #
   #         curl -XPUT "$ES_URL/_template/$TEMPLATE_NAME" -H 'Content-Type: application/json' -d'{"index_patterns":['\""$INDEX_PATTERN"\"'],"settings":{"number_of_shards":'$SHARD_COUNT',"number_of_replicas":'$REPLICA_COUNT'}}'
 
-keystore:
-    - secretName: google-application-credentials
+keystore: []
+    # needed for gcs and not required for aws
+    # - secretName: google-application-credentials
 
 networkPolicy:
   ## Enable creation of NetworkPolicy resources. Only Ingress traffic is filtered for now.
@@ -400,4 +402,5 @@ plugins:
   enabled: true
   installList:
     - repository-gcs
+    # - repository-s3 # aws deployment
   # - example-fake-plugin

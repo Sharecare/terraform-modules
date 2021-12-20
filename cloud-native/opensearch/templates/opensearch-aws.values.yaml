@@ -115,7 +115,7 @@ hostAliases: []
 
 image: "opensearchproject/opensearch"
 # override image tag, which is .Chart.AppVersion by default
-imageTag: "1.2.0"
+imageTag: "1.2.1"
 imagePullPolicy: "IfNotPresent"
 
 podAnnotations: {}
@@ -193,7 +193,7 @@ persistence:
   storageClass: opensearch-aws
   accessModes:
     - ReadWriteOnce
-  size: 64Gi
+  size: 512Gi
   annotations: {}
 
 extraVolumes: []

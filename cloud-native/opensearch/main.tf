@@ -12,6 +12,11 @@ resource "helm_release" "opensearch" {
 
   values = [templatefile("./${path.module}/templates/opensearch.values.yaml", {})]
 
+  set {
+    name  = "plugins.installList[0]"
+    value = "repository-${var.snapshot_type}"
+  }
+
   dynamic "set" {
     for_each = var.opensearch_overrides
     content {
@@ -73,6 +78,7 @@ resource "helm_release" "metricbeat" {
 # curl --user admin:admin -XPUT 'http://opensearch-cluster-master.opensearch:9200/idx'
 
 # resource "kubernetes_storage_class" "opensearch" {
+# provider = kubernetes
 #   count = var.cloud_provider == "gcp" ? 1 : 0
 #   metadata {
 #     name = "opensearch-regional"
@@ -153,5 +159,87 @@ resource "kubernetes_config_map" "init-opensearch-dashboards" {
     "deleteold-logs-indices.json"       = file("${path.module}/templates/deleteold-logs-indices.json")
     "deleteold-metricbeat-indices.json" = file("${path.module}/templates/deleteold-metricbeat-indices.json")
     "rollup-metricbeat.json"            = file("${path.module}/templates/rollup-metricbeat.json")
+  }
+}
+
+resource "kubernetes_job" "opensearch_init_job" {
+  count = var.observability_enabled == true ? 1 : 0
+  metadata {
+    name      = "opensearch-init-job"
+    namespace = "opensearch"
+  }
+  spec {
+    template {
+      metadata {}
+      spec {
+        container {
+          name    = "opensearch-init"
+          image   = "alpine:latest"
+          command = ["/bin/sh", "-c", data.template_file.cluster-init-script.rendered]
+          volume_mount {
+            mount_path = "/usr/share/init-files"
+            name       = "init-config"
+          }
+        }
+        volume {
+          name = "init-config"
+          config_map {
+            name = "opensearch-dashboards-init"
+          }
+        }
+        restart_policy = "Never"
+      }
+    }
+    backoff_limit = 4
+  }
+  wait_for_completion = true
+
+  depends_on = [kubernetes_config_map.init-opensearch-dashboards, helm_release.dashboards, helm_release.opensearch, helm_release.metricbeat, helm_release.fluentd]
+}
+
+data "template_file" "cluster-init-script" {
+  template = file("${path.module}/templates/cluster-init.tpl")
+}
+
+
+resource "kubernetes_cron_job" "snapshot" {
+  count = var.create_snapshots == true ? 1 : 0
+  metadata {
+    name      = "opensearch-snaphsot-cronjob"
+    namespace = "opensearch"
+  }
+  spec {
+    concurrency_policy            = "Replace"
+    failed_jobs_history_limit     = 5
+    schedule                      = "*/5 * * * *"
+    starting_deadline_seconds     = 10
+    successful_jobs_history_limit = 10
+    job_template {
+      metadata {}
+      spec {
+        backoff_limit              = 2
+        ttl_seconds_after_finished = 604800
+        template {
+          metadata {}
+          spec {
+            container {
+              name    = "opensearch-snapshot-creation"
+              image   = "alpine:latest"
+              command = ["/bin/sh", "-c", data.template_file.snapshot-script.rendered]
+            }
+          }
+        }
+      }
+    }
+  }
+  depends_on = [kubernetes_config_map.init-opensearch-dashboards, helm_release.dashboards, kubernetes_job.opensearch_init_job, helm_release.opensearch]
+}
+
+data "template_file" "snapshot-script" {
+  template = file("${path.module}/templates/snapshot-creation.tpl")
+
+  vars = {
+    TYPE   = var.snapshot_type
+    BUCKET = var.snapshot_bucket
   }
 }

@@ -1,6 +1,5 @@
 {
   "policy": {
-      "policy_id": "delete_old_logs",
       "description": "policy to delete old logs from opensearch",
       "last_updated_time": 1637207331863,
       "schema_version": 11,
@@ -16,7 +15,7 @@
               ],
               "transitions": [
                   {
-                      "state_name": "delete_old_logs",
+                      "state_name": "delete_old",
                       "conditions": {
                           "min_index_age": "120d"
                       }
@@ -24,7 +23,7 @@
               ]
           },
           {
-              "name": "delete_old_Logs",
+              "name": "delete_old",
               "actions": [
                   {
                       "delete": {}
