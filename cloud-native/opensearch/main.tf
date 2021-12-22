@@ -24,7 +24,6 @@ resource "helm_release" "opensearch" {
       value = set.value
     }
   }
-  # depends_on = [kubernetes_storage_class.opensearch]
 }
 
 resource "helm_release" "dashboards" {
@@ -74,54 +73,6 @@ resource "helm_release" "metricbeat" {
   }
   depends_on = [helm_release.dashboards, helm_release.opensearch]
 }
-
-# curl --user admin:admin -XPUT 'http://opensearch-cluster-master.opensearch:9200/idx'
-
-# resource "kubernetes_storage_class" "opensearch" {
-# provider = kubernetes
-#   count = var.cloud_provider == "gcp" ? 1 : 0
-#   metadata {
-#     name = "opensearch-regional"
-#   }
-#   storage_provisioner = "kubernetes.io/gce-pd"
-#   reclaim_policy      = "Delete"
-#   volume_binding_mode = "Immediate"
-#   parameters = {
-#     type             = "pd-ssd"
-#     fsType           = "ext4" # default prefered by elasticsearch
-#     replication-type = "regional-pd"
-#   }
-#   allowed_topologies {
-#     match_label_expressions {
-#       key = "failure-domain.beta.kubernetes.io/zone"
-#       values = var.pv_zones
-#     }
-#   }
-#   allow_volume_expansion = true
-# }
-
-
-# resource "kubernetes_storage_class" "opensearch-aws" {
-#   count = var.cloud_provider == "aws" ? 1 : 0
-#   metadata {
-#     name = "opensearch-aws"
-#   }
-#   storage_provisioner = "kubernetes.io/aws-ebs"
-#   reclaim_policy      = "Delete"
-#   volume_binding_mode = "WaitForFirstConsumer"
-#   parameters = {
-#     type   = "gp2"
-#     fsType = "ext4" # default prefered by elasticsearch
-#   }
-#   allowed_topologies {
-#     match_label_expressions {
-#       key = "failure-domain.beta.kubernetes.io/zone"
-#       values = var.pv_zones
-#     }
-#   }
-#   allow_volume_expansion = true
-# }
-
 
 resource "helm_release" "fluentd" {
   count            = var.observability_enabled ? 1 : 0
@@ -194,7 +145,13 @@ resource "kubernetes_job" "opensearch_init_job" {
   }
   wait_for_completion = true
 
-  depends_on = [kubernetes_config_map.init-opensearch-dashboards, helm_release.dashboards, helm_release.opensearch, helm_release.metricbeat, helm_release.fluentd]
+  depends_on = [
+    kubernetes_config_map.init-opensearch-dashboards,
+    helm_release.dashboards,
+    helm_release.opensearch,
+    helm_release.metricbeat,
+    helm_release.fluentd
+  ]
 }
 
 data "template_file" "cluster-init-script" {
@@ -232,7 +189,12 @@ resource "kubernetes_cron_job" "snapshot" {
       }
     }
   }
-  depends_on = [kubernetes_config_map.init-opensearch-dashboards, helm_release.dashboards, kubernetes_job.opensearch_init_job, helm_release.opensearch]
+  depends_on = [
+    kubernetes_config_map.init-opensearch-dashboards,
+    helm_release.dashboards,
+    kubernetes_job.opensearch_init_job,
+    helm_release.opensearch
+  ]
 }
 
 data "template_file" "snapshot-script" {

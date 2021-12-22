@@ -111,6 +111,24 @@ service:
   nodePort: ""
   labels: {}
   annotations: {}
+    # example SET if you want to expose opensearch-dashboards
+    # getambassador.io/config: |
+    #   ---
+    #   apiVersion: ambassador/v1
+    #   kind:  Mapping
+    #   name: opensearch-dashboards
+    #   prefix: /
+    #   host: ${OPENSEARCH_URL}
+    #   host_regex: false
+    #   service: opensearch-dashboards.opensearch:5601
+    #   add_response_headers:
+    #     Content-Security-Policy: "frame-ancestors 'none'"
+    #     Strict-Transport-Security: max-age=31536000;
+    #     X-Frame-Options: deny
+    #     X-XSS-Protection: 1; mode=block
+    #     Referrer-Policy: strict-origin-when-cross-origin
+    #     Feature-Policy: "geolocation 'self'; camera 'self'"
+    #     X-Content-Type-Options: nosniff
   loadBalancerSourceRanges: []
   # 0.0.0.0/0
   httpPortName: http

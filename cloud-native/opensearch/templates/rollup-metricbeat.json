@@ -5,7 +5,7 @@
         "schedule": {
             "interval": {
                 "start_time": 1637272006,
-                "period": 1,
+                "period": 12,
                 "unit": "Hours"
             }
         },
