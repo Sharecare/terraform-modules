@@ -43,4 +43,7 @@ resource "kubernetes_manifest" "mapping" {
       USER_AGENT = each.value,
       SUFFIX     = each.key
   }))
+  depends_on = [
+    helm_release.ambassador
+  ]
 }
