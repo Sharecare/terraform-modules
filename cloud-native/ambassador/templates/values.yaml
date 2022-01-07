@@ -210,7 +210,9 @@ adminService:
   # NodePort used if type is NodePort
   # nodePort: 38877
   annotations:
-    {}
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "/metrics"
+    prometheus.io/port: "8877"
 
 rbac:
   # Specifies whether RBAC resources should be created
@@ -263,10 +265,7 @@ volumeMounts: []
 podLabels:
   service: statsd-sink
 
-podAnnotations:
-  prometheus.io/scrape: "true"
-  prometheus.io/path: "/metrics"
-  prometheus.io/port: "8877"
+podAnnotations: {}
 
 deploymentLabels:
   {}
