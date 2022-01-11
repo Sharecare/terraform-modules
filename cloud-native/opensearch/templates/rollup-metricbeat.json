@@ -1,0 +1,178 @@
+{
+    "rollup": {
+        "rollup_id": "metricbeat-rollup",
+        "enabled": true,
+        "schedule": {
+            "interval": {
+                "start_time": 1637272006,
+                "period": 12,
+                "unit": "Hours"
+            }
+        },
+        "last_updated_time": 1637272006626,
+        "enabled_time": 1637208079687,
+        "description": "",
+        "schema_version": 11,
+        "source_index": "metricbeat-7.12.1-*",
+        "target_index": "metricbeats-rollup",
+        "page_size": 1000,
+        "delay": 0,
+        "continuous": true,
+        "dimensions": [
+            {
+                "date_histogram": {
+                    "fixed_interval": "5m",
+                    "source_field": "@timestamp",
+                    "target_field": "@timestamp",
+                    "timezone": "UTC"
+                }
+            },
+            {
+                "terms": {
+                    "source_field": "@timestamp",
+                    "target_field": "@timestamp"
+                }
+            },
+            {
+                "histogram": {
+                    "source_field": "kubernetes.container.cpu.limit.cores",
+                    "target_field": "kubernetes.container.cpu.limit.cores",
+                    "interval": 5
+                }
+            },
+            {
+                "histogram": {
+                    "source_field": "kubernetes.container.cpu.limit.nanocores",
+                    "target_field": "kubernetes.container.cpu.limit.nanocores",
+                    "interval": 5
+                }
+            },
+            {
+                "histogram": {
+                    "source_field": "kubernetes.container.cpu.request.cores",
+                    "target_field": "kubernetes.container.cpu.request.cores",
+                    "interval": 5
+                }
+            },
+            {
+                "histogram": {
+                    "source_field": "kubernetes.container.cpu.request.nanocores",
+                    "target_field": "kubernetes.container.cpu.request.nanocores",
+                    "interval": 5
+                }
+            },
+            {
+                "histogram": {
+                    "source_field": "kubernetes.container.cpu.usage.core.ns",
+                    "target_field": "kubernetes.container.cpu.usage.core.ns",
+                    "interval": 5
+                }
+            },
+            {
+                "histogram": {
+                    "source_field": "kubernetes.container.cpu.usage.limit.pct",
+                    "target_field": "kubernetes.container.cpu.usage.limit.pct",
+                    "interval": 5
+                }
+            },
+            {
+                "histogram": {
+                    "source_field": "kubernetes.container.cpu.usage.nanocores",
+                    "target_field": "kubernetes.container.cpu.usage.nanocores",
+                    "interval": 5
+                }
+            },
+            {
+                "histogram": {
+                    "source_field": "kubernetes.container.cpu.usage.node.pct",
+                    "target_field": "kubernetes.container.cpu.usage.node.pct",
+                    "interval": 5
+                }
+            },
+            {
+                "terms": {
+                    "source_field": "kubernetes.container.id",
+                    "target_field": "kubernetes.container.id"
+                }
+            },
+            {
+                "terms": {
+                    "source_field": "kubernetes.container.image",
+                    "target_field": "kubernetes.container.image"
+                }
+            },
+            {
+                "histogram": {
+                    "source_field": "kubernetes.container.memory.available.bytes",
+                    "target_field": "kubernetes.container.memory.available.bytes",
+                    "interval": 5
+                }
+            },
+            {
+                "histogram": {
+                    "source_field": "kubernetes.container.memory.limit.bytes",
+                    "target_field": "kubernetes.container.memory.limit.bytes",
+                    "interval": 5
+                }
+            },
+            {
+                "histogram": {
+                    "source_field": "kubernetes.container.memory.majorpagefaults",
+                    "target_field": "kubernetes.container.memory.majorpagefaults",
+                    "interval": 5
+                }
+            },
+            {
+                "histogram": {
+                    "source_field": "kubernetes.container.memory.pagefaults",
+                    "target_field": "kubernetes.container.memory.pagefaults",
+                    "interval": 5
+                }
+            },
+            {
+                "histogram": {
+                    "source_field": "kubernetes.container.memory.request.bytes",
+                    "target_field": "kubernetes.container.memory.request.bytes",
+                    "interval": 5
+                }
+            },
+            {
+                "histogram": {
+                    "source_field": "kubernetes.container.memory.rss.bytes",
+                    "target_field": "kubernetes.container.memory.rss.bytes",
+                    "interval": 5
+                }
+            },
+            {
+                "histogram": {
+                    "source_field": "kubernetes.container.memory.usage.bytes",
+                    "target_field": "kubernetes.container.memory.usage.bytes",
+                    "interval": 5
+                }
+            },
+            {
+                "histogram": {
+                    "source_field": "kubernetes.container.memory.usage.limit.pct",
+                    "target_field": "kubernetes.container.memory.usage.limit.pct",
+                    "interval": 5
+                }
+            },
+            {
+                "histogram": {
+                    "source_field": "kubernetes.container.memory.usage.node.pct",
+                    "target_field": "kubernetes.container.memory.usage.node.pct",
+                    "interval": 5
+                }
+            },
+            {
+                "histogram": {
+                    "source_field": "kubernetes.container.memory.workingset.bytes",
+                    "target_field": "kubernetes.container.memory.workingset.bytes",
+                    "interval": 5
+                }
+            }
+        ],
+        "metrics": []
+    }
+
+}

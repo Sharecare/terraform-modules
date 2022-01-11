@@ -1,0 +1,45 @@
+{
+  "policy": {
+      "description": "policy to delete old logs from opensearch",
+      "last_updated_time": 1637207331863,
+      "schema_version": 11,
+      "error_notification": null,
+      "default_state": "open",
+      "states": [
+          {
+              "name": "open",
+              "actions": [
+                  {
+                      "open": {}
+                  }
+              ],
+              "transitions": [
+                  {
+                      "state_name": "delete_old",
+                      "conditions": {
+                          "min_index_age": "120d"
+                      }
+                  }
+              ]
+          },
+          {
+              "name": "delete_old",
+              "actions": [
+                  {
+                      "delete": {}
+                  }
+              ],
+              "transitions": []
+          }
+      ],
+      "ism_template": [
+          {
+              "index_patterns": [
+                  "logstash-*"
+              ],
+              "priority": 1,
+              "last_updated_time": 1637207056206
+          }
+      ]
+  }
+}

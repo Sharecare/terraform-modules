@@ -1,0 +1,45 @@
+{
+  "policy": {
+      "description": "A policy to delete old cluster metrics from the cluster",
+      "last_updated_time": 1637207331863,
+      "schema_version": 11,
+      "error_notification": null,
+      "default_state": "open",
+      "states": [
+          {
+              "name": "open",
+              "actions": [
+                  {
+                      "open": {}
+                  }
+              ],
+              "transitions": [
+                  {
+                      "state_name": "delete_old",
+                      "conditions": {
+                          "min_index_age": "7d"
+                      }
+                  }
+              ]
+          },
+          {
+              "name": "delete_old",
+              "actions": [
+                  {
+                      "delete": {}
+                  }
+              ],
+              "transitions": []
+          }
+      ],
+      "ism_template": [
+          {
+              "index_patterns": [
+                  "metricbeat-7.12.1-*"
+              ],
+              "priority": 1,
+              "last_updated_time": 1637207056206
+          }
+      ]
+  }
+}

@@ -27,3 +27,15 @@ variable "grafana_enabled" {
   default     = false
   description = "flag to turn grafana dashboard on/off"
 }
+
+variable "values_override" {
+  type        = any
+  default     = {}
+  description = "values overrides for the chart"
+}
+
+variable "cluster_name" {
+  type        = string
+  default     = "dev-toniq-dev"
+  description = "name of toniq cluster/deployment to send alerts for"
+}

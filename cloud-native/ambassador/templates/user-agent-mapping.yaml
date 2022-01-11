@@ -1,10 +1,10 @@
-apiVersion: getambassador.io/v2
+apiVersion: getambassador.io/v1
 kind:  Mapping
 metadata:
   name:  black-hole-route-${SUFFIX}
   namespace: ingress
 spec:
   prefix: /
-  service: http://hello.docai.beer
+  service: https://hello.docai.beer
   headers:
     user-agent: ${USER_AGENT}
