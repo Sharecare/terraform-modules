@@ -1,9 +1,11 @@
 resource "helm_release" "ambassador" {
-  name       = "ambassador"
-  repository = "https://getambassador.io"
-  chart      = "ambassador"
-  version    = "6.6.0"
-  namespace  = "ingress"
+  name         = "ambassador"
+  repository   = "https://getambassador.io"
+  chart        = "ambassador"
+  version      = "6.6.0"
+  namespace    = "ingress"
+  force_update = true
+  lint         = true
 
   # override values as a heredoc use the file in ./templates/values.yaml as
   # a reference
