@@ -203,16 +203,16 @@ service:
         use_remote_address: true
 
 adminService:
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "/metrics"
+    prometheus.io/port: "8877"
   create: true
   type: ClusterIP
   port: 8877
   snapshotPort: 8005
   # NodePort used if type is NodePort
   # nodePort: 38877
-  annotations:
-    prometheus.io/scrape: "true"
-    prometheus.io/path: "/metrics"
-    prometheus.io/port: "8877"
 
 rbac:
   # Specifies whether RBAC resources should be created
