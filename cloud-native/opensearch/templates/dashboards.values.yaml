@@ -118,7 +118,7 @@ service:
     #   kind:  Mapping
     #   name: opensearch-dashboards
     #   prefix: /
-    #   host: ${OPENSEARCH_URL}
+    #   host: $${OPENSEARCH_URL}
     #   host_regex: false
     #   service: opensearch-dashboards.opensearch:5601
     #   add_response_headers:
