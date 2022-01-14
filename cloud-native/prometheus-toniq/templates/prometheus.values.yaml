@@ -2448,7 +2448,7 @@ prometheus:
     ## Example which selects ServiceMonitors with label "prometheus" set to "somelabel"
     serviceMonitorSelector:
       matchLabels:
-        prometheus: prometheus
+        release: prometheus
 
     ## Namespaces to be selected for ServiceMonitor discovery.
     ##
