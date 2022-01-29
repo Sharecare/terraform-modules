@@ -37,14 +37,21 @@ resource "helm_release" "ambassador" {
   }
 }
 
-resource "kubernetes_manifest" "mapping" {
-  provider = kubernetes
-  for_each = var.user_agents_block
-  manifest = yamldecode(templatefile("./${path.module}/templates/user-agent-mapping.yaml",
-    {
-      USER_AGENT = each.value,
-      SUFFIX     = each.key
-  }))
+resource "helm_release" "manifests" {
+  name         = "ambassador-manifests"
+  chart        = "${path.module}/manifests"
+  version      = "1.0.0"
+  namespace    = "ingress"
+  force_update = true
+  lint         = true
+
+#  dynamic "set" {
+#    for_each = var.user_agents_block
+#    content {
+#      name  = "user_agent_mappings.${set.key}"
+#      value = set.value
+#    }
+#  }
   depends_on = [
     helm_release.ambassador
   ]

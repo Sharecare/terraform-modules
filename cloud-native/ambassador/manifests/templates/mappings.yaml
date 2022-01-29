@@ -1,10 +1,13 @@
+{{- range $k, $v := .Values.user_agent_mappings }}
+---
 apiVersion: getambassador.io/v1
 kind:  Mapping
 metadata:
-  name:  black-hole-route-${SUFFIX}
+  name:  black-hole-route-{{- $k }}
   namespace: ingress
 spec:
   prefix: /
   service: https://hello.docai.beer
   headers:
-    user-agent: ${USER_AGENT}
+    user-agent: {{ $v }}
+{{- end }}
