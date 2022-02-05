@@ -7,34 +7,7 @@ resource "helm_release" "ambassador" {
   force_update = true
   lint         = true
 
-  # override values as a heredoc use the file in ./templates/values.yaml as
-  # a reference
-  values = [var.values_override]
-
-  set {
-    name  = "metrics.enabled"
-    value = "true"
-  }
-
-  set {
-    name  = "authService.create"
-    value = "false"
-  }
-
-  set {
-    name  = "RateLimit.create"
-    value = "false"
-  }
-
-  set {
-    name  = "env.STATSD_ENABLED"
-    value = "true"
-  }
-
-  set {
-    name  = "env.STATSD_HOST"
-    value = "localhost"
-  }
+  values = [file("${path.module}/templates/values.yaml")]
 }
 
 resource "helm_release" "manifests" {
@@ -45,13 +18,17 @@ resource "helm_release" "manifests" {
   force_update = true
   lint         = true
 
-#  dynamic "set" {
-#    for_each = var.user_agents_block
-#    content {
-#      name  = "user_agent_mappings.${set.key}"
-#      value = set.value
-#    }
-#  }
+  set {
+    name  = "provider"
+    value = var.dns_provider
+  }
+  dynamic "set" {
+    for_each = var.tls_contexts
+    content {
+      name  = "tls_contexts.${set.key}"
+      value = set.value
+    }
+  }
   depends_on = [
     helm_release.ambassador
   ]

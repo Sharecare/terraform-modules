@@ -1,8 +1,19 @@
 ---
 # Customized values for ambassador helm chart 6.6.0
 
-# TODO: add
-#podDisruptionBudget: {}
+podDisruptionBudget:
+  maxUnavailable: 1
+
+# TODO: add with helm chart 6.9.3
+#topologySpreadConstraints: {}
+#      topologySpreadConstraints:
+#      - maxSkew: 1
+#        topologyKey: kubernetes.io/hostname
+#        whenUnsatisfiable: ScheduleAnyway
+#        labelSelector:
+#          matchLabels:
+#            app: toniq-api-v1
+  
 
 namespace:
   name: ingress
@@ -25,42 +36,12 @@ service:
   # Note that target http ports need to match your ambassador configurations service_port
   # https://www.getambassador.io/reference/modules/#the-ambassador-module
   ports:
-    - name: http
-      port: 80
-    - name: https
-      port: 443
-  annotations:
-    getambassador.io/config: |
-      ---
-      apiVersion: ambassador/v1
-      kind: TLSContext
-      name: tls-${PROVIDER}
-      hosts: ['*.${COMMON_NAME}', ${COMMON_NAME}]
-      secret: ambassador-certs-${PROVIDER}
-      redirect_cleartext_from: 8080
-      alpn_protocols: h2[, http/1.1]
-      min_tls_version: v1.2
-      max_tls_version: v1.3
-      ---
-      apiVersion: ambassador/v1
-      kind: TLSContext
-      name: tls-clouddns-sso
-      hosts: ['*.alpha.docai.beer', 'alpha.docai.beer']
-      secret: ambassador-certs-clouddns-sso
-      redirect_cleartext_from: 8080
-      alpn_protocols: h2[, http/1.1]
-      min_tls_version: v1.2
-      max_tls_version: v1.3
-      ---
-      apiVersion: ambassador/v1
-      kind: Module
-      name: ambassador
-      config:
-        diagnostics:
-          enabled: true
-        load_balancer:
-          policy: round_robin
-        use_remote_address: true
+  - name: http
+    port: 80
+    targetPort: 8080
+  - name: https
+    port: 443
+    targetPort: 8443
 
 adminService:
   annotations:

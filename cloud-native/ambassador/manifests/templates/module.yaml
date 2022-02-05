@@ -1,0 +1,13 @@
+apiVersion: getambassador.io/v2
+kind: Module
+metadata:
+  name: ambassador
+  namespace: {{ .Release.namespace }}
+spec:
+  config:
+    diagnostics:
+      enabled: true
+    load_balancer:
+      policy: round_robin
+    use_remote_address: true
+    enable_grpc_web: true
