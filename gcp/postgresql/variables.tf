@@ -7,9 +7,8 @@ variable "postgresql_version" {
 }
 
 variable "project_id" {
-  description = "Project where this mysql db needs to be created"
+  description = "Project where this mysql db needs to be created (REQUIRED)"
   type        = string
-  default     = "serenity-stage-d334"
 }
 
 variable "region" {
@@ -17,19 +16,25 @@ variable "region" {
   type    = string
 }
 
+variable "zone" {
+  default = "us-central1-a"
+  type    = string
+}
+
+
 variable "backup_location" {
   default = "us-central1"
   type    = string
 }
 
 variable "authorized_networks" {
-  type        = list(string)
+  type        = list(map(string))
   default     = []
   description = "List of authorized pulic network that connect to the SQLDB"
 }
 
 variable "additional_users" {
-  type        = list(string)
+  type        = list(any)
   default     = []
   description = "list of user to add to the database"
 }
