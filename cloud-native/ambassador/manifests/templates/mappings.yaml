@@ -1,0 +1,14 @@
+{{- $namespace := .Release.namespace }}
+{{- range $k, $v := .Values.user_agent_mappings }}
+---
+apiVersion: getambassador.io/v1
+kind:  Mapping
+metadata:
+  name:  black-hole-route-{{- $k }}
+  namespace: {{ $namespace }}
+spec:
+  prefix: /
+  service: https://hello.docai.beer
+  headers:
+    user-agent: {{ $v }}
+{{- end }}

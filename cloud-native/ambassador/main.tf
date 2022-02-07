@@ -7,44 +7,28 @@ resource "helm_release" "ambassador" {
   force_update = true
   lint         = true
 
-  # override values as a heredoc use the file in ./templates/values.yaml as
-  # a reference
-  values = [var.values_override]
-
-  set {
-    name  = "metrics.enabled"
-    value = "true"
-  }
-
-  set {
-    name  = "authService.create"
-    value = "false"
-  }
-
-  set {
-    name  = "RateLimit.create"
-    value = "false"
-  }
-
-  set {
-    name  = "env.STATSD_ENABLED"
-    value = "true"
-  }
-
-  set {
-    name  = "env.STATSD_HOST"
-    value = "localhost"
-  }
+  values = [file("${path.module}/templates/values.yaml")]
 }
 
-resource "kubernetes_manifest" "mapping" {
-  provider = kubernetes
-  for_each = var.user_agents_block
-  manifest = yamldecode(templatefile("./${path.module}/templates/user-agent-mapping.yaml",
-    {
-      USER_AGENT = each.value,
-      SUFFIX     = each.key
-  }))
+resource "helm_release" "manifests" {
+  name         = "ambassador-manifests"
+  chart        = "${path.module}/manifests"
+  version      = "1.0.0"
+  namespace    = "ingress"
+  force_update = true
+  lint         = true
+
+  set {
+    name  = "provider"
+    value = var.dns_provider
+  }
+  dynamic "set" {
+    for_each = var.tls_contexts
+    content {
+      name  = "tls_contexts.${set.key}"
+      value = set.value
+    }
+  }
   depends_on = [
     helm_release.ambassador
   ]
