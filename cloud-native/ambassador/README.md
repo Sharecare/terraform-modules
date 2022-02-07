@@ -1,7 +1,6 @@
 ## Requirements
 
-Uses internal Helm chart to set up Module, TLSContext and Mapping manifests.
-Supports as many TLSContext hostnames as provided in the tls_contexts variable.
+No requirements.
 
 ## Providers
 
@@ -24,8 +23,8 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_dns_provider"></a> [dns\_provider](#input\_dns\_provider) | n/a | `string` | `"clouddns"` | no |
-| <a name="input_tls_contexts"></a> [tls\_contexts](#input\_tls\_contexts) | n/a | `map(string)` | n/a | yes |
+| <a name="input_dns_provider"></a> [dns\_provider](#input\_dns\_provider) | DNS provider for cert-manager issuer; either clouddns or cloudflare by default | `string` | `"clouddns"` | no |
+| <a name="input_tls_contexts"></a> [tls\_contexts](#input\_tls\_contexts) | Map from TLSContext name (all must be unique) to domain name for ambassador/emissary to host | `map(string)` | n/a | yes |
 
 ## Outputs
 
