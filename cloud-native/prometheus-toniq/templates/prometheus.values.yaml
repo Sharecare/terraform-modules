@@ -152,15 +152,15 @@ additionalPrometheusRulesMap:
         annotations:
           summary: "Instance {{ $labels.instance }} on {{ $labels.deployment }} down"
           description: "Instance {{ $labels.instance }} has been down for more than 1 minute. \n VALUE= {{ $value }}\n LABELS = {{ $labels }}"
-      - alert: ToniqMlflowDown
-        expr: (absent(up{job="toniq-mlflow"}) == 1) or (up{job="toniq-mlflow"} == 0)
-        for: 1m
-        labels:
-          severity: critical
-          deployment: ${CLUSTER_NAME}
-        annotations:
-          summary: "Instance {{ $labels.instance }} on {{ $labels.deployment }} down"
-          description: "Instance {{ $labels.instance }} has been down for more than 1 minute. \n VALUE= {{ $value }}\n LABELS = {{ $labels }}"
+      # - alert: ToniqMlflowDown
+      #   expr: (absent(up{job="toniq-mlflow"}) == 1) or (up{job="toniq-mlflow"} == 0)
+      #   for: 1m
+      #   labels:
+      #     severity: critical
+      #     deployment: ${CLUSTER_NAME}
+      #   annotations:
+      #     summary: "Instance {{ $labels.instance }} on {{ $labels.deployment }} down"
+      #     description: "Instance {{ $labels.instance }} has been down for more than 1 minute. \n VALUE= {{ $value }}\n LABELS = {{ $labels }}"
       - alert: ToniqArgoDown
         expr: (absent(up{job="toniq-argo"}) == 1) or (up{job="toniq-argo"} == 0)
         for: 1m
@@ -173,7 +173,7 @@ additionalPrometheusRulesMap:
     - name: ToniqGeneral
       rules:
       - alert: HostHighCpuLoad
-        expr: (100 - (avg by(instance) (rate(node_cpu_seconds_total{job="node-exporter",mode="idle"}[5m])) * 100)) > 80
+        expr: (100 - (avg by(instance) (rate(node_cpu_seconds_total{job="node-exporter",mode="idle"}[5m])) * 100)) > 90
         for: 5m
         labels:
           severity: warning
@@ -200,7 +200,7 @@ additionalPrometheusRulesMap:
           summary: "Host is running out of memory (instance {{ $labels.instance }})"
           description: "Node memory is filling up ( < 10% left)\n VALUE = {{ $value }}\n LABELS: {{ $labels }}"
       - alert: JvmMemoryFillingUp
-        expr: (sum by (instance)(jvm_memory_bytes_used{area="heap"}) / sum by (instance)(jvm_memory_bytes_max{area="heap"})) * 100 > 80
+        expr: (sum by (instance)(jvm_memory_bytes_used{area="heap"}) / sum by (instance)(jvm_memory_bytes_max{area="heap"})) * 100 > 90
         for: 5m
         labels:
           severity: warning
@@ -218,7 +218,7 @@ additionalPrometheusRulesMap:
           summary: Container CPU usage (instance {{ $labels.instance }})
           description: "Container CPU usage is above 90%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
       - alert: ContainerMemoryUsage
-        expr: (sum(container_memory_working_set_bytes{name!=""}) BY (instance, name) / sum(container_spec_memory_limit_bytes{name!=""} > 0) BY (instance, name) * 100) > 80
+        expr: (sum(container_memory_working_set_bytes{name!=""}) BY (instance, name) / sum(container_spec_memory_limit_bytes{name!=""} > 0) BY (instance, name) * 100) > 95
         for: 5m
         labels:
           severity: warning
