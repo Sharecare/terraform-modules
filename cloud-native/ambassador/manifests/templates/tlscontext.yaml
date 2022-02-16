@@ -11,7 +11,7 @@ spec:
   hosts:
   - "*.{{- $v }}"
   - "{{- $v }}"
-  secret: ambassador-certs-{{- $provider }}
+  secret: ambassador-certs-{{- $k }}
   redirect_cleartext_from: 8080
   alpn_protocols: h2[, http/1.1]
   min_tls_version: v1.2
