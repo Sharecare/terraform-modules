@@ -13,7 +13,7 @@ podDisruptionBudget:
 #        labelSelector:
 #          matchLabels:
 #            app: toniq-api-v1
-  
+
 
 namespace:
   name: ingress
