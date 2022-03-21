@@ -1,11 +1,12 @@
 resource "helm_release" "ambassador" {
-  name         = "ambassador"
-  repository   = "https://getambassador.io"
-  chart        = "ambassador"
-  version      = "6.6.0"
-  namespace    = "ingress"
-  force_update = true
-  lint         = true
+  name             = "ambassador"
+  repository       = "https://getambassador.io"
+  chart            = "ambassador"
+  version          = "6.6.0"
+  namespace        = "ingress"
+  create_namespace = true
+  force_update     = true
+  lint             = true
 
   values = [file("${path.module}/templates/values.yaml")]
 }
