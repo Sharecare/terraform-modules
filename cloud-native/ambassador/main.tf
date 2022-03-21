@@ -4,12 +4,27 @@ resource "helm_release" "ambassador" {
   chart            = "ambassador"
   version          = "6.6.0"
   namespace        = "ingress"
-  create_namespace = var.create_namespace
   force_update     = true
   lint             = true
 
   values = [file("${path.module}/templates/values.yaml")]
+  depends_on = [ kubernetes_namespace.ingress ]
 }
+
+resource "kubernetes_namespace" "ingress" {
+  metadata {
+    annotations         = {
+      name              = "ingress"
+    }
+
+    labels              = {
+      application       = "ambassador"
+    }
+
+    name                = "ingress"
+  }
+}
+
 
 resource "helm_release" "manifests" {
   name         = "ambassador-manifests"
