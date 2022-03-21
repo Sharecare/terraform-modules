@@ -4,7 +4,7 @@ resource "helm_release" "ambassador" {
   chart            = "ambassador"
   version          = "6.6.0"
   namespace        = "ingress"
-  create_namespace = true
+  create_namespace = var.create_namespace
   force_update     = true
   lint             = true
 
