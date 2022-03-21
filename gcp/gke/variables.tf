@@ -2,6 +2,7 @@ variable "project_id" {}
 variable "subnetwork_name" {}
 variable "network_name" {}
 
+
 variable "region" {
   default = "us-central1"
 }
