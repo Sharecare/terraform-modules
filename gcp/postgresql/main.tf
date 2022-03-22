@@ -4,7 +4,7 @@ resource "random_id" "name" {
 
 module "postgresql_db" {
   source            = "GoogleCloudPlatform/sql-db/google//modules/postgresql"
-  version           = "5.1.1"
+  version           = "10.0.0"
   name              = "${var.project_id}-sql-${var.name}-${random_id.name.hex}"
   database_version  = var.postgresql_version
   project_id        = var.project_id
