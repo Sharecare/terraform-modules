@@ -8,6 +8,7 @@ locals {
     require_ssl         = false
     private_network     = null
     authorized_networks = var.authorized_networks
+    allocated_ip_range  = null
   }
   database_flags = [
     {
@@ -21,15 +22,16 @@ locals {
   ]
   read_replicas = [
     {
-      name             = "0"
-      zone             = "${var.region}-a"
-      tier             = var.tier
-      ip_configuration = local.ip_configuration
-      database_flags   = local.database_flags
-      disk_autoresize  = var.disk_autoresize
-      disk_size        = var.disk_size
-      disk_type        = "PD_HDD"
-      user_labels      = var.tags
+      name                = "0"
+      zone                = "${var.region}-a"
+      tier                = var.tier
+      ip_configuration    = local.ip_configuration
+      database_flags      = local.database_flags
+      disk_autoresize     = var.disk_autoresize
+      disk_size           = var.disk_size
+      disk_type           = "PD_HDD"
+      user_labels         = var.tags
+      encryption_key_name = var.encryption_key_name
     }
   ]
 }

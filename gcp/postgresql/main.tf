@@ -19,15 +19,20 @@ module "postgresql_db" {
     private_network     = null
     require_ssl         = false
     authorized_networks = var.authorized_networks
+    allocated_ip_range  = null
   }
 
   additional_databases = var.additional_databases
   additional_users     = var.additional_users
+  # attributes "retained_backups", "retention_unit", and "transaction_log_retention_days" are required.
 
   backup_configuration = {
     point_in_time_recovery_enabled = true
     enabled                        = true
     start_time                     = "12:00"
     location                       = var.backup_location
+    retained_backups               = null
+    retention_unit                 = null
+    transaction_log_retention_days = null
   }
 }

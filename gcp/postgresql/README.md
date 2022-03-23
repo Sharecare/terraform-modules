@@ -12,7 +12,7 @@ No requirements.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_postgresql_db"></a> [postgresql\_db](#module\_postgresql\_db) | GoogleCloudPlatform/sql-db/google//modules/postgresql | 5.1.1 |
+| <a name="module_postgresql_db"></a> [postgresql\_db](#module\_postgresql\_db) | GoogleCloudPlatform/sql-db/google//modules/postgresql | 10.0.0 |
 
 ## Resources
 
