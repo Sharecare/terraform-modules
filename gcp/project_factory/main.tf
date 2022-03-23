@@ -9,7 +9,7 @@ data "google_billing_account" "acct" {
 
 module "project_factory" {
   source                      = "terraform-google-modules/project-factory/google"
-  version                     = "11.3.1"
+  version                     = "12.0.0"
   random_project_id           = true
   name                        = var.project_name
   org_id                      = var.org_id
