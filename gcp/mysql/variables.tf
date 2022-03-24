@@ -99,9 +99,18 @@ variable "read_replica_enabled" {
 variable "backup_configuration" {
   type = map(any)
   default = {
-    binary_log_enabled = true
-    enabled            = true
-    start_time         = "12:13"
-    location           = null
+    binary_log_enabled             = true
+    enabled                        = true
+    start_time                     = "12:13"
+    location                       = null
+    transaction_log_retention_days = null
+    retained_backups               = null
+    retention_unit                 = null
   }
+}
+
+variable "encryption_key_name" {
+  type        = string
+  description = "Disk Encryption Key name (required if read replica is cross regional)"
+  default     = null
 }
