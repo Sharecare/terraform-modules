@@ -1,5 +1,5 @@
 # Module Repository for Terraform
-Currently works and tested against terraform 0.13 and terraform 0.14
+Currently works and tested against terraform 0.13 and terraform 0.14 modules currently undergoing and upgrade to support terraform 1.x.x
 
 ### Contributing
 Please install the following

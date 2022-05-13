@@ -1,0 +1,14 @@
+# Default values for manifests.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+email: "infra-eng+1@doc.ai"
+
+certificates: []
+  # - common_name: "docai.beer"
+  #   provider: "clouddns"
+  #   project: "infra-sec"
+  #   service_account_name: "test_servica_account.json"
+
+providers: []
+  # - "clouddns"
+  # - "cloudflare"

@@ -1,0 +1,29 @@
+{{- $namespace := .Release.namespace }}
+{{- $email := .Values.email }}
+{{- range .Values.certificates }}
+{{- if eq .provider "clouddns" }}
+{{- $common_name_normalized := .common_name | replace "." "-" }}
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name:  "letsencrypt-clouddns-{{ $common_name_normalized }}"
+  namespace: {{ $namespace }}
+spec:
+  acme:
+    email: {{ $email }}
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-clouddns-secret
+    solvers:
+    - dns01:
+        cloudDNS:
+          # The ID of the GCP project
+          project: {{ .project }}
+          # This is the secret used to access the service account
+          # Use Workload Identity in place of a credentials file
+          # https://cert-manager.io/docs/configuration/acme/dns01/google/#gke-workload-identity
+          serviceAccountSecretRef:
+            name: "cert-manager-credentials-{{ $common_name_normalized }}"
+            key: {{ .service_account_name }}
+{{- end }}
+{{- end }}

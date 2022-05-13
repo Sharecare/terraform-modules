@@ -1,0 +1,21 @@
+{{- $namespace := .Release.namespace }}
+{{- $email := .Values.email }}
+{{- if has "cloudflare" .Values.providers }}
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name:  letsencrypt-cloudflare
+  namespace: {{ $namespace }}
+spec:
+  acme:
+    email: {{ $email }}
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-cloudflare-secret
+    solvers:
+    - dns01:
+        cloudflare:
+          apiTokenSecretRef:
+            name: cloudflare-api-token-secret
+            key: api-token
+{{- end }}
