@@ -46,19 +46,14 @@ variable "cloudflare_key" {
   sensitive   = true
 }
 
-variable "project_id" {
-  type        = string
-  description = "GCP project ID where your cluster exists can be the same as dns_zone_project if on AWS"
+variable "create_namespace" {
+  description = "Create namespace true if this is a fresh install otherwise use default false"
+  default     = false
 }
-
 locals {
   common_name_provider_map = { for k, v in var.certificates : k => v["provider"] }
   has_cloudflare           = contains(values(local.common_name_provider_map), "cloudflare")
-  # tflint-ignore: terraform_unused_declarations
-  has_clouddns = contains(values(local.common_name_provider_map), "clouddns")
-  # tflint-ignore: terraform_unused_declarations
-  cloudflare_certs = { for k, v in var.certificates : k => v if v["provider"] == "cloudflare" }
-  clouddns_certs   = { for k, v in var.certificates : k => v if v["provider"] == "clouddns" }
+  clouddns_certs           = { for k, v in var.certificates : k => v if v["provider"] == "clouddns" }
 
   # tflint-ignore: terraform_unused_declarations
   validate_cloudflare_key_required = (local.has_cloudflare && length(var.cloudflare_key) == 0) ? tobool("cloudflare_key must be set to have a valid issuer.") : true
@@ -85,13 +80,3 @@ locals {
   ])
   manifest_map = merge(local.manifest_helm_set...)
 }
-
-# "${google_service_account.service_account[k].name}.json"
-
-
-# resource "google_service_account" "service_account" {
-#   for_each     = local.clouddns_certs
-#   account_id   = substr("cert-manager-dns-${replace(each.key, ".", "-")}", 0, 29) #can only be 6-30 chars long
-#   display_name = "cert-manager-dns-${replace(each.key, ".", "-")}"
-#   project      = var.project_id
-# }

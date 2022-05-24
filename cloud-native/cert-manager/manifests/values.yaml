@@ -7,7 +7,7 @@ certificates: []
   # - common_name: "docai.beer"
   #   provider: "clouddns"
   #   project: "infra-sec"
-  #   service_account_name: "test_servica_account.json"
+  # service_account_name: "test_servica_account.json"
 
 providers: []
   # - "clouddns"

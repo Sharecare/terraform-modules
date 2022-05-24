@@ -28,17 +28,13 @@ resource "kubernetes_namespace" "ingress" {
 resource "helm_release" "manifests" {
   name         = "ambassador-manifests"
   chart        = "${path.module}/manifests"
-  version      = "1.0.0"
+  version      = "1.1.0"
   namespace    = "ingress"
   force_update = true
   lint         = true
 
-  set {
-    name  = "provider"
-    value = var.dns_provider
-  }
   dynamic "set" {
-    for_each = var.tls_contexts
+    for_each = local.tls_contexts
     content {
       name  = "tls_contexts.${set.key}"
       value = set.value

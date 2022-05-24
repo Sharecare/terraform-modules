@@ -1,6 +1,7 @@
 {{- $namespace := .Release.namespace }}
 {{- $email := .Values.email }}
 {{- range .Values.certificates }}
+---
 {{- if eq .provider "clouddns" }}
 {{- $common_name_normalized := .common_name | replace "." "-" }}
 apiVersion: cert-manager.io/v1
@@ -23,7 +24,7 @@ spec:
           # Use Workload Identity in place of a credentials file
           # https://cert-manager.io/docs/configuration/acme/dns01/google/#gke-workload-identity
           serviceAccountSecretRef:
-            name: "cert-manager-credentials-{{ $common_name_normalized }}"
-            key: {{ .service_account_name }}
+            name: "cert-manager-creds"
+            key: "dns-sa-{{ $common_name_normalized }}.json"
 {{- end }}
 {{- end }}

@@ -1,14 +1,13 @@
 resource "kubernetes_secret" "dns_service_account" {
-  for_each = local.clouddns_certs
   provider = kubernetes
   metadata {
-    name      = "cert-manager-credentials"
+    name      = "cert-manager-creds"
     namespace = var.ambassador_namespace
   }
 
 
   data = {
-    for k, v in local.clouddns_certs : "${google_service_account.service_account[k].name}.json" => base64encode(google_service_account_key.key[k].private_key)
+    for k, v in local.clouddns_certs : "dns-sa-${replace(k, ".", "-")}.json" => base64decode(google_service_account_key.key[k].private_key)
   }
 
 }

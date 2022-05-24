@@ -15,7 +15,8 @@ spec:
     solvers:
     - dns01:
         cloudflare:
-          apiTokenSecretRef:
+          email: owner@doc.ai
+          apiKeySecretRef:
             name: cloudflare-api-token-secret
             key: api-token
 {{- end }}

@@ -1,6 +1,7 @@
 
 {{- $namespace := .Release.namespace }}
 {{- range .Values.certificates }}
+---
 {{- $common_name_normalized := .common_name | replace "." "-" }}
 {{- if eq .provider "clouddns" }}
 apiVersion: cert-manager.io/v1
@@ -15,12 +16,13 @@ spec:
     kind: Issuer
   commonName: {{ .common_name }}
   dnsNames:
-  - "'{{ .common_name }}'"
-  - "'*.{{ .common_name }}'"
+  - "{{ .common_name }}"
+  - "*.{{ .common_name }}"
 {{- end }}
 {{- end }}
 ---
 {{- range .Values.certificates }}
+---
 {{- $common_name_normalized := .common_name | replace "." "-" }}
 {{- if eq .provider "cloudflare" }}
 apiVersion: cert-manager.io/v1
@@ -35,8 +37,8 @@ spec:
     kind: Issuer
   commonName: {{ .common_name }}
   dnsNames:
-  - "'{{ .common_name }}'"
-  - "'*.{{ .common_name }}'"
+  - "{{ .common_name }}"
+  - "*.{{ .common_name }}"
 {{- end }}
 {{- end }}
 ---
