@@ -53,7 +53,7 @@ kind: ServiceAccount
 apiVersion: v1
 metadata:
   name: rapid7-monitor
-  namespace: {{ .Release.namespace }}
+  namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -66,14 +66,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: rapid7-monitor
-  namespace: {{ .Release.namespace }}
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: rapid7
-  labels:
-    name: rapid7
+  namespace: {{ .Release.Namespace }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -81,7 +74,7 @@ metadata:
   labels:
     service: rapid7-monitor
   name: rapid7-monitor
-  namespace: {{ .Release.namespace }}
+  namespace: {{ .Release.Namespace }}
 spec:
   replicas: 1
   selector:
@@ -100,7 +93,7 @@ spec:
         name: kubernetes-agent
         env:
         - name: CLUSTER_NAME
-          value: {{- .Values.clusterName }}
+          value: {{ .Values.clusterName }}
         - name: RAPID7_MONITOR_KEY
           valueFrom:
             secretKeyRef:
