@@ -1,4 +1,4 @@
-apiVersion: kubeless.io/v1beta1
+apiVersion: kubeless.io/v1
 kind: Function
 metadata:
   finalizers:

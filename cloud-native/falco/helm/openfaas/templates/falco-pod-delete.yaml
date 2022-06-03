@@ -1,0 +1,20 @@
+{{- $namespace := .Release.Namespace }}
+---
+apiVersion: openfaas.com/v1
+kind: Function
+metadata:
+  name: falco-pod-delete
+  namespace: {{ $namespace }}
+spec:
+  name: falco-pod-delete
+  image: gcr.io/infra-sec-28bd/infrastructure/falco-delete-pod:latest
+  annotations:
+    com.openfaas.serviceaccount: falco-pod-delete
+  labels:
+    com.openfaas.scale.min: "2"
+    com.openfaas.scale.max: "10"
+  environment:
+    write_debug: "true"
+  requests:
+    cpu: "10m"
+    memory: "128Mi"

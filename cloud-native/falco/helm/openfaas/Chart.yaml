@@ -1,0 +1,4 @@
+apiVersion: v1
+name: openfaas-functions
+version: 1.0.0
+description: openfaas falco response engine
