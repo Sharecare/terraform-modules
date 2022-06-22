@@ -71,7 +71,7 @@ locals {
   manifest_helm_set = flatten([
     for k, v in local.manifests_array :
     {
-      "certificates[${k}].common_name"          = v["domain"]
+      "certificates[${k}].common_name"          = replace(v["domain"], ".", "!")
       "certificates[${k}].provider"             = v["provider"]
       "certificates[${k}].project"              = v["project"]
       "certificates[${k}].service_account_name" = "${v["service_account_name"]}.json"

@@ -3,7 +3,7 @@
 {{- range .Values.certificates }}
 ---
 {{- if eq .provider "clouddns" }}
-{{- $common_name_normalized := .common_name | replace "." "-" }}
+{{- $common_name_normalized := .common_name | replace "!" "-" }}
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:

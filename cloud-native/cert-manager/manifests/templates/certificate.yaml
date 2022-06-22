@@ -2,7 +2,8 @@
 {{- $namespace := .Release.namespace }}
 {{- range .Values.certificates }}
 ---
-{{- $common_name_normalized := .common_name | replace "." "-" }}
+{{- $common_name_normalized := .common_name | replace "!" "-" }}
+{{- $common_name_domain := .common_name | replace "!" "." }}
 {{- if eq .provider "clouddns" }}
 apiVersion: cert-manager.io/v1
 kind: Certificate
@@ -14,16 +15,17 @@ spec:
   issuerRef:
     name: "letsencrypt-{{ .provider }}-{{ $common_name_normalized }}"
     kind: Issuer
-  commonName: {{ .common_name }}
+  commonName: {{ $common_name_domain }}
   dnsNames:
-  - "{{ .common_name }}"
-  - "*.{{ .common_name }}"
+  - "{{ $common_name_domain }}"
+  - "*.{{ $common_name_domain }}"
 {{- end }}
 {{- end }}
 ---
 {{- range .Values.certificates }}
 ---
-{{- $common_name_normalized := .common_name | replace "." "-" }}
+{{- $common_name_normalized := .common_name | replace "!" "-" }}
+{{- $common_name_domain := .common_name | replace "!" "." }}
 {{- if eq .provider "cloudflare" }}
 apiVersion: cert-manager.io/v1
 kind: Certificate
@@ -35,10 +37,10 @@ spec:
   issuerRef:
     name: "letsencrypt-{{ .provider }}"
     kind: Issuer
-  commonName: {{ .common_name }}
+  commonName: {{ $common_name_domain }}
   dnsNames:
-  - "{{ .common_name }}"
-  - "*.{{ .common_name }}"
+  - "{{ $common_name_domain }}"
+  - "*.{{ $common_name_domain }}"
 {{- end }}
 {{- end }}
 ---
