@@ -2,6 +2,7 @@ resource "helm_release" "datadog" {
   name          = "datadog"
   repository    = "https://helm.datadoghq.com"
   chart         = "datadog"
+  version       = "2.35.6"
   namespace     = "default"
   lint          = true
   force_update  = true
