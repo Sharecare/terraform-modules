@@ -23,3 +23,10 @@ variable "default_service_account" {
 variable "display_name" {
   default = "Doc.ai - SADA"
 }
+
+variable "labels" {
+  description = "Map of labels for billing"
+  default = {
+    "project_owner" = "infra"
+  }
+}

@@ -108,7 +108,7 @@ datadog:
   # datadog.dd_url -- The host of the Datadog intake server to send Agent data to, only set this option if you need the Agent to send data to a custom URL
 
   ## Overrides the site setting defined in "site".
-  dd_url:  # https://app.datadoghq.com
+  dd_url: # https://app.datadoghq.com
 
   # datadog.logLevel -- Set logging verbosity, valid log levels are: trace, debug, info, warn, error, critical, off
   logLevel: INFO
@@ -281,7 +281,7 @@ datadog:
     ##
     ## WARNING: Make sure that hosts using this are properly firewalled otherwise
     ## metrics and traces are accepted from any host able to connect to this host.
-    useHostPort: false
+    useHostPort: true
 
     # datadog.dogstatsd.useHostPID -- Run the agent in the host's PID namespace
 
