@@ -14,7 +14,7 @@ No requirements.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_project_factory"></a> [project\_factory](#module\_project\_factory) | terraform-google-modules/project-factory/google | 11.3.1 |
+| <a name="module_project_factory"></a> [project\_factory](#module\_project\_factory) | terraform-google-modules/project-factory/google | 12.0.0 |
 
 ## Resources
 
@@ -30,6 +30,7 @@ No requirements.
 | <a name="input_default_service_account"></a> [default\_service\_account](#input\_default\_service\_account) | Project default service account setting: can be one of delete, deprivilege, disable, or keep. | `string` | `"disable"` | no |
 | <a name="input_display_name"></a> [display\_name](#input\_display\_name) | n/a | `string` | `"Doc.ai - SADA"` | no |
 | <a name="input_folder_id"></a> [folder\_id](#input\_folder\_id) | folder id that this project belongs to | `any` | n/a | yes |
+| <a name="input_labels"></a> [labels](#input\_labels) | Map of labels for billing | `map` | <pre>{<br>  "project_owner": "infra"<br>}</pre> | no |
 | <a name="input_org_id"></a> [org\_id](#input\_org\_id) | organization this project belongs to (Required) | `any` | n/a | yes |
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Name of the project to create | `any` | n/a | yes |
 | <a name="input_project_services"></a> [project\_services](#input\_project\_services) | List of services that need to be enabled for the given project. | `any` | n/a | yes |
