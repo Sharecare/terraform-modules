@@ -108,7 +108,7 @@ datadog:
   # datadog.dd_url -- The host of the Datadog intake server to send Agent data to, only set this option if you need the Agent to send data to a custom URL
 
   ## Overrides the site setting defined in "site".
-  dd_url:  # https://app.datadoghq.com
+  dd_url: # https://app.datadoghq.com
 
   # datadog.logLevel -- Set logging verbosity, valid log levels are: trace, debug, info, warn, error, critical, off
   logLevel: INFO
@@ -249,7 +249,7 @@ datadog:
     # datadog.dogstatsd.originDetection -- Enable origin detection for container tagging
 
     ## ref: https://docs.datadoghq.com/developers/dogstatsd/unix_socket/#using-origin-detection-for-container-tagging
-    originDetection: true
+    originDetection: false
 
     # datadog.dogstatsd.tags -- List of static tags to attach to every custom metric, event and service check collected by Dogstatsd.
 
