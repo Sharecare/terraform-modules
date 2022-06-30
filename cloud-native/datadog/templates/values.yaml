@@ -249,7 +249,7 @@ datadog:
     # datadog.dogstatsd.originDetection -- Enable origin detection for container tagging
 
     ## ref: https://docs.datadoghq.com/developers/dogstatsd/unix_socket/#using-origin-detection-for-container-tagging
-    originDetection: false
+    originDetection: true
 
     # datadog.dogstatsd.tags -- List of static tags to attach to every custom metric, event and service check collected by Dogstatsd.
 
@@ -281,7 +281,7 @@ datadog:
     ##
     ## WARNING: Make sure that hosts using this are properly firewalled otherwise
     ## metrics and traces are accepted from any host able to connect to this host.
-    useHostPort: false
+    useHostPort: true
 
     # datadog.dogstatsd.useHostPID -- Run the agent in the host's PID namespace
 
