@@ -110,4 +110,8 @@ resource "helm_release" "openfaas_functions" {
   depends_on = [
     helm_release.openfaas
   ]
+  set {
+    name = "force_update"
+    value = timestamp()
+  }
 }
