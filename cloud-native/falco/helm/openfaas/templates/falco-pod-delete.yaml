@@ -7,7 +7,7 @@ metadata:
   namespace: {{ $namespace }}
 spec:
   name: falco-pod-delete
-  image: gcr.io/infra-sec-28bd/infrastructure/falco-delete-pod:latest
+  image: gcr.io/terraform-254700/infrastructure/falco-delete-pod:latest
   annotations:
     com.openfaas.serviceaccount: falco-pod-delete
   labels:
