@@ -46,10 +46,16 @@ variable "cloudflare_key" {
   sensitive   = true
 }
 
-variable "create_namespace" {
+variable "create_certmanager_namespace" {
   description = "Create namespace true if this is a fresh install otherwise use default false"
   default     = false
 }
+
+variable "create_ingress_namespace" {
+  description = "Create namespace true if this is a fresh install otherwise use default false"
+  default     = false
+}
+
 locals {
   common_name_provider_map = { for k, v in var.certificates : k => v["provider"] }
   has_cloudflare           = contains(values(local.common_name_provider_map), "cloudflare")

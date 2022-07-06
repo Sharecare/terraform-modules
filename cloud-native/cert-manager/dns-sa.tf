@@ -1,7 +1,7 @@
 resource "google_service_account" "service_account" {
   for_each     = local.clouddns_certs
   description  = "Used to pass acme dns01 challenge for ${each.key}"
-  account_id   = substr("cert-manager-dns-${replace(each.key, ".", "-")}", 0, 29) #can only be 6-30 chars long
+  account_id   = trim(substr("cert-manager-dns-${replace(each.key, ".", "-")}", 0, 26), "-") #can only be 6-30 chars long
   display_name = "cert-manager-dns-${replace(each.key, ".", "-")}"
   project      = each.value.project
 }

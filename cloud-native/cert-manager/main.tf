@@ -4,7 +4,7 @@ resource "helm_release" "cert_manager" {
   repository = "https://charts.jetstack.io"
   chart      = "cert-manager"
   version    = var.cert-manager-version
-  namespace  = kubernetes_namespace.cert_manager[0].id
+  namespace  = var.create_certmanager_namespace
   values     = [templatefile("${path.module}/templates/values.yaml", {})]
 
 
@@ -23,7 +23,7 @@ resource "helm_release" "cert_manager" {
 
 resource "kubernetes_namespace" "cert_manager" {
   provider = kubernetes
-  count    = var.create_namespace ? 1 : 0
+  count    = var.create_certmanager_namespace ? 1 : 0
   metadata {
     annotations = {
       name = "cert-namanger"
@@ -38,6 +38,24 @@ resource "kubernetes_namespace" "cert_manager" {
   }
 }
 
+resource "kubernetes_namespace" "ingress" {
+  provider = kubernetes
+  count    = var.create_ingress_namespace ? 1 : 0
+  metadata {
+    annotations = {
+      name = "ingress"
+    }
+
+    labels = {
+      application = "ingress"
+      name        = "ingress"
+    }
+
+    name = "ingress"
+  }
+}
+
+
 
 resource "helm_release" "manifests" {
   provider         = helm
@@ -45,7 +63,7 @@ resource "helm_release" "manifests" {
   chart            = "${path.module}/manifests"
   version          = "1.0.0"
   namespace        = "ingress"
-  create_namespace = true
+  create_namespace = var.create_ingress_namespace
   force_update     = true
   lint             = true
 
