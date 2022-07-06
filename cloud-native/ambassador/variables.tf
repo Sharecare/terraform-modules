@@ -8,6 +8,11 @@ variable "tls_contexts" {
   }
 }
 
+variable "create_namespace" {
+  description = "create ingress namespace? set to true if installing ambassador without Certmanager"
+  default     = false
+}
+
 locals {
   tls_contexts = { for k, v in var.tls_contexts : replace(k, ".", "-") => v.provider }
 }

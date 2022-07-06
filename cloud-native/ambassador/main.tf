@@ -12,6 +12,7 @@ resource "helm_release" "ambassador" {
 }
 
 resource "kubernetes_namespace" "ingress" {
+  count = var.create_namespace ? 1 : 0
   metadata {
     annotations = {
       name = "ingress"
