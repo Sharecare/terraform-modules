@@ -18,15 +18,8 @@ resource "helm_release" "cert_manager" {
     }
   }
   depends_on = [
-    kubernetes_namespace.cert_manager,
-    kubectl_manifest.cert-manager-crds
+    kubernetes_namespace.cert_manager
   ]
-}
-
-resource "kubectl_manifest" "cert-manager-crds" {
-  provider  = kubectl
-  yaml_body = yamldecode(file("./${path.module}/crds/crds-${var.cert-manager-version}.yaml"))
-  force_new = true
 }
 
 resource "kubernetes_namespace" "cert_manager" {
