@@ -19,7 +19,7 @@ resource "helm_release" "cert_manager" {
   }
   depends_on = [
     kubernetes_namespace.cert_manager,
-    kubernetes_manifest.cert-manager-crds
+    kubectl_manifest.cert-manager-crds
   ]
 }
 
