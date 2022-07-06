@@ -1,11 +1,11 @@
 ###################### FALCO
 resource "helm_release" "falco" {
 
-  depends_on = []
-  name       = "falco"
-  repository = "https://falcosecurity.github.io/charts"
-  chart      = "falco"
-  # version          = "0.2.7"
+  depends_on       = []
+  name             = "falco"
+  repository       = "https://falcosecurity.github.io/charts"
+  chart            = "falco"
+  version          = "1.18.5"
   namespace        = "falco"
   create_namespace = true
   wait             = true
@@ -33,7 +33,7 @@ resource "helm_release" "falco_sidekick" {
   name             = "falcosidekick"
   repository       = "https://falcosecurity.github.io/charts"
   chart            = "falcosidekick"
-  version          = "0.2.7"
+  version          = "0.5.1"
   namespace        = "falco"
   create_namespace = true
   wait             = true
@@ -44,13 +44,18 @@ resource "helm_release" "falco_sidekick" {
     name  = "config.debug"
     value = "true"
   }
+  # set {
+  #   name  = "config.kubeless.namespace"
+  #   value = "kubeless"
+  # }
+  # set {
+  #   name  = "config.kubeless.function"
+  #   value = "delete-pod"
+  # }
+
   set {
-    name  = "config.kubeless.namespace"
-    value = "kubeless"
-  }
-  set {
-    name  = "config.kubeless.function"
-    value = "delete-pod"
+    name  = "config.openfaas.functionname"
+    value = "falco-pod-delete"
   }
   set {
     name  = "config.slack.webhookurl"
@@ -58,28 +63,55 @@ resource "helm_release" "falco_sidekick" {
   }
 }
 
-###################### KUBELESS DELETE-POD
-resource "helm_release" "kubeless" {
-  name             = "kubeless-delete-pod"
-  chart            = "${path.module}/helm/kubeless"
-  namespace        = "kubeless"
+###################### OpenFaas DELETE-POD
+data "template_file" "openfaas" {
+  template = file("${path.module}/templates/openfaas.values.yaml")
+}
+
+resource "helm_release" "openfaas" {
+  name             = "openfaas"
+  repository       = "https://openfaas.github.io/faas-netes/"
+  chart            = "openfaas"
+  namespace        = "openfaas"
+  version          = "10.1.1"
   create_namespace = true
   wait             = true
   recreate_pods    = true
   lint             = true
-  depends_on       = [kubernetes_namespace.kubeless]
+
+  values = [data.template_file.openfaas.rendered]
+  depends_on = [
+    kubernetes_namespace.openfaas-fn
+  ]
 }
 
-resource "kubernetes_namespace" "kubeless" {
+resource "kubernetes_namespace" "openfaas-fn" {
   metadata {
     annotations = {
-      name = "kubeless"
+      name = "openfaas-fn"
     }
 
     labels = {
-      application = "kubeless"
+      application = "openfaas"
     }
+    name = "openfaas-fn"
+  }
+}
 
-    name = "kubeless"
+resource "helm_release" "openfaas_functions" {
+  name             = "openfaas-functions"
+  chart            = "${path.module}/helm/openfaas"
+  namespace        = kubernetes_namespace.openfaas-fn.id
+  create_namespace = true
+  wait             = true
+  recreate_pods    = true
+  lint             = true
+  force_update     = true
+  depends_on = [
+    helm_release.openfaas
+  ]
+  set {
+    name = "force_update"
+    value = timestamp()
   }
 }

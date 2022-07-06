@@ -19,4 +19,5 @@ module "project_factory" {
   activate_apis               = var.project_services
   auto_create_network         = var.auto_create_network
   default_service_account     = var.default_service_account
+  labels                      = var.labels
 }
