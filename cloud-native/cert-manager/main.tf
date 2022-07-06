@@ -1,11 +1,12 @@
 resource "helm_release" "cert_manager" {
-  provider   = helm
-  name       = "cert-manager"
-  repository = "https://charts.jetstack.io"
-  chart      = "cert-manager"
-  version    = var.cert-manager-version
-  namespace  = var.create_certmanager_namespace
-  values     = [templatefile("${path.module}/templates/values.yaml", {})]
+  provider         = helm
+  name             = "cert-manager"
+  repository       = "https://charts.jetstack.io"
+  chart            = "cert-manager"
+  version          = var.cert-manager-version
+  namespace        = "cert-manager"
+  create_namespace = var.create_certmanager_namespace
+  values           = [templatefile("${path.module}/templates/values.yaml", {})]
 
 
   dynamic "set" {
