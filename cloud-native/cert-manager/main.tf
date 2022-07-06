@@ -23,9 +23,10 @@ resource "helm_release" "cert_manager" {
   ]
 }
 
-resource "kubernetes_manifest" "cert-manager-crds" {
-  provider = kubernetes
-  manifest = yamldecode(file("./${path.module}/crds/crds-${var.cert-manager-version}.yaml"))
+resource "kubectl_manifest" "cert-manager-crds" {
+  provider  = kubectl
+  yaml_body = yamldecode(file("./${path.module}/crds/crds-${var.cert-manager-version}.yaml"))
+  force_new = true
 }
 
 resource "kubernetes_namespace" "cert_manager" {
