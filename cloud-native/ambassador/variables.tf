@@ -8,6 +8,10 @@ variable "tls_contexts" {
   }
 }
 
+variable "ambassador_overrides" {
+  default = {}
+}
+
 variable "create_namespace" {
   description = "create ingress namespace? set to true if installing ambassador without Certmanager"
   default     = false

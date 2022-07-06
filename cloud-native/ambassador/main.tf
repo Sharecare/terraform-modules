@@ -7,7 +7,14 @@ resource "helm_release" "ambassador" {
   force_update = true
   lint         = true
 
-  values     = [file("${path.module}/templates/values.yaml")]
+  values = [file("${path.module}/templates/values.yaml")]
+  dynamic "set" {
+    for_each = var.ambassador_overrides
+    content {
+      name  = set.key
+      value = set.value
+    }
+  }
   depends_on = [kubernetes_namespace.ingress]
 }
 
