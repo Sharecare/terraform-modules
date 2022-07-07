@@ -1,6 +1,6 @@
 {{- $namespace := .Release.namespace }}
-{{- $provider := .Values.provider }}
 {{- range $k, $v := .Values.tls_contexts }}
+{{- $common_name := $k | replace "-" "." }}
 ---
 apiVersion: getambassador.io/v2
 kind: TLSContext
@@ -9,9 +9,9 @@ metadata:
   namespace: {{ $namespace }}
 spec:
   hosts:
-  - "*.{{- $v }}"
-  - "{{- $v }}"
-  secret: ambassador-certs-{{- $k }}
+  - "*.{{- $common_name }}"
+  - "{{- $common_name }}"
+  secret: "ambassador-certs-{{- $v }}-{{- $k }}"
   redirect_cleartext_from: 8080
   alpn_protocols: h2[, http/1.1]
   min_tls_version: v1.2

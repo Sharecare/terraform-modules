@@ -1,6 +1,8 @@
 repos:
   - repo: https://github.com/gruntwork-io/pre-commit
-    rev: v0.1.12 # Get the latest from: https://github.com/gruntwork-io/pre-commit/releases
+    rev: v0.1.17 # Get the latest from: https://github.com/gruntwork-io/pre-commit/releases
     hooks:
       - id: terraform-fmt
+      # https://github.com/terraform-linters/tflint/tree/master/docs/rules add rules to .tflint.hcl
       - id: tflint
+

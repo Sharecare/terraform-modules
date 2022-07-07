@@ -28,8 +28,9 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_dns_provider"></a> [dns\_provider](#input\_dns\_provider) | DNS provider for cert-manager issuer; either clouddns or cloudflare by default | `string` | `"clouddns"` | no |
-| <a name="input_tls_contexts"></a> [tls\_contexts](#input\_tls\_contexts) | Map from TLSContext name (all must be unique) to domain name for ambassador/emissary to host | `map(string)` | n/a | yes |
+| <a name="input_ambassador_overrides"></a> [ambassador\_overrides](#input\_ambassador\_overrides) | n/a | `map` | `{}` | no |
+| <a name="input_create_namespace"></a> [create\_namespace](#input\_create\_namespace) | create ingress namespace? set to true if installing ambassador without Certmanager | `bool` | `false` | no |
+| <a name="input_tls_contexts"></a> [tls\_contexts](#input\_tls\_contexts) | tls context map same contract as cert-manager | `map` | <pre>{<br>  "docai.beer": {<br>    "project": "doc-ai-infra-sec",<br>    "provider": "clouddns"<br>  }<br>}</pre> | no |
 
 ## Outputs
 

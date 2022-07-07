@@ -1,10 +1,22 @@
-variable "dns_provider" {
-  type    = string
-  default = "clouddns"
-  description = "DNS provider for cert-manager issuer; either clouddns or cloudflare by default"
+variable "tls_contexts" {
+  description = "tls context map same contract as cert-manager"
+  default = {
+    "docai.beer" = {
+      provider = "clouddns"
+      project  = "doc-ai-infra-sec"
+    }
+  }
 }
 
-variable "tls_contexts" {
-  type = map(string)
-  description = "Map from TLSContext name (all must be unique) to domain name for ambassador/emissary to host"
+variable "ambassador_overrides" {
+  default = {}
+}
+
+variable "create_namespace" {
+  description = "create ingress namespace? set to true if installing ambassador without Certmanager"
+  default     = false
+}
+
+locals {
+  tls_contexts = { for k, v in var.tls_contexts : replace(k, ".", "-") => v.provider }
 }
