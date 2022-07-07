@@ -5,7 +5,7 @@ resource "helm_release" "cert_manager" {
   chart            = "cert-manager"
   version          = var.cert-manager-version
   namespace        = "cert-manager"
-  create_namespace = var.create_certmanager_namespace
+  create_namespace = var.create_certmanager_namespace ? "false" : "true"
   values           = [templatefile("${path.module}/templates/values.yaml", {})]
 
 
@@ -64,7 +64,7 @@ resource "helm_release" "manifests" {
   chart            = "${path.module}/manifests"
   version          = "1.0.0"
   namespace        = "ingress"
-  create_namespace = var.create_ingress_namespace
+  create_namespace = var.create_ingress_namespace ? "false" : "true"
   force_update     = true
   lint             = true
 

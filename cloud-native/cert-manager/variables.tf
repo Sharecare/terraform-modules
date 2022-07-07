@@ -8,17 +8,17 @@ variable "certificates" {
   description = "map of certificate requests"
   type        = map(any)
   default = {
-    "docai.beer" = {
+    "example.beer" = {
       provider = "clouddns"
       project  = "doc-ai-infra-sec"
     }
 
-    "harbor.docai.beer" = {
+    "example.docai.beer" = {
       provider = "clouddns"
       project  = "infra-sec"
     }
 
-    "doc.ai" = {
+    "example.ai" = {
       provider = "cloudflare"
       project  = ""
     }
