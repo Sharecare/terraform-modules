@@ -13,6 +13,7 @@ image:
 podSecurityContext:
   runAsUser: 1234
   fsGroup: 1234
+  readOnlyRootFilesystem: true
 
 # One or more secrets to be used when pulling images
 imagePullSecrets: []
@@ -400,6 +401,7 @@ webui:
   podSecurityContext:
     runAsUser: 1234
     fsGroup: 1234
+    readOnlyRootFilesystem: true
 
   priorityClassName: ""
 
