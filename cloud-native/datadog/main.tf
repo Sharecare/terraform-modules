@@ -2,7 +2,7 @@ resource "helm_release" "datadog" {
   name          = "datadog"
   repository    = "https://helm.datadoghq.com"
   chart         = "datadog"
-  version       = "2.35.6"
+  version       = var.dd_version
   namespace     = "default"
   lint          = true
   force_update  = true
@@ -15,4 +15,12 @@ resource "helm_release" "datadog" {
         DATADOG_API_KEY = var.datadog_api_key
     })
   ]
+  dynamic "set" {
+    for_each = var.value_overrides
+    iterator = override
+    content {
+      name  = override.key
+      value = override.value
+    }
+  }
 }

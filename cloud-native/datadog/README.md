@@ -27,6 +27,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_datadog_api_key"></a> [datadog\_api\_key](#input\_datadog\_api\_key) | Datadog API key | `string` | `""` | no |
 | <a name="input_requirements"></a> [requirements](#input\_requirements) | List of module deps | `list(any)` | `[]` | no |
+| <a name="input_value_overrides"></a> [value\_overrides](#input\_value\_overrides) | A map used to feed the dynamic blocks of the datadog helm chart | `map(any)` | `{}` | no |
 
 ## Outputs
 
