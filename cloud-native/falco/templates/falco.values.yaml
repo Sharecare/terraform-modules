@@ -169,7 +169,7 @@ driver:
   # Always set it to false when using Falco with plugins.
   enabled: true
   # -- Tell Falco which driver to use. Available options: module (kernel driver) and ebpf (eBPF probe).
-  kind: module
+  kind: ebpf
   # -- Configuration section for ebpf driver.
   ebpf:
     # -- Path where the eBPF probe is located. It comes handy when the probe have been installed in the nodes using tools other than the init
@@ -199,8 +199,9 @@ driver:
         #  -- Overrides the image tag whose default is the chart appVersion.
         tag: ""
       # -- Extra environment variables that will be pass onto Falco driver loader init container.
-      env: {}
-
+      env:
+        FALCO_BPF_PROBE: ""
+#  Loading rules from file /etc/falco/rules.d/custom.local.yaml:
 # Collectors for data enrichment (scenario requirement)
 collectors:
   # -- Enable/disable all the metadata collectors.
@@ -321,7 +322,11 @@ falco:
   rules_file:
     - /etc/falco/falco_rules.yaml
     - /etc/falco/falco_rules.local.yaml
+    # - /etc/falco/k8s_audit_rules.yaml
+    - /etc/falco/rules.d/custom.local.yaml
     - /etc/falco/rules.d
+    - /etc/falco/rules.optional.d
+    #  Loading rules from file /etc/falco/rules.d/custom.local.yaml:
 
   #
   # Plugins that are available for use. These plugins are not loaded by
@@ -371,7 +376,7 @@ falco:
   time_format_iso_8601: false
 
   # -- Whether to output events in json or text.
-  json_output: false
+  json_output: true
 
   # -- When using json output, whether or not to include the "output" property
   # itself (e.g. "File below a known binary directory opened for writing
@@ -395,7 +400,7 @@ falco:
   # separate from the priority field of rules. This refers only to the
   # log level of falco's internal logging. Can be one of "emergency",
   # "alert", "critical", "error", "warning", "notice", "info", "debug".
-  log_level: info
+  log_level: debug
 
   # Falco is capable of managing the logs coming from libs. If enabled,
   # the libs logger send its log records the same outputs supported by

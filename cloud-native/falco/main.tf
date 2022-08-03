@@ -33,7 +33,7 @@ resource "helm_release" "falco_sidekick" {
   name             = "falcosidekick"
   repository       = "https://falcosecurity.github.io/charts"
   chart            = "falcosidekick"
-  version          = "0.5.1"
+  version          = "0.5.7"
   namespace        = "falco"
   create_namespace = true
   wait             = true
