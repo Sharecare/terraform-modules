@@ -5,7 +5,7 @@ resource "helm_release" "falco" {
   name             = "falco"
   repository       = "https://falcosecurity.github.io/charts"
   chart            = "falco"
-  version          = "1.18.5"
+  version          = "2.0.5"
   namespace        = "falco"
   create_namespace = true
   wait             = true
@@ -33,7 +33,7 @@ resource "helm_release" "falco_sidekick" {
   name             = "falcosidekick"
   repository       = "https://falcosecurity.github.io/charts"
   chart            = "falcosidekick"
-  version          = "0.5.1"
+  version          = "0.5.7"
   namespace        = "falco"
   create_namespace = true
   wait             = true
@@ -44,22 +44,28 @@ resource "helm_release" "falco_sidekick" {
     name  = "config.debug"
     value = "true"
   }
-  # set {
-  #   name  = "config.kubeless.namespace"
-  #   value = "kubeless"
-  # }
-  # set {
-  #   name  = "config.kubeless.function"
-  #   value = "delete-pod"
-  # }
+
+  set {
+    name  = "config.customfields.cluster"
+    value = "${var.product}-${var.project_id}"
+  }
 
   set {
     name  = "config.openfaas.functionname"
     value = "falco-pod-delete"
   }
+
   set {
     name  = "config.slack.webhookurl"
     value = var.webhookurl
+  }
+  dynamic "set" {
+    for_each = var.value_overrides
+    iterator = override
+    content {
+      name  = override.key
+      value = override.value
+    }
   }
 }
 
@@ -111,7 +117,7 @@ resource "helm_release" "openfaas_functions" {
     helm_release.openfaas
   ]
   set {
-    name = "force_update"
+    name  = "force_update"
     value = timestamp()
   }
 }
