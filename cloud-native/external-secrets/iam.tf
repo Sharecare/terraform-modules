@@ -9,7 +9,7 @@ module "external_secrets_workload_identity" {
   name       = var.name
   namespace  = kubernetes_namespace.external-secrets.id
   project_id = var.project_id
-  roles = var.gcp_roles
+  roles      = var.gcp_roles
 }
 
 resource "kubernetes_namespace" "external-secrets" {

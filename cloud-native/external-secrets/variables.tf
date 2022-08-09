@@ -23,12 +23,12 @@ variable "provider" {
 variable "gcp_roles" {
   type        = list(string)
   description = "roles to assign to the k8s service account"
-  default     = [
+  default = [
     "roles/secretmanager.secretAccessor",
   ]
 }
 
 
 locals {
-   validate_projectId_gcp = (var.provider == "gcp" && length(var.project_id) == 0) ? tobool("GCP provider requires the use of a project ID in this module") : true
+  validate_projectId_gcp = (var.provider == "gcp" && length(var.project_id) == 0) ? tobool("GCP provider requires the use of a project ID in this module") : true
 }
