@@ -6,7 +6,7 @@ variable "name" {
 
 variable "service_account_name" {
   type        = string
-  description = "name of the k8s service account running with secret access privelages Required for external secrets"
+  description = "name of the k8s service accont running with secret access privelages Required for external secrets"
 }
 
 variable "project_id" {
