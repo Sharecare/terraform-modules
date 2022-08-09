@@ -48,5 +48,4 @@ resource "kubernetes_secret" "external_secrets_local_sa_token" {
 }
 
 resource "random_uuid" "sa" {
-  count    = var.create_service_account_secret ? 1 : 0
 }
