@@ -4,11 +4,6 @@ variable "name" {
   default     = "external-secrets"
 }
 
-variable "service_account_name" {
-  type        = string
-  description = "name of the k8s service accont running with secret access prisvelages Required for external secrets"
-}
-
 variable "project_id" {
   type        = string
   description = "project id for the k8s cluster gcp"
