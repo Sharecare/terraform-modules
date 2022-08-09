@@ -2,7 +2,7 @@ resource "helm_release" "external-secrets" {
   provider              = helm
   name                  = var.name
   repository            = "https://charts.external-secrets.io"
-  chart                 = "external-secrets/external-secrets"
+  chart                 = "external-secrets"
   version               = "0.5.9"
   namespace             = kubernetes_namespace.external-secrets.id
   create_namespace      = true
