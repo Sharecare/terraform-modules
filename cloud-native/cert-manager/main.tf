@@ -7,7 +7,8 @@ resource "helm_release" "cert_manager" {
   namespace        = "cert-manager"
   create_namespace = var.create_certmanager_namespace ? "false" : "true"
   values           = [templatefile("${path.module}/templates/values.yaml", {})]
-
+  lint             = true
+  cleanup_on_fail  = true
 
   dynamic "set" {
     for_each = var.certmanager_value_overrides
@@ -67,6 +68,7 @@ resource "helm_release" "manifests" {
   create_namespace = var.create_ingress_namespace ? "false" : "true"
   force_update     = true
   lint             = true
+  cleanup_on_fail  = true
 
   dynamic "set" {
     for_each = local.manifest_map
