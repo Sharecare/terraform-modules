@@ -20,7 +20,7 @@ resource "helm_release" "external-secrets" {
 
   set {
     name  = "serviceAccount.name"
-    value = var.provider == "gcp" ? module.external_secrets_workload_identity[0].k8s_service_account_name : "external-secrets-aws"
+    value = var.cloud_provider == "gcp" ? module.external_secrets_workload_identity[0].k8s_service_account_name : "external-secrets-aws"
   }
 
   dynamic "set" {

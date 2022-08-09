@@ -10,7 +10,7 @@ variable "project_id" {
   default     = ""
 }
 
-variable "provider" {
+variable "cloud_provider" {
   type        = string
   description = "provider for the k8s cluster (gcp, aws, azure)"
 }
@@ -25,5 +25,5 @@ variable "gcp_roles" {
 
 
 locals {
-  validate_projectId_gcp = (var.provider == "gcp" && length(var.project_id) == 0) ? tobool("GCP provider requires the use of a project ID in this module") : true
+  validate_projectId_gcp = (var.cloud_provider == "gcp" && length(var.project_id) == 0) ? tobool("GCP provider requires the use of a project ID in this module") : true
 }
