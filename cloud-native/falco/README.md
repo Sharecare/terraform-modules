@@ -38,6 +38,7 @@ No modules.
 | <a name="input_product"></a> [product](#input\_product) | n/a | `string` | n/a | yes |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | n/a | `string` | n/a | yes |
 | <a name="input_requirements"></a> [requirements](#input\_requirements) | n/a | `list(string)` | n/a | yes |
+| <a name="input_value_overrides"></a> [value\_overrides](#input\_value\_overrides) | n/a | `map(string)` | `{}` | no |
 | <a name="input_webhookurl"></a> [webhookurl](#input\_webhookurl) | n/a | `string` | n/a | yes |
 
 ## Outputs
