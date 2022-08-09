@@ -11,7 +11,7 @@ variable "project_id" {
 }
 
 variable "values_overrides" {
-  type        = map
+  type        = map(any)
   description = "values overrides for the external-secrets chart"
   default     = {}
 }
@@ -28,6 +28,11 @@ variable "gcp_roles" {
   default = [
     "roles/secretmanager.secretAccessor",
   ]
+}
+
+variable "create_service_account_secret" {
+  type        = bool
+  description = "Create a secret for the service account if kubernetes version is >= 1.24"
 }
 
 

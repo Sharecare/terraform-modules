@@ -27,3 +27,18 @@ resource "kubernetes_namespace" "external-secrets" {
     name = var.name
   }
 }
+
+resource "kubernetes_secret" "external_secrets_local_sa_token" {
+  count    = var.create_service_account_secret ? 1 : 0
+  provider = kubernetes
+
+  metadata {
+    name      = "${var.name}-token"
+    namespace = kubernetes_namespace.external-secrets.id
+    annotations = {
+      "kubernetes.io/service-account.name" = var.cloud_provider == "gcp" ? module.external_secrets_workload_identity[0].k8s_service_account_name : "external-secrets-aws"
+    }
+  }
+
+  type = "kubernetes.io/service-account-token"
+}
