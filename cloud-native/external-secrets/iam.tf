@@ -10,6 +10,9 @@ module "external_secrets_workload_identity" {
   namespace  = kubernetes_namespace.external-secrets.id
   project_id = var.project_id
   roles      = var.gcp_roles
+  depends_on = [
+    kubernetes_secret.external_secrets_local_sa_token
+  ]
 }
 
 resource "kubernetes_namespace" "external-secrets" {
@@ -36,7 +39,7 @@ resource "kubernetes_secret" "external_secrets_local_sa_token" {
     name      = "${var.name}-token"
     namespace = kubernetes_namespace.external-secrets.id
     annotations = {
-      "kubernetes.io/service-account.name" = var.cloud_provider == "gcp" ? module.external_secrets_workload_identity[0].k8s_service_account_name : "external-secrets-aws"
+      "kubernetes.io/service-account.name" = var.cloud_provider == "gcp" ? var.name : "external-secrets-aws"
     }
   }
 
