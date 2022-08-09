@@ -1,10 +1,10 @@
 resource "helm_release" "external-secrets" {
-
-  name                  = "external-secrets"
+  provider              = helm
+  name                  = var.name
   repository            = "https://charts.external-secrets.io"
   chart                 = "external-secrets/external-secrets"
   version               = "0.5.9"
-  namespace             = var.namespace
+  namespace             = kubernetes_namespace.external-secrets.id
   create_namespace      = true
   wait                  = true
   lint                  = true
@@ -20,8 +20,9 @@ resource "helm_release" "external-secrets" {
 
   set {
     name  = "serviceAccount.name"
-    value = var.service_account_name
+    value = var.provider == "gcp" ? module.external_secrets_workload_identity[0].k8s_service_account_name : "external-secrets-aws"
   }
+
   dynamic "set" {
     for_each = var.values_overrides
     content {
