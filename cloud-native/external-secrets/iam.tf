@@ -1,7 +1,7 @@
 module "external_secrets_workload_identity" {
   count   = var.cloud_provider == "gcp" ? 1 : 0
   source  = "terraform-google-modules/kubernetes-engine/google//modules/workload-identity"
-  version = "20.0.0"
+  version = "22.1.0"
   providers = {
     kubernetes = kubernetes
   }
