@@ -30,10 +30,10 @@
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_gcp_roles"></a> [gcp\_roles](#input\_gcp\_roles) | roles to assign to the k8s service account | `list(string)` | <pre>[<br>  "roles/secretmanager.secretAccessor"<br>]</pre> | no |
 | <a name="input_name"></a> [name](#input\_name) | namespace/serviceaccount where external-secrets lives | `string` | `"external-secrets"` | no |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | project id for the k8s cluster gcp | `string` | `""` | no |
 | <a name="input_provider"></a> [provider](#input\_provider) | provider for the k8s cluster (gcp, aws, azure) | `string` | n/a | yes |
-| <a name="input_service_account_name"></a> [service\_account\_name](#input\_service\_account\_name) | name of the k8s service account running with secret access privelages Required for external secrets | `string` | n/a | yes |
 
 ## Outputs
 
