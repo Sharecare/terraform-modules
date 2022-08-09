@@ -10,6 +10,13 @@ variable "project_id" {
   default     = ""
 }
 
+variable "values_overrides" {
+  type        = map
+  description = "values overrides for the external-secrets chart"
+  default     = {}
+}
+
+
 variable "cloud_provider" {
   type        = string
   description = "provider for the k8s cluster (gcp, aws, azure)"
