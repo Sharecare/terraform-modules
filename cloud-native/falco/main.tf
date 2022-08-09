@@ -11,6 +11,7 @@ resource "helm_release" "falco" {
   wait             = true
   recreate_pods    = true
   lint             = true
+  cleanup_on_fail  = true
 
   values = [
     data.template_file.falco_template.rendered,
@@ -39,6 +40,7 @@ resource "helm_release" "falco_sidekick" {
   wait             = true
   recreate_pods    = true
   lint             = true
+  cleanup_on_fail  = true
 
   set {
     name  = "config.debug"
@@ -84,6 +86,7 @@ resource "helm_release" "openfaas" {
   wait             = true
   recreate_pods    = true
   lint             = true
+  cleanup_on_fail  = true
 
   values = [data.template_file.openfaas.rendered]
   depends_on = [
@@ -113,6 +116,8 @@ resource "helm_release" "openfaas_functions" {
   recreate_pods    = true
   lint             = true
   force_update     = true
+  cleanup_on_fail  = true
+
   depends_on = [
     helm_release.openfaas
   ]

@@ -1,12 +1,14 @@
 resource "helm_release" "ambassador" {
-  name             = "ambassador"
-  repository       = "https://getambassador.io"
-  chart            = "ambassador"
-  version          = "6.6.0"
-  namespace        = "ingress"
-  create_namespace = var.create_namespace ? "false" : "true"
-  force_update     = true
-  lint             = true
+  name                  = "ambassador"
+  repository            = "https://getambassador.io"
+  chart                 = "ambassador"
+  version               = "6.6.0"
+  namespace             = "ingress"
+  create_namespace      = var.create_namespace ? "false" : "true"
+  force_update          = true
+  lint                  = true
+  render_subchart_notes = true
+  cleanup_on_fail       = true
 
   values = [file("${path.module}/templates/values.yaml")]
   dynamic "set" {
@@ -35,12 +37,13 @@ resource "kubernetes_namespace" "ingress" {
 
 
 resource "helm_release" "manifests" {
-  name         = "ambassador-manifests"
-  chart        = "${path.module}/manifests"
-  version      = "1.1.0"
-  namespace    = "ingress"
-  force_update = true
-  lint         = true
+  name            = "ambassador-manifests"
+  chart           = "${path.module}/manifests"
+  version         = "1.1.0"
+  namespace       = "ingress"
+  force_update    = true
+  lint            = true
+  cleanup_on_fail = true
 
   dynamic "set" {
     for_each = local.tls_contexts

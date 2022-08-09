@@ -1,12 +1,13 @@
 resource "helm_release" "datadog" {
-  name          = "datadog"
-  repository    = "https://helm.datadoghq.com"
-  chart         = "datadog"
-  version       = var.dd_version
-  namespace     = "default"
-  lint          = true
-  force_update  = true
-  recreate_pods = true
+  name            = "datadog"
+  repository      = "https://helm.datadoghq.com"
+  chart           = "datadog"
+  version         = var.dd_version
+  namespace       = "default"
+  lint            = true
+  force_update    = true
+  recreate_pods   = true
+  cleanup_on_fail = true
 
 
   values = [
