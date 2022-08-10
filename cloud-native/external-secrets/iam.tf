@@ -49,3 +49,26 @@ resource "kubernetes_secret" "external_secrets_local_sa_token" {
 
 resource "random_uuid" "sa" {
 }
+
+/*
+  NOTE: Using `kubernetes_manifest` resource due to a bug in the terraform provider. Details can be found here:
+  https://github.com/hashicorp/terraform-provider-kubernetes/issues/1724#issuecomment-1139450178
+*/
+resource "kubernetes_manifest" "state_metrics_local_sa" {
+  provider = kubernetes.local
+
+  manifest = {
+    apiVersion = "v1"
+    kind       = "ServiceAccount"
+    metadata = {
+      namespace = kubernetes_namespace.mon_local.metadata[0].name
+      name      = "state-metrics"
+
+      labels = {
+        app = "state-metrics"
+      }
+    }
+
+    automountServiceAccountToken = false
+  }
+}
