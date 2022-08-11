@@ -116,7 +116,7 @@ variable "encryption_key_name" {
 }
 
 variable "database_flags" {
-  type        = list(map)
+  type        = list(any)
   description = "Database flags"
   default     = [
     {
