@@ -10,23 +10,13 @@ locals {
     authorized_networks = var.authorized_networks
     allocated_ip_range  = null
   }
-  database_flags = [
-    {
-      name  = "log_bin_trust_function_creators"
-      value = "on"
-    },
-    {
-      name  = "sql_mode"
-      value = "TRADITIONAL"
-    },
-  ]
   read_replicas = [
     {
       name                = "0"
       zone                = "${var.region}-a"
       tier                = var.tier
       ip_configuration    = local.ip_configuration
-      database_flags      = local.database_flags
+      database_flags      = var.database_flags
       disk_autoresize     = var.disk_autoresize
       disk_size           = var.disk_size
       disk_type           = "PD_HDD"
@@ -38,7 +28,7 @@ locals {
 
 module "mysql_db" {
   source                           = "GoogleCloudPlatform/sql-db/google//modules/mysql"
-  version                          = "10.0.0"
+  version                          = "10.1.0"
   name                             = "${var.project_id}-mysql-${var.name}"
   database_version                 = var.mysql_version
   project_id                       = var.project_id
@@ -54,7 +44,7 @@ module "mysql_db" {
   enable_default_user              = false
   enable_default_db                = false
   ip_configuration                 = local.ip_configuration
-  database_flags                   = local.database_flags
+  database_flags                   = var.database_flags
   user_labels                      = var.tags
   backup_configuration             = var.backup_configuration
 

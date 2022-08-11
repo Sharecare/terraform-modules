@@ -102,7 +102,7 @@ variable "backup_configuration" {
     binary_log_enabled             = true
     enabled                        = true
     start_time                     = "12:13"
-    location                       = null
+    location                       = "us"
     transaction_log_retention_days = null
     retained_backups               = null
     retention_unit                 = null
@@ -113,4 +113,19 @@ variable "encryption_key_name" {
   type        = string
   description = "Disk Encryption Key name (required if read replica is cross regional)"
   default     = null
+}
+
+variable "database_flags" {
+  type        = list(any)
+  description = "Database flags"
+  default     = [
+    {
+      name  = "log_bin_trust_function_creators"
+      value = "on"
+    },
+    {
+      name  = "sql_mode"
+      value = "TRADITIONAL"
+    },
+  ]
 }
