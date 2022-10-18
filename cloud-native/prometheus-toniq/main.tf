@@ -18,6 +18,7 @@ resource "helm_release" "prometheus" {
       GRAFANA_URL          = var.grafana_url
       GRAFANA_ENABLED      = var.grafana_enabled
       CLUSTER_NAME         = var.cluster_name
+      SUB_PATH             = length(split("/", var.grafana_url)) > 1
     })
   ]
 

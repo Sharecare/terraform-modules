@@ -861,6 +861,7 @@ grafana:
       token_url: https://accounts.google.com/o/oauth2/token
     server:
       root_url: https://${GRAFANA_URL}
+      serve_from_sub_path: ${SUB_PATH}
 
   ## ForceDeployDatasources Create datasource configmap even if grafana deployment has been disabled
   ##
