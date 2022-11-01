@@ -1,7 +1,13 @@
+resource "random_string" "sa-random" {
+  length  = 4
+  special = false
+  upper = false
+}
+
 resource "google_service_account" "service_account" {
   for_each     = local.clouddns_certs
   description  = "Used to pass acme dns01 challenge for ${each.key}"
-  account_id   = trim(substr("cert-manager-dns-${replace(each.key, ".", "-")}", 0, 26), "-") #can only be 6-30 chars long
+  account_id   = trim(substr("cert-man-${random_string.sa-random.result}-${replace(each.key, ".", "-")}", 0, 29), "-") #can only be 6-30 chars long
   display_name = "cert-manager-dns-${replace(each.key, ".", "-")}"
   project      = each.value.project
 }
