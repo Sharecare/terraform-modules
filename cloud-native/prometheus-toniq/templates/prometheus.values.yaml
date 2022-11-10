@@ -2869,7 +2869,6 @@ prometheus:
         source_labels:
         - __meta_kubernetes_pod_annotation_prometheus_io_path
         target_label: __metrics_path__
-        replacement: /notebook$1
       - action: replace
         regex: ([^:]+)(?::\d+)?;(\d+)
         replacement: $1:$2
