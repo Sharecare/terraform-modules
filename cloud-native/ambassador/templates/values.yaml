@@ -1,71 +1,44 @@
----
-# Customized values for ambassador helm chart 6.6.0
+# Customized for emissary ingress 8.3.1
 
-podDisruptionBudget:
-  maxUnavailable: 1
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: kubernetes.io/hostname
+    whenUnsatisfiable: ScheduleAnyway
+    labelSelector:
+      matchLabels:
+        app: toniq-api-v1
 
-# TODO: add with helm chart 6.9.3
-#topologySpreadConstraints: {}
-#      topologySpreadConstraints:
-#      - maxSkew: 1
-#        topologyKey: kubernetes.io/hostname
-#        whenUnsatisfiable: ScheduleAnyway
-#        labelSelector:
-#          matchLabels:
-#            app: toniq-api-v1
+podDisruptionBudget: {}
 
+# Do not create the Module in this helm chart.
+module:
 
+# Do not run the agent
+agent:
+  enabled: false
+  
 namespace:
+  # Explicitly set the AMBASSADOR_NAMESPACE environment variable
   name: ingress
 
-# Additional container environment variable
-# Uncomment or add additional environment variables for the container here.
 env:
   # Exposing statistics via StatsD
   STATSD_ENABLED: true
   STATSD_HOST: localhost
 
-image:
-  repository: quay.io/datawire/ambassador
-  tag: 1.14.2
-  pullPolicy: IfNotPresent
-
-service:
-  type: LoadBalancer
-
-  # Note that target http ports need to match your ambassador configurations service_port
-  # https://www.getambassador.io/reference/modules/#the-ambassador-module
-  ports:
-  - name: http
-    port: 80
-    targetPort: 8080
-  - name: https
-    port: 443
-    targetPort: 8443
 
 adminService:
   annotations:
-    prometheus.io/scrape: "true"
-    prometheus.io/path: "/metrics"
-    prometheus.io/port: "8877"
-  create: true
-  type: ClusterIP
-  port: 8877
-  snapshotPort: 8005
+   prometheus.io/scrape: "true"
+   prometheus.io/path: "/metrics"
+   prometheus.io/port: "8877"  # If true, create a service for Ambassador's admin UI
+
+# CPU/memory resource requests/limits
+resources: # +doc-gen:break
+  # No limits
+  requests:
+    cpu: 200m
+    memory: 300Mi
 
 podLabels:
   service: statsd-sink
-
-################################################################################
-## Ambassador Edge Stack Configuration                                        ##
-################################################################################
-
-# The Ambassador Edge Stack is free for limited use without a license key.
-# Go to https://{ambassador-host}/edge_stack/admin/#dashboard to register
-# for a community license key.
-
-enableAES: false
-
-# Ambassador ships with a basic redis instance. Configure the deployment with the options below.
-redis:
-  create: false
