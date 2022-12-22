@@ -6,7 +6,7 @@ topologySpreadConstraints:
     whenUnsatisfiable: ScheduleAnyway
     labelSelector:
       matchLabels:
-        app: toniq-api-v1
+        app.kubernetes.io/name: ambassador
 
 podDisruptionBudget: {}
 

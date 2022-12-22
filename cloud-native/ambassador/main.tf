@@ -18,6 +18,10 @@ resource "helm_release" "ambassador" {
       value = set.value
     }
   }
+  set {
+    name  = "service.externalTrafficPolicy"
+    value = var.external_traffic_policy
+  }
   depends_on = [kubernetes_namespace.ingress]
 }
 
