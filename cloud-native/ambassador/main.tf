@@ -43,7 +43,7 @@ resource "kubernetes_namespace" "ingress" {
 resource "helm_release" "manifests" {
   name            = "ambassador-manifests"
   chart           = "${path.module}/manifests"
-  version         = "1.1.0"
+  version         = "2.9.5"
   namespace       = "ingress"
   force_update    = true
   lint            = true
