@@ -22,7 +22,10 @@ resource "helm_release" "ambassador" {
     name  = "service.externalTrafficPolicy"
     value = var.external_traffic_policy
   }
-  depends_on = [kubernetes_namespace.ingress]
+  depends_on = [
+    kubernetes_namespace.ingress,
+    helm_release.manifests
+  ]
 }
 
 resource "kubernetes_namespace" "ingress" {
@@ -56,7 +59,4 @@ resource "helm_release" "manifests" {
       value = set.value
     }
   }
-  depends_on = [
-    helm_release.ambassador
-  ]
 }
