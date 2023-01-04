@@ -28,7 +28,7 @@ locals {
 
 module "mysql_db" {
   source                           = "GoogleCloudPlatform/sql-db/google//modules/mysql"
-  version                          = "10.1.0"
+  version                          = "13.0.1"
   name                             = "${var.project_id}-mysql-${var.name}"
   database_version                 = var.mysql_version
   project_id                       = var.project_id
