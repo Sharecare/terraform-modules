@@ -22,6 +22,8 @@ locals {
       disk_type           = "PD_HDD"
       user_labels         = var.tags
       encryption_key_name = var.encryption_key_name
+      availability_type   = "REGIONAL"
+      disk_autoresize_limit = 0
     }
   ]
 }
