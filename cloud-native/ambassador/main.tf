@@ -42,7 +42,9 @@ resource "kubernetes_namespace" "ingress" {
   }
 }
 
-
+# If these manifests change in the helm chart then update the helm chart
+# version in the Chart.yaml and here in the version to force an upgrade of
+# the helm chart.
 resource "helm_release" "manifests" {
   name            = "ambassador-manifests"
   chart           = "${path.module}/manifests"
