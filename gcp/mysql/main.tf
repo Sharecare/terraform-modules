@@ -49,6 +49,7 @@ module "mysql_db" {
   database_flags                   = var.database_flags
   user_labels                      = var.tags
   backup_configuration             = var.backup_configuration
+  secondary_zone                   = "${var.region}-f"
 
   db_name              = var.db_name
   db_charset           = var.db_charset
