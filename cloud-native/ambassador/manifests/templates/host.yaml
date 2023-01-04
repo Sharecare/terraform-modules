@@ -1,0 +1,34 @@
+{{- $namespace := .Release.namespace }}
+{{- range $k, $v := .Values.tls_contexts }}
+{{- $common_name := $k | replace "-" "." }}
+---
+apiVersion: getambassador.io/v3alpha1
+kind: Host
+metadata:
+  name: wildcard-{{- $k }}
+  namespace: {{ $namespace }}
+spec:
+  requestPolicy:
+    insecure:
+      action: Redirect
+  hostname: "*.{{- $common_name }}"
+  tlsSecret:
+    name: "ambassador-certs-{{- $v }}-{{- $k }}"
+  tlsContext:
+    name: tls-{{- $k }}
+---
+apiVersion: getambassador.io/v3alpha1
+kind: Host
+metadata:
+  name: host-{{- $k }}
+  namespace: {{ $namespace }}
+spec:
+  requestPolicy:
+    insecure:
+      action: Redirect
+  hostname: "{{- $common_name }}"
+  tlsSecret:
+    name: "ambassador-certs-{{- $v }}-{{- $k }}"
+  tlsContext:
+    name: tls-{{- $k }}
+{{- end }}

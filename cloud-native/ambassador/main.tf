@@ -1,8 +1,8 @@
 resource "helm_release" "ambassador" {
   name                  = "ambassador"
   repository            = "https://getambassador.io"
-  chart                 = "ambassador"
-  version               = "6.6.0"
+  chart                 = "emissary-ingress"
+  version               = "8.3.1"
   namespace             = "ingress"
   create_namespace      = var.create_namespace ? "false" : "true"
   force_update          = true
@@ -18,7 +18,14 @@ resource "helm_release" "ambassador" {
       value = set.value
     }
   }
-  depends_on = [kubernetes_namespace.ingress]
+  set {
+    name  = "service.externalTrafficPolicy"
+    value = var.external_traffic_policy
+  }
+  depends_on = [
+    kubernetes_namespace.ingress,
+    helm_release.manifests
+  ]
 }
 
 resource "kubernetes_namespace" "ingress" {
@@ -35,11 +42,13 @@ resource "kubernetes_namespace" "ingress" {
   }
 }
 
-
+# If these manifests change in the helm chart then update the helm chart
+# version in the Chart.yaml and here in the version to force an upgrade of
+# the helm chart.
 resource "helm_release" "manifests" {
   name            = "ambassador-manifests"
   chart           = "${path.module}/manifests"
-  version         = "1.1.0"
+  version         = "2.9.5"
   namespace       = "ingress"
   force_update    = true
   lint            = true
@@ -52,7 +61,4 @@ resource "helm_release" "manifests" {
       value = set.value
     }
   }
-  depends_on = [
-    helm_release.ambassador
-  ]
 }

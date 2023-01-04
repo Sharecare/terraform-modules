@@ -2,15 +2,15 @@
 {{- range $k, $v := .Values.tls_contexts }}
 {{- $common_name := $k | replace "-" "." }}
 ---
-apiVersion: getambassador.io/v2
+apiVersion: getambassador.io/v3alpha1
 kind: TLSContext
 metadata:
   name: tls-{{- $k }}
   namespace: {{ $namespace }}
 spec:
   hosts:
-  - "*.{{- $common_name }}"
-  - "{{- $common_name }}"
+    - "*.{{- $common_name }}"
+    - "{{- $common_name }}"
   secret: "ambassador-certs-{{- $v }}-{{- $k }}"
   redirect_cleartext_from: 8080
   alpn_protocols: h2[, http/1.1]
