@@ -10,19 +10,20 @@ locals {
     authorized_networks = var.authorized_networks
     allocated_ip_range  = null
   }
+
   read_replicas = [
     {
-      name                = "0"
-      zone                = "${var.region}-a"
-      tier                = var.tier
-      ip_configuration    = local.ip_configuration
-      database_flags      = var.database_flags
-      disk_autoresize     = var.disk_autoresize
-      disk_size           = var.disk_size
-      disk_type           = "PD_HDD"
-      user_labels         = var.tags
-      encryption_key_name = var.encryption_key_name
-      availability_type   = "REGIONAL"
+      name                  = "0"
+      zone                  = "${var.region}-a"
+      tier                  = var.tier
+      ip_configuration      = local.ip_configuration
+      database_flags        = var.database_flags
+      disk_autoresize       = var.disk_autoresize
+      disk_size             = var.disk_size
+      disk_type             = "PD_HDD"
+      user_labels           = var.tags
+      encryption_key_name   = var.encryption_key_name
+      availability_type     = "REGIONAL"
       disk_autoresize_limit = 0
     }
   ]
@@ -57,7 +58,7 @@ module "mysql_db" {
   additional_users     = length(var.additional_users) > 0 ? var.additional_users : []
   additional_databases = length(var.additional_databases) > 0 ? var.additional_databases : []
 
-  insights_config      = var.insights_config
+  insights_config = var.insights_config
 
   read_replica_name_suffix = var.read_replica_enabled ? "-replica" : ""
   read_replicas            = var.read_replica_enabled ? local.read_replicas : []
