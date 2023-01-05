@@ -131,7 +131,6 @@ variable "database_flags" {
 }
 
 variable "insights_config" {
-  type = map(any)
   description = "Insights config for mysql instance"
   default = {
     query_insights_enabled = true
