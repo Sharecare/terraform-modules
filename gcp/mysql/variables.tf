@@ -35,12 +35,6 @@ variable "additional_databases" {
   description = "list of databases to add to the database cluster"
 }
 
-variable "enable_failover_replica" {
-  default     = "true"
-  type        = string
-  description = "flag to enable failover replica or not"
-}
-
 variable "disk_size" {
   default     = "250"
   type        = string
@@ -86,11 +80,6 @@ variable "name" {
   description = "name to append to the cluster name"
 }
 
-variable "read_replicas" {
-  type    = list(any)
-  default = []
-}
-
 variable "read_replica_enabled" {
   type    = bool
   default = false
@@ -118,7 +107,7 @@ variable "encryption_key_name" {
 variable "database_flags" {
   type        = list(any)
   description = "Database flags"
-  default     = [
+  default = [
     {
       name  = "log_bin_trust_function_creators"
       value = "on"
@@ -128,4 +117,15 @@ variable "database_flags" {
       value = "TRADITIONAL"
     },
   ]
+}
+
+variable "insights_config" {
+  type        = any
+  description = "Insights config for mysql instance"
+  default = {
+    query_insights_enabled  = true
+    query_string_length     = 1024
+    record_application_tags = true
+    record_client_address   = true
+  }
 }
