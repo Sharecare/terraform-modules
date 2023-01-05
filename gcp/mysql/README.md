@@ -12,7 +12,7 @@ No requirements.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_mysql_db"></a> [mysql\_db](#module\_mysql\_db) | GoogleCloudPlatform/sql-db/google//modules/mysql | 10.0.0 |
+| <a name="module_mysql_db"></a> [mysql\_db](#module\_mysql\_db) | GoogleCloudPlatform/sql-db/google//modules/mysql | 13.0.1 |
 
 ## Resources
 
@@ -27,7 +27,8 @@ No requirements.
 | <a name="input_additional_databases"></a> [additional\_databases](#input\_additional\_databases) | list of databases to add to the database cluster | `list(any)` | `[]` | no |
 | <a name="input_additional_users"></a> [additional\_users](#input\_additional\_users) | list of user to add to the database | `list(any)` | `[]` | no |
 | <a name="input_authorized_networks"></a> [authorized\_networks](#input\_authorized\_networks) | List of authorized pulic network that connect to the SQLDB | `list(any)` | `[]` | no |
-| <a name="input_backup_configuration"></a> [backup\_configuration](#input\_backup\_configuration) | n/a | `map(any)` | <pre>{<br>  "binary_log_enabled": true,<br>  "enabled": true,<br>  "location": null,<br>  "retained_backups": null,<br>  "retention_unit": null,<br>  "start_time": "12:13",<br>  "transaction_log_retention_days": null<br>}</pre> | no |
+| <a name="input_backup_configuration"></a> [backup\_configuration](#input\_backup\_configuration) | n/a | `map(any)` | <pre>{<br>  "binary_log_enabled": true,<br>  "enabled": true,<br>  "location": "us",<br>  "retained_backups": null,<br>  "retention_unit": null,<br>  "start_time": "12:13",<br>  "transaction_log_retention_days": null<br>}</pre> | no |
+| <a name="input_database_flags"></a> [database\_flags](#input\_database\_flags) | Database flags | `list(any)` | <pre>[<br>  {<br>    "name": "log_bin_trust_function_creators",<br>    "value": "on"<br>  },<br>  {<br>    "name": "sql_mode",<br>    "value": "TRADITIONAL"<br>  }<br>]</pre> | no |
 | <a name="input_db_charset"></a> [db\_charset](#input\_db\_charset) | n/a | `string` | `"utf8mb4"` | no |
 | <a name="input_db_collation"></a> [db\_collation](#input\_db\_collation) | n/a | `string` | `"utf8mb4_general_ci"` | no |
 | <a name="input_db_name"></a> [db\_name](#input\_db\_name) | n/a | `string` | n/a | yes |
@@ -36,6 +37,7 @@ No requirements.
 | <a name="input_disk_size"></a> [disk\_size](#input\_disk\_size) | Size of the SQL Storage in GB | `string` | `"250"` | no |
 | <a name="input_enable_failover_replica"></a> [enable\_failover\_replica](#input\_enable\_failover\_replica) | flag to enable failover replica or not | `string` | `"true"` | no |
 | <a name="input_encryption_key_name"></a> [encryption\_key\_name](#input\_encryption\_key\_name) | Disk Encryption Key name (required if read replica is cross regional) | `string` | `null` | no |
+| <a name="input_insights_config"></a> [insights\_config](#input\_insights\_config) | Insights config for mysql instance | `map` | <pre>{<br>  "query_insights_enabled": true,<br>  "query_string_length": 1024,<br>  "record_application_tags": true,<br>  "record_client_address": true<br>}</pre> | no |
 | <a name="input_mysql_version"></a> [mysql\_version](#input\_mysql\_version) | Version for the mysql instance. | `string` | `"MYSQL_5_7"` | no |
 | <a name="input_name"></a> [name](#input\_name) | name to append to the cluster name | `string` | n/a | yes |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | Project where this mysql db needs to be created | `string` | `"serenity-stage-d334"` | no |
