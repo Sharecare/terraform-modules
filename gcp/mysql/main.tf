@@ -57,6 +57,7 @@ module "mysql_db" {
   additional_users     = length(var.additional_users) > 0 ? var.additional_users : []
   additional_databases = length(var.additional_databases) > 0 ? var.additional_databases : []
 
+  insights_config      = var.insights_config
 
   read_replica_name_suffix = var.read_replica_enabled ? "-replica" : ""
   read_replicas            = var.read_replica_enabled ? local.read_replicas : []

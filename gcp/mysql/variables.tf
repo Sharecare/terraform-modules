@@ -129,3 +129,14 @@ variable "database_flags" {
     },
   ]
 }
+
+variable "insights_config" {
+  type = map(any)
+  description = "Insights config for mysql instance"
+  default = {
+    query_insights_enabled = true
+    query_string_length     = 1024
+    record_application_tags = true
+    record_client_address = true
+  }
+}
