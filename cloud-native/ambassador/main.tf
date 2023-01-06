@@ -61,4 +61,17 @@ resource "helm_release" "manifests" {
       value = set.value
     }
   }
+  depends_on = [
+    helm_release.crds
+  ]
+}
+
+resource "helm_release" "crds" {
+  name            = "ambassador-crds"
+  chart           = "${path.module}/crds"
+  version         = "2.9.5"
+  namespace       = "ingress"
+  force_update    = true
+  lint            = true
+  cleanup_on_fail = true
 }

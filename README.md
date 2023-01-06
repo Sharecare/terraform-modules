@@ -6,6 +6,7 @@ Please install the following
  * [terraform-docs](https://github.com/terraform-docs/terraform-docs) `brew install terraform-docs`
  * [pre-commit](https://github.com/pre-commit/pre-commit) `brew install pre-commit`
  * [tf-lint](https://github.com/terraform-linters/tflint) `brew install tflint`
+ * Run `pre-commit install` at the root to install pre-commit on the project
  * To generate documentation, run: `./generate_docs.sh`
 
 
