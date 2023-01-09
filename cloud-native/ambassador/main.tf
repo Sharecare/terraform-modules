@@ -55,7 +55,7 @@ resource "helm_release" "manifests" {
   cleanup_on_fail = true
 
   dynamic "set" {
-    for_each = local.tls_contexts
+    for_each = var.tls_contexts
     content {
       name  = "tls_contexts.${set.key}"
       value = set.value

@@ -5,30 +5,30 @@
 apiVersion: getambassador.io/v3alpha1
 kind: Host
 metadata:
-  name: wildcard-{{- $k }}
+  name: wildcard-{{- $common_name }}
   namespace: {{ $namespace }}
 spec:
   requestPolicy:
     insecure:
       action: Redirect
-  hostname: "*.{{- $common_name }}"
+  hostname: "*.{{- $k }}"
   tlsSecret:
-    name: "ambassador-certs-{{- $v }}-{{- $k }}"
+    name: "ambassador-certs-{{- $v }}-{{- $common_name }}"
   tlsContext:
-    name: tls-{{- $k }}
+    name: tls-{{- $common_name }}
 ---
 apiVersion: getambassador.io/v3alpha1
 kind: Host
 metadata:
-  name: host-{{- $k }}
+  name: host-{{- $common_name }}
   namespace: {{ $namespace }}
 spec:
   requestPolicy:
     insecure:
       action: Redirect
-  hostname: "{{- $common_name }}"
+  hostname: "{{- $k }}"
   tlsSecret:
-    name: "ambassador-certs-{{- $v }}-{{- $k }}"
+    name: "ambassador-certs-{{- $v }}-{{- $common_name }}"
   tlsContext:
-    name: tls-{{- $k }}
+    name: tls-{{- $common_name }}
 {{- end }}

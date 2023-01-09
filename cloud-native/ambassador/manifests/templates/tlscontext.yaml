@@ -5,13 +5,13 @@
 apiVersion: getambassador.io/v3alpha1
 kind: TLSContext
 metadata:
-  name: tls-{{- $k }}
+  name: tls-{{- $common_name }}
   namespace: {{ $namespace }}
 spec:
   hosts:
-    - "*.{{- $common_name }}"
-    - "{{- $common_name }}"
-  secret: "ambassador-certs-{{- $v }}-{{- $k }}"
+    - "*.{{- $k }}"
+    - "{{- $k }}"
+  secret: "ambassador-certs-{{- $v }}-{{- $common_name }}"
   redirect_cleartext_from: 8080
   alpn_protocols: h2[, http/1.1]
   min_tls_version: v1.2
