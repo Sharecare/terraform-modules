@@ -1,0 +1,14 @@
+apiVersion: getambassador.io/v3alpha1
+kind: Host
+metadata:
+  name: ${name}
+  namespace: ingress
+spec:
+  requestPolicy:
+    insecure:
+      action: Redirect
+  hostname: "${hostname}"
+  tlsSecret:
+    name: "${tls_secret}"
+  tlsContext:
+    name: "${tls_name}"

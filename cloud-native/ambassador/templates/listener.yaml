@@ -1,0 +1,12 @@
+apiVersion: getambassador.io/v3alpha1
+kind: Listener
+metadata:
+  name: http-listener
+  namespace: ingress
+spec:
+  port: 8080
+  protocol: HTTPS  # NOT A TYPO, see below
+  securityModel: XFP
+  hostBinding:
+    namespace:
+      from: SELF   # See below

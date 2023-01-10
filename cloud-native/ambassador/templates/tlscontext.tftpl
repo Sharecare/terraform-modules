@@ -1,0 +1,14 @@
+apiVersion: getambassador.io/v3alpha1
+kind: TLSContext
+metadata:
+  name: ${name}
+  namespace: ingress
+spec:
+  hosts:
+    - "*.${hostname}"
+    - "${hostname}"
+  secret: "${tls_secret}"
+  redirect_cleartext_from: 8080
+  alpn_protocols: h2[, http/1.1]
+  min_tls_version: v1.2
+  max_tls_version: v1.3
