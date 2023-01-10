@@ -61,9 +61,9 @@ resource "helm_release" "manifests" {
       value = set.value
     }
   }
-  depends_on = [
-    helm_release.crds
-  ]
+  # depends_on = [
+  #   helm_release.crds
+  # ]
 }
 
 # resource "helm_release" "crds" {
