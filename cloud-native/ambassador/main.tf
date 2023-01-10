@@ -10,7 +10,7 @@ resource "helm_release" "ambassador" {
   render_subchart_notes = true
   cleanup_on_fail       = true
 
-  values = [file("${path.module}/templates/values.yaml")]
+  values = [file("${path.module}/templates/values.tftpl")]
   dynamic "set" {
     for_each = var.ambassador_overrides
     content {
@@ -24,7 +24,7 @@ resource "helm_release" "ambassador" {
   }
   depends_on = [
     kubernetes_namespace.ingress,
-    helm_release.manifests
+#    kubernetes_manifest.crds
   ]
 }
 
@@ -39,26 +39,5 @@ resource "kubernetes_namespace" "ingress" {
       application = "ambassador"
     }
     name = "ingress"
-  }
-}
-
-# If these manifests change in the helm chart then update the helm chart
-# version in the Chart.yaml and here in the version to force an upgrade of
-# the helm chart.
-resource "helm_release" "manifests" {
-  name            = "ambassador-manifests"
-  chart           = "${path.module}/manifests"
-  version         = "2.9.5"
-  namespace       = "ingress"
-  force_update    = true
-  lint            = true
-  cleanup_on_fail = true
-
-  dynamic "set" {
-    for_each = var.tls_contexts
-    content {
-      name  = "tls_contexts.${set.key}"
-      value = set.value
-    }
   }
 }
