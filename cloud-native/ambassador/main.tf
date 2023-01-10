@@ -66,13 +66,13 @@ resource "helm_release" "manifests" {
   ]
 }
 
-resource "helm_release" "crds" {
-  name             = "ambassador-crds"
-  chart            = "${path.module}/crds"
-  version          = "2.9.5"
-  namespace        = "emissary-system"
-  force_update     = true
-  lint             = true
-  cleanup_on_fail  = true
-  create_namespace = true
-}
+# resource "helm_release" "crds" {
+#   name             = "ambassador-crds"
+#   chart            = "${path.module}/crds"
+#   version          = "2.9.5"
+#   create_namespace = true
+#   namespace        = "emissary-system"
+#   force_update     = true
+#   lint             = true
+#   cleanup_on_fail  = true
+# }
