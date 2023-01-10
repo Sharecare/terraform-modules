@@ -1,4 +1,4 @@
-# Customized for emissary ingress 8.3.1
+# Customized for emissary ingress 8.4.0
 
 topologySpreadConstraints:
   - maxSkew: 1
@@ -16,7 +16,7 @@ module:
 # Do not run the agent
 agent:
   enabled: false
-  
+
 namespace:
   # Explicitly set the AMBASSADOR_NAMESPACE environment variable
   name: ingress
@@ -36,8 +36,8 @@ podAnnotations:
             }
           ]
         }
-      } 
-  
+      }
+
 adminService:
   annotations:
    prometheus.io/scrape: "true"
