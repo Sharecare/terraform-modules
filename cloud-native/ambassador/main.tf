@@ -70,7 +70,7 @@ resource "helm_release" "crds" {
   name            = "ambassador-crds"
   chart           = "${path.module}/crds"
   version         = "2.9.5"
-  namespace       = "ingress"
+  namespace       = "emissary-system"
   force_update    = true
   lint            = true
   cleanup_on_fail = true
