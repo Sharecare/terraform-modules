@@ -2,7 +2,7 @@ resource "helm_release" "ambassador" {
   name                  = "ambassador"
   repository            = "https://getambassador.io"
   chart                 = "emissary-ingress"
-  version               = "8.3.1"
+  version               = "8.4.0"
   namespace             = "ingress"
   create_namespace      = var.create_namespace ? "false" : "true"
   force_update          = true
