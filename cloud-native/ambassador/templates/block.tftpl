@@ -1,0 +1,10 @@
+apiVersion: getambassador.io/v3alpha1
+kind:  Mapping
+metadata:
+  name:  black-hole-route-${name}
+  namespace: ingress
+spec:
+  prefix: /
+  service: https://hello.docai.beer
+  headers:
+    user-agent: ${agent}

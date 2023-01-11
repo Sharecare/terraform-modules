@@ -4,16 +4,62 @@ resource "kubernetes_manifest" "crds" {
   depends_on = [ kubernetes_namespace.ingress ]
 }
 
-resource "kubernetes_manifest" "emissary-junk" {
-  for_each = fileset("${path.module}/crds-3.4.0", "emissary-*.yaml")
-  manifest = yamldecode(file("${path.module}/crds-3.4.0/${each.value}"))
-  depends_on = [ kubernetes_namespace.ingress ]
+resource "kubernetes_manifest" "emissary-system" {
+  manifest = yamldecode(file("${path.module}/crds-3.4.0/emissary-systemNamespace.yaml"))
+}
+
+resource "kubernetes_manifest" "emissary-apiextServiceAccount" {
+  manifest = yamldecode(file("${path.module}/crds-3.4.0/emissary-apiextServiceAccount.yaml"))
+  depends_on = [ kubernetes_manifest.emissary-system ]
+}
+
+resource "kubernetes_manifest" "emissary-apiextClusterRole" {
+  manifest = yamldecode(file("${path.module}/crds-3.4.0/emissary-apiextClusterRole.yaml"))
+  depends_on = [ kubernetes_manifest.emissary-system ]
+}
+
+resource "kubernetes_manifest" "emissary-apiextRole" {
+  manifest = yamldecode(file("${path.module}/crds-3.4.0/emissary-apiextRole.yaml"))
+  depends_on = [
+             kubernetes_manifest.emissary-apiextServiceAccount
+  ]
+}
+
+resource "kubernetes_manifest" "emissary-apiextRoleBinding" {
+  manifest = yamldecode(file("${path.module}/crds-3.4.0/emissary-apiextRoleBinding.yaml"))
+  depends_on = [
+             kubernetes_manifest.emissary-apiextRole
+  ]
+}
+
+resource "kubernetes_manifest" "emissary-apiextClusterRoleBinding" {
+  manifest = yamldecode(file("${path.module}/crds-3.4.0/emissary-apiextClusterRoleBinding.yaml"))
+  depends_on = [
+             kubernetes_manifest.emissary-apiextClusterRole,
+             kubernetes_manifest.emissary-apiextServiceAccount
+  ]
+}
+
+resource "kubernetes_manifest" "emissary-apiextDeployment" {
+  manifest = yamldecode(file("${path.module}/crds-3.4.0/emissary-apiextDeployment.yaml"))
+  depends_on = [
+             kubernetes_manifest.emissary-apiextClusterRoleBinding,
+             kubernetes_manifest.emissary-apiextRoleBinding
+  ]
+}
+
+resource "kubernetes_manifest" "emissary-apiextService" {
+  manifest = yamldecode(file("${path.module}/crds-3.4.0/emissary-apiextService.yaml"))
+  depends_on = [ kubernetes_manifest.emissary-apiextDeployment ]
 }
 
 resource "kubernetes_manifest" "yamls" {
   for_each = fileset(path.module, "templates/*yaml")
   manifest = yamldecode(file("${path.module}/${each.value}"))
-  depends_on = [ kubernetes_manifest.crds ]
+  depends_on = [
+    kubernetes_manifest.crds,
+    kubernetes_manifest.emissary-apiextService
+  ]
 }
 
 resource "kubernetes_manifest" "host" {
