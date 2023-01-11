@@ -8,7 +8,7 @@ resource "helm_release" "ambassador" {
   force_update          = true
   lint                  = true
   render_subchart_notes = true
-  cleanup_on_fail       = true
+  cleanup_on_fail       = false
 
   values = [file("${path.module}/templates/values.tftpl")]
   dynamic "set" {

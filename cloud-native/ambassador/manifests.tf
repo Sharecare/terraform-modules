@@ -4,6 +4,12 @@ resource "kubernetes_manifest" "crds" {
   depends_on = [ kubernetes_namespace.ingress ]
 }
 
+resource "kubernetes_manifest" "emissary-junk" {
+  for_each = fileset("${path.module}/crds-3.4.0", "emissary-*.yaml")
+  manifest = yamldecode(file("${path.module}/crds-3.4.0/${each.value}"))
+  depends_on = [ kubernetes_namespace.ingress ]
+}
+
 resource "kubernetes_manifest" "yamls" {
   for_each = fileset(path.module, "templates/*yaml")
   manifest = yamldecode(file("${path.module}/${each.value}"))

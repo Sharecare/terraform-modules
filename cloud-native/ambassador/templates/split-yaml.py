@@ -5,5 +5,5 @@ import yaml
 
 for data in yaml.safe_load_all(sys.stdin):
     if data != None:
-        with open(data["metadata"]["name"]+".yaml","w") as output:
+        with open(data["metadata"]["name"]+(data["kind"] if "kind" in data.keys() else "")+".yaml","w") as output:
             yaml.dump(data, output)
