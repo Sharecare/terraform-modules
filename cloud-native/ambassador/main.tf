@@ -24,7 +24,7 @@ resource "helm_release" "ambassador" {
   }
   depends_on = [
     kubernetes_namespace.ingress,
-#    kubernetes_manifest.crds
+    kubernetes_manifest.crds
   ]
 }
 
