@@ -1,6 +1,6 @@
 resource "kubernetes_manifest" "crds" {
-  for_each = fileset(path.module, "crds-3.3.1/*getambassador.io.yaml")
-  manifest = yamldecode(file("${path.module}/${each.value}"))
+  for_each = fileset("${path.module}/crds-3.4.0", "*getambassador.io.yaml")
+  manifest = yamldecode(file("${path.module}/crds-3.4.0/${each.value}"))
   depends_on = [ kubernetes_namespace.ingress ]
 }
 
@@ -8,7 +8,6 @@ resource "kubernetes_manifest" "yamls" {
   for_each = fileset(path.module, "templates/*yaml")
   manifest = yamldecode(file("${path.module}/${each.value}"))
   depends_on = [ kubernetes_manifest.crds ]
-#  depends_on = [ helm_release.ambassador ]
 }
 
 resource "kubernetes_manifest" "host" {
@@ -21,7 +20,6 @@ resource "kubernetes_manifest" "host" {
       tls_secret = "ambassador-certs-${each.value.provider}-${each.key}"      
     }))
   depends_on = [ kubernetes_manifest.crds ]  
-#  depends_on = [ helm_release.ambassador ]
 }
 
 resource "kubernetes_manifest" "wildcard" {
@@ -34,7 +32,6 @@ resource "kubernetes_manifest" "wildcard" {
       tls_secret = "ambassador-certs-${each.value.provider}-${each.key}"      
     }))
   depends_on = [ kubernetes_manifest.crds ]  
-#  depends_on = [ helm_release.ambassador ]
 }
 
 resource "kubernetes_manifest" "tlscontext" {
@@ -46,5 +43,4 @@ resource "kubernetes_manifest" "tlscontext" {
       name       = "tls-${each.key}"
     }))
   depends_on = [ kubernetes_manifest.crds ]  
-#  depends_on = [ helm_release.ambassador ]
 }
