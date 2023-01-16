@@ -1,17 +1,19 @@
 {{- $namespace := .Release.namespace }}
-{{- range $k, $v := .Values.tls_contexts }}
-{{- $common_name := $k | replace "-" "." }}
+{{- range .Values.tls_contexts }}
+{{- $common_name_normalized := .common_name | replace "!" "-" }}
+{{- $common_name_domain := .common_name | replace "!" "." }}
+{{- $provider = .provider }}
 ---
 apiVersion: getambassador.io/v3alpha1
 kind: TLSContext
 metadata:
-  name: tls-{{- $k }}
+  name: tls-{{- $common_name_normalized }}
   namespace: {{ $namespace }}
 spec:
   hosts:
-    - "*.{{- $common_name }}"
-    - "{{- $common_name }}"
-  secret: "ambassador-certs-{{- $v }}-{{- $k }}"
+    - "*.{{- $common_name_domain }}"
+    - "{{- $common_name_domain }}"
+  secret: "ambassador-certs-{{- $provider }}-{{- $common_name_normalized }}"
   redirect_cleartext_from: 8080
   alpn_protocols: h2[, http/1.1]
   min_tls_version: v1.2
