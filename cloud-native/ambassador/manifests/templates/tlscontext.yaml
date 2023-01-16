@@ -2,7 +2,7 @@
 {{- range .Values.tls_contexts }}
 {{- $common_name_normalized := .common_name | replace "!" "-" }}
 {{- $common_name_domain := .common_name | replace "!" "." }}
-{{- $provider = .provider }}
+{{- $provider := .provider }}
 ---
 apiVersion: getambassador.io/v3alpha1
 kind: TLSContext

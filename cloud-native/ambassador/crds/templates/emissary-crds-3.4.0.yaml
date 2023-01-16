@@ -5254,13 +5254,13 @@ spec:
     storage: false
 ---
 ################################################################################
-# Namespace                                                                    #
+# Namespace is totally broken with helm                                        #
 ################################################################################
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: emissary-system
+#---
+#apiVersion: v1
+#kind: Namespace
+#metadata:
+#  name: emissary-system
 ---
 ################################################################################
 # ServiceAccount                                                               #
