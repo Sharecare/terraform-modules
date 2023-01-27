@@ -1,0 +1,28 @@
+{{- $namespace := .Release.namespace }}
+{{- $email := .Values.email }}
+{{- range .Values.certificates }}
+---
+{{- if eq .provider "route53" }}
+{{- $common_name_normalized := .common_name | replace "!" "-" }}
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name:  "letsencrypt-route53-{{ $common_name_normalized }}"
+  namespace: {{ $namespace }}
+spec:
+  acme:
+    email: {{ $email }}
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-route53-secret
+    solvers:
+    - dns01:
+        route53:
+          region: us-east-1
+          hostedZoneID: {{ .zone_id }}
+          accessKeyID: {{ .access_key }}
+          secretAccessKeySecretRef:
+            name: {{ .access_key_secret }}
+            key: secret-access-key
+{{- end }}
+{{- end }}
