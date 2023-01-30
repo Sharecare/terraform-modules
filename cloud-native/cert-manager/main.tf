@@ -63,7 +63,7 @@ resource "helm_release" "manifests" {
   provider         = helm
   name             = "cert-manager-manifests"
   chart            = "${path.module}/manifests"
-  version          = "1.0.0"
+  version          = "1.0.1"
   namespace        = "ingress"
   create_namespace = var.create_ingress_namespace ? "false" : "true"
   force_update     = true

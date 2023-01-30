@@ -70,7 +70,10 @@ locals {
       domain               = domain
       provider             = lookup(config, "provider", "clouddns")
       project              = lookup(config, "project", "")
+      access_key           = lookup(config, "access_key", "")
+      access_key_secret    = lookup(config, "access_key_secret", "")      
       service_account_name = try(google_service_account.service_account[domain].name, "")
+      zone_id              = lookup(config, "zone_id", "")
     }
   ])
 
@@ -81,6 +84,9 @@ locals {
       "certificates[${k}].provider"             = v["provider"]
       "certificates[${k}].project"              = v["project"]
       "certificates[${k}].service_account_name" = "${v["service_account_name"]}.json"
+      "certificates[${k}].access_key"           = v["access_key"]
+      "certificates[${k}].access_key_secret"    = v["access_key_secret"]
+      "certificates[${k}].zone_id"              = v["zone_id"]
       "providers[${k}]"                         = v["provider"]
     }
   ])
