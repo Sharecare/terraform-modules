@@ -1,33 +1,38 @@
+variable "helm_version" {
+  type    = string
+  default = "0.7.2"
+}
+
+variable "cloud_provider" {
+  type        = string
+  description = "Cloud Provider being used. Available values are gcp, aws"
+  default     = "gcp"
+}
+
+variable "namespaces" {
+  type        = list(string)
+  description = "List of namespaces to create a secret store in"
+}
+
 
 variable "project_id" {
   type        = string
   description = "GCP project"
 }
 
-variable "cluster" {
+variable "cluster_name" {
   type        = string
   description = "GCP kubernetes cluster "
 }
 
-
-
-variable "region" {
-  type        = string
-  description = "region where the kubernetes cluster is deployed"
+variable "overrides" {
+  type = map(any)
+  default = {
+  }
 }
 
-variable "requirements" {
-  type = list(string)
-}
 
-variable "k8_service_account" {
+variable "gke_location" {
   type        = string
-  description = "service account in k8 cluster with secret access privelages "
-  default     = "external-secrets"
-}
-
-variable "namespace" {
-  type        = string
-  description = "namespace where the external secrets in deployed"
-  default     = "default"
+  description = "region or zone where the kubernetes cluster is deployed"
 }

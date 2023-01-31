@@ -1,12 +1,15 @@
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.14.0 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | ~> 3.1.2 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_random"></a> [random](#provider\_random) | n/a |
+| <a name="provider_random"></a> [random](#provider\_random) | ~> 3.1.2 |
 
 ## Modules
 
@@ -35,14 +38,12 @@ No requirements.
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | n/a | `bool` | n/a | yes |
 | <a name="input_disk_autoresize"></a> [disk\_autoresize](#input\_disk\_autoresize) | n/a | `bool` | `true` | no |
 | <a name="input_disk_size"></a> [disk\_size](#input\_disk\_size) | Size of the SQL Storage in GB | `string` | `"250"` | no |
-| <a name="input_enable_failover_replica"></a> [enable\_failover\_replica](#input\_enable\_failover\_replica) | flag to enable failover replica or not | `string` | `"true"` | no |
 | <a name="input_encryption_key_name"></a> [encryption\_key\_name](#input\_encryption\_key\_name) | Disk Encryption Key name (required if read replica is cross regional) | `string` | `null` | no |
-| <a name="input_insights_config"></a> [insights\_config](#input\_insights\_config) | Insights config for mysql instance | `map` | <pre>{<br>  "query_insights_enabled": true,<br>  "query_string_length": 1024,<br>  "record_application_tags": true,<br>  "record_client_address": true<br>}</pre> | no |
+| <a name="input_insights_config"></a> [insights\_config](#input\_insights\_config) | Insights config for mysql instance | `any` | <pre>{<br>  "query_insights_enabled": true,<br>  "query_string_length": 1024,<br>  "record_application_tags": true,<br>  "record_client_address": true<br>}</pre> | no |
 | <a name="input_mysql_version"></a> [mysql\_version](#input\_mysql\_version) | Version for the mysql instance. | `string` | `"MYSQL_5_7"` | no |
 | <a name="input_name"></a> [name](#input\_name) | name to append to the cluster name | `string` | n/a | yes |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | Project where this mysql db needs to be created | `string` | `"serenity-stage-d334"` | no |
 | <a name="input_read_replica_enabled"></a> [read\_replica\_enabled](#input\_read\_replica\_enabled) | n/a | `bool` | `false` | no |
-| <a name="input_read_replicas"></a> [read\_replicas](#input\_read\_replicas) | n/a | `list(any)` | `[]` | no |
 | <a name="input_region"></a> [region](#input\_region) | n/a | `string` | `"us-central1"` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | n/a | `map(any)` | `{}` | no |
 | <a name="input_tier"></a> [tier](#input\_tier) | available machine types (tiers) for Cloud SQL, for example, db-n1-standard-1. | `string` | `"db-n1-standard-1"` | no |

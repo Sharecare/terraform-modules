@@ -1,70 +1,139 @@
-resource "null_resource" "k8_service_account" {
-  triggers = { always_run = timestamp() }
-  provisioner "local-exec" {
-    command = "gcloud container clusters describe  $CLUSTER --project $PROJECT_ID --region $REGION | grep \"serviceAccount\" | cut -d\":\" -f2 | sort -u | xargs | head -1 > ${path.module}/k8_service_account.txt"
-
-    environment = {
-      CLUSTER    = var.cluster
-      REGION     = var.region
-      PROJECT_ID = var.project_id
-    }
-  }
-
-}
-
-data "local_file" "service_account_file" {
-  filename   = "${path.module}/k8_service_account.txt"
-  depends_on = [null_resource.k8_service_account]
-}
-
-data "google_iam_policy" "admin" {
-  binding {
-    role = "roles/iam.workloadIdentityUser"
-
-    members = [
-      "serviceAccount:${var.project_id}.svc.id.goog[${var.namespace}/${var.k8_service_account}]",
-    ]
-  }
-}
-
-resource "google_service_account_iam_policy" "admin-account-iam" {
-  service_account_id = "projects/${var.project_id}/serviceAccounts/${trimspace(data.local_file.service_account_file.content)}"
-  policy_data        = data.google_iam_policy.admin.policy_data
-}
-
-resource "google_project_iam_binding" "project" {
-  project = var.project_id
-  role    = "roles/secretmanager.secretAccessor"
-  members = [
-    "serviceAccount:${trimspace(data.local_file.service_account_file.content)}",
-  ]
-}
-
-data "template_file" "template_values_file" {
-  template = file("${path.module}/templates/values.tpl")
-  vars = {
-    gcp_service_account = trimspace(data.local_file.service_account_file.content)
-    k8_service_account  = var.k8_service_account
-  }
-}
-
-resource "helm_release" "externalsec" {
-
-  name = "externalsec"
-  #repository       = "https://external-secrets.github.io/kubernetes-external-secrets"
-  chart            = "external-secrets/kubernetes-external-secrets"
-  version          = "6.1.0"
-  namespace        = var.namespace
+resource "helm_release" "external_secrets" {
+  provider         = helm
+  name             = "external-secrets"
+  repository       = "https://charts.external-secrets.io"
+  chart            = "external-secrets"
   create_namespace = true
+  namespace        = kubernetes_namespace.external_secrets.id
+  version          = var.helm_version
+  lint             = true
+  recreate_pods    = true
   wait             = true
 
-  values = [
-    data.template_file.template_values_file.rendered
+
+  dynamic "set" {
+    for_each = merge(var.overrides,
+      {
+        "serviceAccount.name" = "external-secrets"
+      },
+      {
+        "serviceAccount.create" = "false"
+      },
+      {
+        "installCRDs" = "false"
+      }
+    )
+
+    content {
+      name  = set.key
+      value = set.value
+    }
+  }
+  depends_on = [
+    module.external_secrets_sa,
+    kubectl_manifest.crds
+  ]
+}
+resource "kubernetes_namespace" "external_secrets" {
+  metadata {
+    name = "external-secrets"
+  }
+  provider = kubernetes
+}
+
+data "kubectl_file_documents" "crds" {
+  provider = kubectl
+  content  = file("${path.module}/templates/crds.yaml")
+}
+
+resource "kubectl_manifest" "crds" {
+  provider  = kubectl
+  for_each  = data.kubectl_file_documents.crds.manifests
+  yaml_body = each.value
+  depends_on = [
+    kubernetes_namespace.external_secrets
   ]
 }
 
-resource "null_resource" "done" {
+################################ GCP specific resources below this line ############################
+
+module "external_secrets_sa" {
+  count      = var.cloud_provider == "gcp" ? 1 : 0
+  source     = "terraform-google-modules/kubernetes-engine/google//modules/workload-identity"
+  version    = "24.1.0"
+  name       = "external-secrets"
+  namespace  = kubernetes_namespace.external_secrets.id
+  project_id = var.project_id
+  roles      = ["roles/iam.serviceAccountTokenCreator", "roles/secretmanager.secretAccessor"]
+  providers = {
+    kubernetes = kubernetes
+  }
+}
+
+module "external_secrets_namespace_sa" {
+  for_each   = { for k, v in toset(var.namespaces) : k => v if var.cloud_provider == "gcp" }
+  source     = "terraform-google-modules/kubernetes-engine/google//modules/workload-identity"
+  version    = "24.1.0"
+  name       = "secret-store-${each.value}"
+  namespace  = each.value
+  project_id = var.project_id
+  roles      = ["roles/iam.serviceAccountTokenCreator", "roles/secretmanager.secretAccessor"]
+  providers = {
+    kubernetes = kubernetes
+  }
+}
+
+resource "kubectl_manifest" "gcp_secret_store" {
+  for_each  = { for k, v in toset(var.namespaces) : k => v if var.cloud_provider == "gcp" }
+  provider  = kubectl
+  yaml_body = <<YAML
+apiVersion: external-secrets.io/v1beta1
+kind: SecretStore
+metadata:
+  name: "${each.value}-secretstore"
+  namespace: ${each.value}
+spec:
+  retrySettings:
+    maxRetries: 5
+    retryInterval: "10s"
+  provider:
+    gcpsm:
+      projectID: ${var.project_id}
+      auth:
+        workloadIdentity:
+          clusterLocation: ${var.gke_location}
+          clusterName: ${var.cluster_name}
+          serviceAccountRef:
+            name: ${module.external_secrets_namespace_sa[each.value].k8s_service_account_name}
+YAML
   depends_on = [
-    helm_release.externalsec
+    helm_release.external_secrets
   ]
+}
+
+################################ AWS specific resources below this line ############################
+
+resource "kubectl_manifest" "aws_secret_store" {
+  for_each  = { for k, v in toset(var.namespaces) : k => v if var.cloud_provider == "aws" }
+  provider  = kubectl
+  yaml_body = <<YAML
+apiVersion: external-secrets.io/v1beta1
+kind: SecretStore
+metadata:
+  name: "${each.value}-secretstore"
+  namespace: ${each.value}
+spec:
+  retrySettings:
+    maxRetries: 5
+    retryInterval: "10s"
+  provider:
+    aws:
+      service: SecretsManager
+      role: arn:aws:iam::123456789012:role/external-secrets
+      region: ${var.gke_location}
+      auth:
+        jwt:
+          serviceAccountRef:
+            name: k8s serviceaccount name
+YAML
 }
