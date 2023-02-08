@@ -21,6 +21,7 @@ No modules.
 | Name | Type |
 |------|------|
 | [helm_release.ambassador](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
+| [helm_release.crds](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.manifests](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [kubernetes_namespace.ingress](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace) | resource |
 
@@ -30,6 +31,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_ambassador_overrides"></a> [ambassador\_overrides](#input\_ambassador\_overrides) | n/a | `map` | `{}` | no |
 | <a name="input_create_namespace"></a> [create\_namespace](#input\_create\_namespace) | create ingress namespace? set to true if installing ambassador without Certmanager | `bool` | `false` | no |
+| <a name="input_external_traffic_policy"></a> [external\_traffic\_policy](#input\_external\_traffic\_policy) | LoadBalancer's externalTrafficPolicy defaults to Local | `string` | `"Local"` | no |
 | <a name="input_tls_contexts"></a> [tls\_contexts](#input\_tls\_contexts) | tls context map same contract as cert-manager | `map` | <pre>{<br>  "docai.beer": {<br>    "project": "doc-ai-infra-sec",<br>    "provider": "clouddns"<br>  }<br>}</pre> | no |
 
 ## Outputs
