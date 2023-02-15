@@ -12,5 +12,5 @@ variable "value_overrides" {
 variable "dd_version" {
   description = "Datadog helm chart version"
   type        = string
-  default     = "3.6.7"
+  default     = "3.10.7"
 }
