@@ -1,6 +1,6 @@
 module "gke" {
   source                     = "terraform-google-modules/kubernetes-engine/google"
-  version                    = "22.0.0"
+  version                    = "30.2.0"
   project_id                 = var.project_id
   name                       = "${var.project_id}-cluster"
   region                     = var.region
@@ -18,6 +18,8 @@ module "gke" {
   logging_service            = "logging.googleapis.com/kubernetes"
   monitoring_service         = "monitoring.googleapis.com/kubernetes"
   remove_default_node_pool   = var.remove_default_node_pool
+  enable_private_endpoint    = true
+  enable_private_nodes       = true
   node_pools                 = var.node_pools
   node_pools_oauth_scopes    = var.node_pools_oauth_scopes
   node_pools_labels          = var.node_pools_labels
