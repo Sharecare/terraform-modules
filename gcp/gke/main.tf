@@ -18,8 +18,6 @@ module "gke" {
   logging_service            = "logging.googleapis.com/kubernetes"
   monitoring_service         = "monitoring.googleapis.com/kubernetes"
   remove_default_node_pool   = var.remove_default_node_pool
-  enable_private_endpoint    = var.enable_private_endpoint
-  enable_private_nodes       = var.enable_private_nodes
   node_pools                 = var.node_pools
   node_pools_oauth_scopes    = var.node_pools_oauth_scopes
   node_pools_labels          = var.node_pools_labels
