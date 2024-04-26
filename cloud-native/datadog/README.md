@@ -26,7 +26,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_datadog_api_key"></a> [datadog\_api\_key](#input\_datadog\_api\_key) | Datadog API key | `string` | `""` | no |
-| <a name="input_dd_version"></a> [dd\_version](#input\_dd\_version) | Datadog helm chart version | `string` | `"3.6.7"` | no |
+| <a name="input_dd_version"></a> [dd\_version](#input\_dd\_version) | Datadog helm chart version | `string` | `"3.33.1"` | no |
 | <a name="input_value_overrides"></a> [value\_overrides](#input\_value\_overrides) | A map used to feed the dynamic blocks of the datadog helm chart | `map(any)` | `{}` | no |
 
 ## Outputs
