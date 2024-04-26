@@ -23,5 +23,5 @@ module "gke" {
   node_pools_labels          = var.node_pools_labels
   node_pools_metadata        = var.node_pools_metadata
   node_pools_tags            = var.node_pools_tags
-  dns_cache                  = true
+  dns_cache                  = var.dns_cache
 }

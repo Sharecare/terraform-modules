@@ -24,16 +24,6 @@ variable "grant_registry_access" {
   default = false
 }
 
-variable "enable_private_endpoint" {
-  type    = bool
-  default = false
-}
-
-variable "enable_private_nodes" {
-  type    = bool
-  default = false
-}
-
 variable "node_pools" {}
 
 variable "node_pools_oauth_scopes" {}
@@ -48,8 +38,11 @@ variable "kubernetes_version" {
   default = "latest"
 }
 
-
-
 variable "default_max_pods_per_node" {
   default = "20"
+}
+
+variable "dns_cache" {
+  type    = bool
+  default = false
 }

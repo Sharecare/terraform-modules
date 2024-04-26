@@ -5,4 +5,3 @@ repos:
       - id: terraform-fmt
       # https://github.com/terraform-linters/tflint/tree/master/docs/rules add rules to .tflint.hcl
       # - id: tflint
-
