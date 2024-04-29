@@ -46,3 +46,7 @@ variable "dns_cache" {
   type    = bool
   default = false
 }
+
+variable "maintenance_start_time" {
+  default = "01:00"
+}
