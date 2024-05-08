@@ -25,4 +25,5 @@ module "gke" {
   node_pools_tags            = var.node_pools_tags
   dns_cache                  = var.dns_cache
   maintenance_start_time     = var.maintenance_start_time
+  gke_backup_agent_config    = var.gke_backup_agent_config
 }
