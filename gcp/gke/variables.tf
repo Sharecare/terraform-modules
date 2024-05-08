@@ -50,3 +50,8 @@ variable "dns_cache" {
 variable "maintenance_start_time" {
   default = "01:00"
 }
+
+variable "gke_backup_agent_config" {
+  type    = bool
+  default = false
+}
