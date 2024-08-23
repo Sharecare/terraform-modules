@@ -55,3 +55,11 @@ variable "gke_backup_agent_config" {
   type    = bool
   default = false
 }
+
+variable "ip_range_pods" {
+  type = string
+}
+
+variable "ip_range_services" {
+  type = string
+}
