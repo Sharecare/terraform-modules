@@ -7,8 +7,10 @@ module "gke" {
   zones                      = var.zones
   network                    = var.network_name
   subnetwork                 = var.subnetwork_name
-  ip_range_pods              = "${var.project_id}-pods"
-  ip_range_services          = "${var.project_id}-services"
+  # ip_range_pods              = "${var.project_id}-pods"
+  # ip_range_services          = "${var.project_id}-services"
+  ip_range_pods = var.ip_range_pods
+  ip_range_services = var.ip_range_services
   http_load_balancing        = var.http_load_balancing
   grant_registry_access      = var.grant_registry_access
   kubernetes_version         = var.kubernetes_version
