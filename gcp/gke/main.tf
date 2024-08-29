@@ -26,4 +26,12 @@ module "gke" {
   dns_cache                  = var.dns_cache
   maintenance_start_time     = var.maintenance_start_time
   gke_backup_agent_config    = var.gke_backup_agent_config
+  security_posture_mode      = "BASIC"
+  cluster_autoscaling        = {
+    enabled = true
+    resource_limits = {
+      "cpu"    = "1"
+      "memory" = "2Gi"
+    }
+  }
 }
