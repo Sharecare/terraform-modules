@@ -29,9 +29,7 @@ module "gke" {
   security_posture_mode      = "BASIC"
   cluster_autoscaling        = {
     enabled = true
-    resource_limits = {
-      "cpu"    = "1"
-      "memory" = "2Gi"
-    }
+    auto_repair   = true
+    auto_upgrade  = true
   }
 }
