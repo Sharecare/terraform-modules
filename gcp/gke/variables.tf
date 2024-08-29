@@ -69,6 +69,11 @@ variable "cluster_name_override" {
   default = ""
 }
 
+variable "security_posture_vulnerability_mode" {
+  type    = string
+  default = "VULNERABILITY_BASIC"
+}
+
 locals {
   cluster_name = var.cluster_name_override != "" ? var.cluster_name_override : "${var.project_id}-cluster"
 }
