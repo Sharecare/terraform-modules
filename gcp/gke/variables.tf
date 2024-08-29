@@ -64,7 +64,7 @@ variable "ip_range_services" {
   type = string
 }
 
-variable cluster_name_override {
+variable "cluster_name_override" {
   type    = string
   default = ""
 }

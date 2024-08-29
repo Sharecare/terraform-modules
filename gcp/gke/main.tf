@@ -1,14 +1,14 @@
 module "gke" {
   source                     = "terraform-google-modules/kubernetes-engine/google"
-  version                    = "27.0.0"
+  version                    = "29.0.0"
   project_id                 = var.project_id
   name                       = local.cluster_name
   region                     = var.region
   zones                      = var.zones
   network                    = var.network_name
   subnetwork                 = var.subnetwork_name
-  ip_range_pods = var.ip_range_pods
-  ip_range_services = var.ip_range_services
+  ip_range_pods              = var.ip_range_pods
+  ip_range_services          = var.ip_range_services
   http_load_balancing        = var.http_load_balancing
   grant_registry_access      = var.grant_registry_access
   kubernetes_version         = var.kubernetes_version
