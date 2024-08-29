@@ -27,9 +27,9 @@ module "gke" {
   maintenance_start_time     = var.maintenance_start_time
   gke_backup_agent_config    = var.gke_backup_agent_config
   security_posture_mode      = "BASIC"
-  cluster_autoscaling        = {
-    enabled = true
-    auto_repair   = true
-    auto_upgrade  = true
-  }
+  # cluster_autoscaling        = {
+  #   enabled = true
+  #   auto_repair   = true
+  #   auto_upgrade  = true
+  # }
 }
