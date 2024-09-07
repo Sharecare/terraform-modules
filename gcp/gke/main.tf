@@ -1,14 +1,14 @@
 module "gke" {
   source                     = "terraform-google-modules/kubernetes-engine/google"
-  version                    = "27.0.0"
+  version                    = "30.0.0"
   project_id                 = var.project_id
-  name                       = "${var.project_id}-cluster"
+  name                       = local.cluster_name
   region                     = var.region
   zones                      = var.zones
   network                    = var.network_name
   subnetwork                 = var.subnetwork_name
-  ip_range_pods              = "${var.project_id}-pods"
-  ip_range_services          = "${var.project_id}-services"
+  ip_range_pods              = var.ip_range_pods
+  ip_range_services          = var.ip_range_services
   http_load_balancing        = var.http_load_balancing
   grant_registry_access      = var.grant_registry_access
   kubernetes_version         = var.kubernetes_version
@@ -26,4 +26,11 @@ module "gke" {
   dns_cache                  = var.dns_cache
   maintenance_start_time     = var.maintenance_start_time
   gke_backup_agent_config    = var.gke_backup_agent_config
+  security_posture_mode      = "BASIC"
+  security_posture_vulnerability_mode = var.security_posture_vulnerability_mode
+  # cluster_autoscaling        = {
+  #   enabled = true
+  #   auto_repair   = true
+  #   auto_upgrade  = true
+  # }
 }

@@ -55,3 +55,25 @@ variable "gke_backup_agent_config" {
   type    = bool
   default = false
 }
+
+variable "ip_range_pods" {
+  type = string
+}
+
+variable "ip_range_services" {
+  type = string
+}
+
+variable "cluster_name_override" {
+  type    = string
+  default = ""
+}
+
+variable "security_posture_vulnerability_mode" {
+  type    = string
+  default = "VULNERABILITY_BASIC"
+}
+
+locals {
+  cluster_name = var.cluster_name_override != "" ? var.cluster_name_override : "${var.project_id}-cluster"
+}
