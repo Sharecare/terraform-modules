@@ -74,6 +74,16 @@ variable "security_posture_vulnerability_mode" {
   default = "VULNERABILITY_BASIC"
 }
 
+variable "cluster_dns_provider" {
+  type    = string
+  default = "PROVIDER_UNSPECIFIED"
+}
+
+variable "cluster_dns_scope" {
+  type    = string
+  default = "DNS_SCOPE_UNSPECIFIED"
+}
+
 locals {
   cluster_name = var.cluster_name_override != "" ? var.cluster_name_override : "${var.project_id}-cluster"
 }
