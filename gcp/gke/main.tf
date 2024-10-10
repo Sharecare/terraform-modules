@@ -28,9 +28,7 @@ module "gke" {
   gke_backup_agent_config    = var.gke_backup_agent_config
   security_posture_mode      = "BASIC"
   security_posture_vulnerability_mode = var.security_posture_vulnerability_mode
-  # cluster_autoscaling        = {
-  #   enabled = true
-  #   auto_repair   = true
-  #   auto_upgrade  = true
-  # }
+  cluster_dns_provider = var.cluster_dns_provider
+  cluster_dns_scope = var.cluster_dns_provider
+
 }
