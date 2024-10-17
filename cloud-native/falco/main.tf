@@ -26,7 +26,7 @@ resource "helm_release" "falco" {
   # -- DEBUG environment variable
   set {
     name  = "falcosidekick.config.debug"
-    value = "true"
+    value = true
   }
 
   # -- a list of escaped comma separated custom fields to add to falco events, syntax is "key:value\,key:value"
