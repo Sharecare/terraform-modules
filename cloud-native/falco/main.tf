@@ -23,8 +23,20 @@ resource "helm_release" "falco" {
     value = true
   }
 
+  # -- DEBUG environment variable
   set {
-    name  = "falcosidekick.slack.webhookurl"
+    name  = "falcosidekick.config.debug"
+    value = "true"
+  }
+
+  # -- a list of escaped comma separated custom fields to add to falco events, syntax is "key:value\,key:value"
+  set {
+    name  = "falcosidekick.config.customfields"
+    value = "cluster:${var.cluster_name}"
+  }
+
+  set {
+    name  = "falcosidekick.config.slack.webhookurl"
     value = var.webhookurl
   }
 

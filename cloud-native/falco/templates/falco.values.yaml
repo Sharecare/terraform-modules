@@ -462,10 +462,6 @@ falcosidekick:
   fullfqdn: false
   # -- Listen port. Default value: 2801
   listenPort: ""
-  # -- For Slack configuration values, see https://github.com/falcosecurity/charts/blob/master/charts/falcosidekick/values.yaml#L174
-  slack:
-    # -- Slack Webhook URL (ex: <https://hooks.slack.com/services/XXXX/YYYY/ZZZZ>), if not `empty`, Slack output is *enabled*
-    webhookurl: ""
 
 
 ####################
