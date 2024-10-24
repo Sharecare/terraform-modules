@@ -6,6 +6,10 @@ variable "product" {
   type = string
 }
 
+variable "cluster_name" {
+  type = string
+}
+
 variable "webhookurl" {
   type = string
 }
