@@ -66,8 +66,6 @@ resource "null_resource" "kourier-pdb-patch" {
   }
 
   depends_on = [
-    kubectl_manifest.serving-crds,
-    kubectl_manifest.serving-core,
     kubectl_manifest.kourier
   ]
 }
@@ -83,9 +81,7 @@ resource "null_resource" "activator-pdb-patch" {
   }
 
   depends_on = [
-    kubectl_manifest.serving-crds,
-    kubectl_manifest.serving-core,
-    kubectl_manifest.kourier
+    kubectl_manifest.serving-core
   ]
 }
 
@@ -100,8 +96,6 @@ resource "null_resource" "webhook-pdb-patch" {
   }
 
   depends_on = [
-    kubectl_manifest.serving-crds,
-    kubectl_manifest.serving-core,
-    kubectl_manifest.kourier
+    kubectl_manifest.serving-core
   ]
 }

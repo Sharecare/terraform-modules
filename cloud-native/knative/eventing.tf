@@ -64,7 +64,6 @@ resource "null_resource" "eventing-webhook-patch" {
   }
 
   depends_on = [
-      kubectl_manifest.eventing-crds,
-      kubectl_manifest.eventing-core,
+      kubectl_manifest.eventing-core
   ]
 }
