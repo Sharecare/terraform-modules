@@ -52,3 +52,20 @@ resource "kubectl_manifest" "mt-channel-broker" {
       kubectl_manifest.in-memory-channel
     ]
 }
+
+resource "null_resource" "eventing-webhook-patch" {
+  provisioner "local-exec" {
+    interpreter = ["/bin/bash", "-c"]
+    command     = <<EOT
+      kubectl patch pdb eventing-webhook \
+        --namespace knative-eventing \
+        --patch '{"spec": {"minAvailable" : ${var.eventing_webhook_min_available} }}'
+    EOT
+  }
+
+  depends_on = [
+    kubectl_manifest.serving-crds,
+    kubectl_manifest.serving-core,
+    kubectl_manifest.kourier
+  ]
+}

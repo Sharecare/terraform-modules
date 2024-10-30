@@ -1,3 +1,3 @@
-# output "done" {
-#   value = null_resource.done.id
+# output "broker_url" {
+#   value = kubectl_manifest.mt-channel-broker
 # }
