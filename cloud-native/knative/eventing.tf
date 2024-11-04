@@ -25,7 +25,7 @@ resource "kubectl_manifest" "eventing-crds" {
 
 resource "kubectl_manifest" "eventing-core" {
     for_each  = data.kubectl_file_documents.eventing-core.manifests
-    yaml_body = each.value
+    yaml_body = replace(each.value, "EVENTING_WEBHOOK_MIN_AVAILABLE", var.eventing_webhook_min_available)
 
     depends_on = [
       kubectl_manifest.eventing-crds
