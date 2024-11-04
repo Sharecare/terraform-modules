@@ -5,6 +5,11 @@ data "kubectl_file_documents" "eventing-crds" {
 
 # https://github.com/knative/eventing/releases/download/knative-v1.15.3/eventing-core.yaml
 data "kubectl_file_documents" "eventing-core" {
+    # NOTE eventing-core.yaml contains the following changes from the original file provided by knative:
+    # changed line 1294 from:
+    #    minAvailable: 80%
+    # to
+    #    minAvailable: EVENTING_WEBHOOK_MIN_AVAILABLE
     content = file("${path.module}/templates/eventing/eventing-core.yaml")
 }
 
@@ -25,7 +30,7 @@ resource "kubectl_manifest" "eventing-crds" {
 
 resource "kubectl_manifest" "eventing-core" {
     for_each  = data.kubectl_file_documents.eventing-core.manifests
-    yaml_body = each.value
+    yaml_body = replace(each.value, "EVENTING_WEBHOOK_MIN_AVAILABLE", var.eventing_webhook_min_available)
 
     depends_on = [
       kubectl_manifest.eventing-crds
