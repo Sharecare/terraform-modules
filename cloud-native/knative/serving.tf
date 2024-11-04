@@ -6,12 +6,8 @@ data "kubectl_file_documents" "serving-crds" {
 # https://github.com/knative/serving/releases/download/knative-v1.15.2/serving-core.yaml
 data "kubectl_file_documents" "serving-core" {
     # NOTE serving-core.yaml contains the following changes from the original file provided by knative:
-    # changed line 8126 from:
-    #    ingress-class: "istio.ingress.networking.knative.dev"
-    # to
+    # a new line was inserted at line 8101:
     #    ingress-class: "kourier.ingress.networking.knative.dev"
-    # and then copied it to line 8101 and outdented it so that it 
-    # becomes part of the 'data' block on line 8100
     content = file("${path.module}/templates/serving/serving-core.yaml")
 }
 

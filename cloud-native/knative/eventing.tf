@@ -5,6 +5,11 @@ data "kubectl_file_documents" "eventing-crds" {
 
 # https://github.com/knative/eventing/releases/download/knative-v1.15.3/eventing-core.yaml
 data "kubectl_file_documents" "eventing-core" {
+    # NOTE eventing-core.yaml contains the following changes from the original file provided by knative:
+    # changed line 1294 from:
+    #    minAvailable: 80%
+    # to
+    #    minAvailable: EVENTING_WEBHOOK_MIN_AVAILABLE
     content = file("${path.module}/templates/eventing/eventing-core.yaml")
 }
 
