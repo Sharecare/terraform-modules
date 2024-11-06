@@ -8507,7 +8507,7 @@ metadata:
     app.kubernetes.io/name: knative-serving
     app.kubernetes.io/version: "1.15.2"
 spec:
-  minAvailable: 80%
+  minAvailable: ACTIVATOR_PDB_MIN_AVAILABLE
   selector:
     matchLabels:
       app: activator
@@ -8980,7 +8980,7 @@ metadata:
     app.kubernetes.io/name: knative-serving
     app.kubernetes.io/version: "1.15.2"
 spec:
-  minAvailable: 80%
+  minAvailable: WEBHOOK_PDB_MIN_AVAILABLE
   selector:
     matchLabels:
       app: webhook
