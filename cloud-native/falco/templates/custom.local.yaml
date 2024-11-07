@@ -31,3 +31,9 @@ customRules:
         shell=%proc.name parent=%proc.pname cmdline=%proc.cmdline terminal=%proc.tty container_id=%container.id image=%container.image.repository)
       priority: WARNING
       tags: [container, shell, mitre_execution]
+
+    # List of allowed container images that are known to execute binaries not part of their base image.
+    - list: known_drop_and_execute_containers
+      items: ['docker.io/library/alpine']
+      override:
+        items: append
