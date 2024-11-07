@@ -32,8 +32,6 @@ customRules:
       priority: WARNING
       tags: [container, shell, mitre_execution]
 
-    # List of allowed container images that are known to execute binaries not part of their base image.
-    - list: known_drop_and_execute_containers
-      items: ['docker.io/library/alpine']
-      override:
-        items: append
+    - rule: Drop and execute new binary in container
+      append: true
+      condition: and not container.name in (cloud-sql-proxy-job)
