@@ -31,3 +31,7 @@ customRules:
         shell=%proc.name parent=%proc.pname cmdline=%proc.cmdline terminal=%proc.tty container_id=%container.id image=%container.image.repository)
       priority: WARNING
       tags: [container, shell, mitre_execution]
+
+    - rule: Drop and execute new binary in container
+      append: true
+      condition: and not container.name in (cloud-sql-proxy-job)
