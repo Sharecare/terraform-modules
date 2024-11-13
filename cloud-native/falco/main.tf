@@ -40,10 +40,9 @@ resource "helm_release" "falco" {
     value = var.webhookurl
   }
 
-  # TODO: update once knative stuff is in place
   set {
     name  = "falcosidekick.config.cloudevents.address"
-    value = ""
+    value = "http://broker-ingress.knative-eventing.svc.cluster.local/default/default"
   }
 }
 
