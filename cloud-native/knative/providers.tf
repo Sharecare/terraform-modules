@@ -8,8 +8,8 @@ terraform {
     }
 
     kubectl = {
-      source  = "gavinbunney/kubectl"
-      version = ">= 1.7.0"
+      source           = "gavinbunney/kubectl"
+      version          = ">= 1.7.0"
     }
   }
 }

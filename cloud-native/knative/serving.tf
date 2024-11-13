@@ -1,6 +1,6 @@
 # https://github.com/knative/serving/releases/download/knative-v1.15.2/serving-crds.yaml
 data "kubectl_file_documents" "serving-crds" {
-    content = file("${path.module}/templates/serving/serving-crds.yaml")
+  content = file("${path.module}/templates/serving/serving-crds.yaml")
 }
 
 # https://github.com/knative/serving/releases/download/knative-v1.15.2/serving-core.yaml
@@ -22,8 +22,8 @@ data "kubectl_file_documents" "kourier" {
 }
 
 resource "kubectl_manifest" "serving-crds" {
-    for_each  = data.kubectl_file_documents.serving-crds.manifests
-    yaml_body = each.value
+  for_each  = data.kubectl_file_documents.serving-crds.manifests
+  yaml_body = each.value
 }
 
 resource "kubectl_manifest" "serving-core" {
@@ -36,17 +36,17 @@ resource "kubectl_manifest" "serving-core" {
       var.webhook_pdb_min_available
     )
 
-    depends_on = [
-      kubectl_manifest.serving-crds
-    ]
+  depends_on = [
+    kubectl_manifest.serving-crds
+  ]
 }
 
 resource "kubectl_manifest" "kourier" {
     for_each  = data.kubectl_file_documents.kourier.manifests
     yaml_body = replace(each.value, "KOURIER_PDB_MIN_AVAILABLE", var.kourier_pdb_min_available)
 
-    depends_on = [
-      kubectl_manifest.serving-crds,
-      kubectl_manifest.serving-core
-    ]
+  depends_on = [
+    kubectl_manifest.serving-crds,
+    kubectl_manifest.serving-core
+  ]
 }
