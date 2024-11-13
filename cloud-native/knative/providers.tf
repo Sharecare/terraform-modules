@@ -13,7 +13,3 @@ terraform {
     }
   }
 }
-
-provider "kubectl" {
-  load_config_file = false
-}
