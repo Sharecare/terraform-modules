@@ -34,4 +34,4 @@ customRules:
 
     - rule: Drop and execute new binary in container
       append: true
-      condition: and not container.name in (cloud-sql-proxy-job)
+      condition: and not container.name in (cloud-sql-proxy-job, strongdm-app)
