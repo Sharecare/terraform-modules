@@ -50,7 +50,7 @@ resource "helm_release" "crds" {
   chart            = "${path.module}/crds"
   version          = "3.12.1"
   namespace        = "emissary-system"
-  create_namespace = true
+  create_namespace = false
   force_update     = true
   lint             = true
   cleanup_on_fail  = true
