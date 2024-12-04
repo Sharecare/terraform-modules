@@ -82,7 +82,7 @@ locals {
 resource "helm_release" "manifests" {
   name            = "ambassador-manifests"
   chart           = "${path.module}/manifests"
-  version         = "2.9.5"
+  version         = "2.9.6"
   namespace       = "ingress"
   force_update    = true
   lint            = true
