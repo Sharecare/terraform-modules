@@ -2,7 +2,7 @@ resource "helm_release" "ambassador" {
   name                  = "ambassador"
   repository            = "https://getambassador.io"
   chart                 = "emissary-ingress"
-  version               = "8.4.0"
+  version               = "8.9.1"
   namespace             = "ingress"
   create_namespace      = var.create_namespace ? "false" : "true"
   force_update          = true
@@ -48,7 +48,7 @@ resource "kubernetes_namespace" "ingress" {
 resource "helm_release" "crds" {
   name            = "ambassador-crds"
   chart           = "${path.module}/crds"
-  version         = "3.4.0"
+  version         = "3.12.1"
   namespace       = "emissary-system"
   create_namespace = true
   force_update    = true
