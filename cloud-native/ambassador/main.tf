@@ -46,14 +46,14 @@ resource "kubernetes_namespace" "ingress" {
 # version in the Chart.yaml and here in the version to force an upgrade of
 # the helm chart.  Try to keep the version close to the CRD version.
 resource "helm_release" "crds" {
-  name            = "ambassador-crds"
-  chart           = "${path.module}/crds"
-  version         = "3.12.1"
-  namespace       = "emissary-system"
+  name             = "ambassador-crds"
+  chart            = "${path.module}/crds"
+  version          = "3.12.1"
+  namespace        = "emissary-system"
   create_namespace = true
-  force_update    = true
-  lint            = true
-  cleanup_on_fail = true
+  force_update     = true
+  lint             = true
+  cleanup_on_fail  = true
 }
 
 locals {
