@@ -8823,11 +8823,6 @@ spec:
     storage: false
 ---
 apiVersion: v1
-kind: Namespace
-metadata:
-  name: emissary-system
----
-apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: emissary-apiext
