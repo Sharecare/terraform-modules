@@ -2,7 +2,7 @@ resource "helm_release" "ambassador" {
   name                  = "ambassador"
   repository            = "https://getambassador.io"
   chart                 = "emissary-ingress"
-  version               = "8.4.0"
+  version               = "8.9.1"
   namespace             = "ingress"
   create_namespace      = var.create_namespace ? "false" : "true"
   force_update          = true
@@ -46,14 +46,14 @@ resource "kubernetes_namespace" "ingress" {
 # version in the Chart.yaml and here in the version to force an upgrade of
 # the helm chart.  Try to keep the version close to the CRD version.
 resource "helm_release" "crds" {
-  name            = "ambassador-crds"
-  chart           = "${path.module}/crds"
-  version         = "3.4.0"
-  namespace       = "emissary-system"
+  name             = "ambassador-crds"
+  chart            = "${path.module}/crds"
+  version          = "3.12.1"
+  namespace        = "emissary-system"
   create_namespace = true
-  force_update    = true
-  lint            = true
-  cleanup_on_fail = true
+  force_update     = true
+  lint             = true
+  cleanup_on_fail  = true
 }
 
 locals {
@@ -82,7 +82,7 @@ locals {
 resource "helm_release" "manifests" {
   name            = "ambassador-manifests"
   chart           = "${path.module}/manifests"
-  version         = "2.9.5"
+  version         = "2.9.6"
   namespace       = "ingress"
   force_update    = true
   lint            = true
