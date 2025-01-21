@@ -1,7 +1,7 @@
 customRules:
   custom.local.yaml: |-
     - macro: user_expected_terminal_shell_in_container_conditions
-      condition: (never_true)
+      condition: (evt.num=0)
 
     - macro: spawned_process
       condition: evt.type = execve and evt.dir=<
@@ -33,5 +33,6 @@ customRules:
       tags: [container, shell, mitre_execution]
 
     - rule: Drop and execute new binary in container
-      append: true
       condition: and not container.name in (cloud-sql-proxy-job, strongdm-app)
+      override:
+        condition: append
