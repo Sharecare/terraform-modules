@@ -7,6 +7,23 @@ topologySpreadConstraints:
     labelSelector:
       matchLabels:
         app.kubernetes.io/name: ambassador
+affinity:
+  nodeAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 100
+      preference:
+        matchExpressions:
+        - key: cloud.google.com/gke-spot
+          operator: NotIn
+          values:
+          - "true"
+    - weight: 100
+      preference:
+        matchExpressions:
+        - key: cloud.google.com/gke-preemptible
+          operator: NotIn
+          values:
+          - "true"
 
 podDisruptionBudget: {}
 
@@ -16,7 +33,7 @@ module:
 # Do not run the agent
 agent:
   enabled: false
-  
+
 namespace:
   # Explicitly set the AMBASSADOR_NAMESPACE environment variable
   name: ingress
@@ -36,8 +53,8 @@ podAnnotations:
             }
           ]
         }
-      } 
-  
+      }
+
 adminService:
   annotations:
    prometheus.io/scrape: "true"
