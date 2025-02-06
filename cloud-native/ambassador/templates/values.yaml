@@ -10,16 +10,12 @@ topologySpreadConstraints:
 affinity:
   nodeAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
-    - weight: 100
-      preference:
-        matchExpressions:
+      nodeSelectorTerms:
+      - matchExpressions:
         - key: cloud.google.com/gke-spot
           operator: NotIn
           values:
           - "true"
-    - weight: 100
-      preference:
-        matchExpressions:
         - key: cloud.google.com/gke-preemptible
           operator: NotIn
           values:
