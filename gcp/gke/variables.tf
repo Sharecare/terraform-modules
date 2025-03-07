@@ -89,6 +89,13 @@ variable "enable_vertical_pod_autoscaling" {
   default = false
 }
 
+variable "cluster_autoscaling" {
+  type = map(any)
+  default = {
+    enabled = false
+  }
+}
+
 locals {
   cluster_name = var.cluster_name_override != "" ? var.cluster_name_override : "${var.project_id}-cluster"
 }
