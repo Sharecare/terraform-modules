@@ -84,6 +84,11 @@ variable "cluster_dns_scope" {
   default = "DNS_SCOPE_UNSPECIFIED"
 }
 
+variable "enable_vertical_pod_autoscaling" {
+  type = bool
+  default = false
+}
+
 locals {
   cluster_name = var.cluster_name_override != "" ? var.cluster_name_override : "${var.project_id}-cluster"
 }

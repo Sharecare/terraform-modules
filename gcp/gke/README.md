@@ -20,9 +20,12 @@ No resources.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_cluster_dns_provider"></a> [cluster\_dns\_provider](#input\_cluster\_dns\_provider) | n/a | `string` | `"PROVIDER_UNSPECIFIED"` | no |
+| <a name="input_cluster_dns_scope"></a> [cluster\_dns\_scope](#input\_cluster\_dns\_scope) | n/a | `string` | `"DNS_SCOPE_UNSPECIFIED"` | no |
 | <a name="input_cluster_name_override"></a> [cluster\_name\_override](#input\_cluster\_name\_override) | n/a | `string` | `""` | no |
 | <a name="input_default_max_pods_per_node"></a> [default\_max\_pods\_per\_node](#input\_default\_max\_pods\_per\_node) | n/a | `string` | `"20"` | no |
 | <a name="input_dns_cache"></a> [dns\_cache](#input\_dns\_cache) | n/a | `bool` | `false` | no |
+| <a name="input_enable_vertical_pod_autoscaling"></a> [enable\_vertical\_pod\_autoscaling](#input\_enable\_vertical\_pod\_autoscaling) | n/a | `bool` | `false` | no |
 | <a name="input_gke_backup_agent_config"></a> [gke\_backup\_agent\_config](#input\_gke\_backup\_agent\_config) | n/a | `bool` | `false` | no |
 | <a name="input_grant_registry_access"></a> [grant\_registry\_access](#input\_grant\_registry\_access) | n/a | `bool` | `false` | no |
 | <a name="input_http_load_balancing"></a> [http\_load\_balancing](#input\_http\_load\_balancing) | n/a | `bool` | `false` | no |

@@ -30,5 +30,5 @@ module "gke" {
   security_posture_vulnerability_mode = var.security_posture_vulnerability_mode
   cluster_dns_provider                = var.cluster_dns_provider
   cluster_dns_scope                   = var.cluster_dns_scope
-
+  enable_vertical_pod_autoscaling     = var.enable_vertical_pod_autoscaling
 }
