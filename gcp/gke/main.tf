@@ -32,4 +32,5 @@ module "gke" {
   cluster_dns_scope                   = var.cluster_dns_scope
   enable_vertical_pod_autoscaling     = var.enable_vertical_pod_autoscaling
   cluster_autoscaling                 = var.cluster_autoscaling
+
 }
