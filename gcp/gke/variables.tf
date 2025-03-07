@@ -92,44 +92,37 @@ variable "enable_vertical_pod_autoscaling" {
 variable "cluster_autoscaling" {
   description = "Cluster autoscaling configuration"
   type = object({
-    enabled             = bool
+    enabled       = bool
+    auto_repair   = bool
+    auto_upgrade  = bool
+
+    min_cpu_cores = number
+    max_cpu_cores = number
+    min_memory_gb = number
+    max_memory_gb = number
+
+    gpu_resources = list(object({
+      resource_type = string
+      minimum       = number
+      maximum       = number
+    }))
+
     autoscaling_profile = string
-    resource_limits     = object({
-      cpu    = object({
-        minimum = number
-        maximum = number
-      })
-      memory = object({
-        minimum = number
-        maximum = number
-      })
-    })
-    auto_provisioning_defaults = object({
-      disk_size    = optional(number)
-      disk_type    = optional(string)
-      image_type   = optional(string)
-      oauth_scopes = optional(list(string))
-    })
   })
   default = {
-    enabled             = false
+    enabled       = true
+    auto_repair   = true
+    auto_upgrade  = true
+
+    // For Java/NodeJS workloads on n2-standard-4 (4 CPU, 16GB)
+    min_cpu_cores = 4
+    max_cpu_cores = 64  // Allow scaling to support multiple applications
+    min_memory_gb = 16
+    max_memory_gb = 256 // Java applications can be memory hungry
+
+    gpu_resources = []  // No GPUs needed for Java/NodeJS
+
     autoscaling_profile = "BALANCED"
-    resource_limits     = {
-      cpu    = {
-        minimum = 1
-        maximum = 100
-      }
-      memory = {
-        minimum = 2
-        maximum = 400
-      }
-    }
-    auto_provisioning_defaults = {
-      disk_size    = 100
-      disk_type    = "pd-standard"
-      image_type   = "COS_CONTAINERD"
-      oauth_scopes = null  # Will be set from var.node_pools_oauth_scopes["all"] in tfvars
-    }
   }
 }
 
