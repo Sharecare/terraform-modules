@@ -10,6 +10,7 @@ module "gke" {
   ip_range_pods                       = var.ip_range_pods
   ip_range_services                   = var.ip_range_services
   http_load_balancing                 = var.http_load_balancing
+  gateway_api_channel                 = "CHANNEL_STANDARD"
   grant_registry_access               = var.grant_registry_access
   kubernetes_version                  = var.kubernetes_version
   horizontal_pod_autoscaling          = true
