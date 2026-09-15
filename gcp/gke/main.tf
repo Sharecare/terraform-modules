@@ -27,6 +27,7 @@ module "gke" {
   dns_cache                            = var.dns_cache
   maintenance_start_time               = var.maintenance_start_time
   gke_backup_agent_config              = var.gke_backup_agent_config
+  monitoring_enabled_components        = var.monitoring_enabled_components
   monitoring_enable_managed_prometheus = var.monitoring_enable_managed_prometheus
   security_posture_mode                = "BASIC"
   security_posture_vulnerability_mode  = var.security_posture_vulnerability_mode

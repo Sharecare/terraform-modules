@@ -56,6 +56,11 @@ variable "gke_backup_agent_config" {
   default = false
 }
 
+variable "monitoring_enabled_components" {
+  type    = list
+  default = []
+}
+
 variable "monitoring_enable_managed_prometheus" {
   type    = bool
   default = false
